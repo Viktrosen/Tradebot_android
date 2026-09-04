@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="common_press_again_message">Нажмите ещё раз, чтобы выйти</string>
+    <string name="dashboard">Дашбоард</string>
+    <string name="positions">Позиции</string>
+    <string name="strategy">Стратегии</string>
+    <string name="risk">Риски</string>
+    <string name="more">Ещё</string>
+    <string name="profile_main_logout_alert_title">Вы уверены, что хотите выйти из профиля?</string>
+    <string name="common_cancel">Отменить</string>
+    <string name="profile_main_logout_alert_confirm">Выйти</string>
+    <string name="geo_unavailable">Текущее местоположение недоступно</string>
+    <string name="geo_reset">Хмм...</string>
+</resources>

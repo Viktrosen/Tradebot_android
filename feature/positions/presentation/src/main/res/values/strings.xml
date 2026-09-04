@@ -1,0 +1,9 @@
+<resources>
+    <string name="position_ai_explanation_title">Решение AI</string>
+    <string name="position_close_reason_title">Причина закрытия</string>
+    <string name="position_side_long">Лонг</string>
+    <string name="position_side_short">Шорт</string>
+    <string name="position_close">Закрыть</string>
+    <string name="position_closed">Закрыта</string>
+    <string name="position_entry_strategy">Стратегия: %1$s</string>
+</resources>

@@ -1,0 +1,29 @@
+# Gradle and build outputs
+.gradle/
+**/build/
+
+# IDE and OS files
+.idea/
+*.iml
+.kotlin/
+.DS_Store
+
+# Local Android configuration and generated captures
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+app/production/
+*.apk
+*.aab
+*.dm
+
+# Local credentials, signing keys and Firebase configuration
+*.jks
+*.keystore
+**/keystore.properties
+**/secrets.properties
+**/google-services.json
+
+# Local AI-assistant plans
+.gigacode/

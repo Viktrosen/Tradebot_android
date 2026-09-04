@@ -1,0 +1,70 @@
+[versions]
+app = "ru.bolotov.tradebot"
+
+common-router = "ru.bolotov.tradebot.common.router"
+
+core-common = "ru.bolotov.tradebot.core.common"
+core-dependency = "ru.bolotov.tradebot.core.dependency"
+core-network= "ru.bolotov.tradebot.core.network"
+core-ui-kit = "ru.bolotov.tradebot.core.uikit"
+core-utils = "ru.bolotov.tradebot.core.util"
+service-network = "ru.bolotov.tradebot.service.network"
+
+feature-authorization-domain = "ru.bolotov.tradebot.feature.authorization.domain"
+feature-authorization-presentation = "ru.bolotov.tradebot.feature.authorization.presentation"
+feature-authorization-router = "ru.bolotov.tradebot.feature.authorization.router"
+feature-authorization-data = "ru.bolotov.tradebot.feature.authorization.data"
+feature-authorization-api = "ru.bolotov.tradebot.feature.authorization.api"
+
+feature-main-presentation = "ru.bolotov.tradebot.feature.main.presentation"
+feature-main-router = "ru.bolotov.tradebot.feature.main.router"
+
+feature-splashScreen-presentation = "ru.bolotov.tradebot.feature.splashscreen.presentation"
+feature-splashScreen-router = "ru.bolotov.tradebot.feature.splashscreen.router"
+
+feature-dashboard-presentation = "ru.bolotov.tradebot.feature.dashboard.presentation"
+feature-dashboard-router = "ru.bolotov.tradebot.feature.dashboard.router"
+feature-dashboard-data = "ru.bolotov.tradebot.feature.dashboard.data"
+feature-dashboard-api = "ru.bolotov.tradebot.feature.dashboard.api"
+feature-dashboard-domain = "ru.bolotov.tradebot.feature.dashboard.domain"
+
+feature-positions-presentation = "ru.bolotov.tradebot.feature.positions.presentation"
+feature-positions-router = "ru.bolotov.tradebot.feature.positions.router"
+feature-positions-data = "ru.bolotov.tradebot.feature.positions.data"
+feature-positions-api = "ru.bolotov.tradebot.feature.positions.api"
+feature-positions-domain = "ru.bolotov.tradebot.feature.positions.domain"
+
+feature-instruments-presentation = "ru.bolotov.tradebot.feature.instruments.presentation"
+feature-instruments-router = "ru.bolotov.tradebot.feature.instruments.router"
+feature-instruments-data = "ru.bolotov.tradebot.feature.instruments.data"
+feature-instruments-api = "ru.bolotov.tradebot.feature.instruments.api"
+feature-instruments-domain = "ru.bolotov.tradebot.feature.instruments.domain"
+
+feature-strategy-presentation = "ru.bolotov.tradebot.feature.strategy.presentation"
+feature-strategy-router = "ru.bolotov.tradebot.feature.strategy.router"
+feature-strategy-data = "ru.bolotov.tradebot.feature.strategy.data"
+feature-strategy-api = "ru.bolotov.tradebot.feature.strategy.api"
+feature-strategy-domain = "ru.bolotov.tradebot.feature.strategy.domain"
+
+feature-risk-presentation = "ru.bolotov.tradebot.feature.risk.presentation"
+feature-risk-router = "ru.bolotov.tradebot.feature.risk.router"
+feature-risk-data = "ru.bolotov.tradebot.feature.risk.data"
+feature-risk-api = "ru.bolotov.tradebot.feature.risk.api"
+feature-risk-domain = "ru.bolotov.tradebot.feature.risk.domain"
+
+feature-more-presentation = "ru.bolotov.tradebot.feature.more.presentation"
+feature-more-router = "ru.bolotov.tradebot.feature.more.router"
+feature-more-data = "ru.bolotov.tradebot.feature.more.data"
+feature-more-api = "ru.bolotov.tradebot.feature.more.api"
+feature-more-domain = "ru.bolotov.tradebot.feature.more.domain"
+
+feature-notifications-api = "ru.bolotov.tradebot.feature.notifications.api"
+feature-notifications-domain = "ru.bolotov.tradebot.feature.notifications.domain"
+feature-notifications-data = "ru.bolotov.tradebot.feature.notifications.data"
+
+feature-scheduler-presentation = "ru.bolotov.tradebot.feature.scheduler.presentation"
+feature-scheduler-router = "ru.bolotov.tradebot.feature.scheduler.router"
+
+feature-chats-presentation = "ru.bolotov.tradebot.feature.chats.presentation"
+feature-chats-router = "ru.bolotov.tradebot.feature.chats.router"
+

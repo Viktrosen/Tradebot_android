@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="risk_settings_title">Настройки риска</string>
+    <string name="risk_position_size">Доля капитала на позицию: %1$d%%</string>
+    <string name="risk_stop_loss">Стоп-лосс: %1$d%%</string>
+    <string name="risk_take_profit">Тейк-профит: %1$d%%</string>
+    <string name="risk_max_capital_usage">Макс. загрузка капитала: %1$d%%</string>
+    <string name="risk_max_positions">Макс. позиций: %1$d</string>
+    <string name="risk_short_trading_enabled">Шорты: включены</string>
+    <string name="risk_short_trading_disabled">Шорты: выключены</string>
+    <string name="dashboard_candlestick_strategy_summary">Таймфрейм: %1$s · Порог: %2$d%%</string>
+    <string name="dashboard_confirmation_strategy_summary">Индикаторы: %1$s</string>
+    <string name="dashboard_voting_strategy_summary">Веса: %1$s</string>
+    <string name="dashboard_trading_available_chip">ТОРГИ ДОСТУПНЫ</string>
+    <string name="dashboard_trading_unavailable_chip">ТОРГИ НЕДОСТУПНЫ</string>
+    <string name="dashboard_position_side_long">Лонг</string>
+    <string name="dashboard_position_side_short">Шорт</string>
+    <string name="dashboard_configure_strategies">Настроить стратегии →</string>
+    <string name="dashboard_position_strategy">Стратегия: %1$s</string>
+</resources>

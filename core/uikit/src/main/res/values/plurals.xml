@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedQuantity">
+    <plurals name="masters_nearby">
+        <item quantity="zero">нет мастеров рядом</item>
+        <item quantity="one">%d мастер рядом</item>
+        <item quantity="two">%d мастера рядом</item>
+        <item quantity="few">%d мастера рядом</item>
+        <item quantity="many">%d мастеров рядом</item>
+        <item quantity="other">%d мастеров рядом</item>
+    </plurals>
+</resources>

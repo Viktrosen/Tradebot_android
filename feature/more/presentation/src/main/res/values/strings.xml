@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="emergency_close_title">Экстренное закрытие</string>
+    <string name="emergency_close_description">Остановить бота и закрыть все открытые позиции рыночными заявками.</string>
+    <string name="emergency_close_action">Закрыть все позиции</string>
+    <string name="emergency_close_in_progress">Запуск закрытия…</string>
+    <string name="emergency_close_dialog_title">Закрыть все позиции?</string>
+    <string name="emergency_close_dialog_message">Вы действительно хотите закрыть все позиции? Бот будет остановлен.</string>
+    <string name="emergency_close_confirm">Да, закрыть</string>
+    <string name="emergency_close_cancel">Нет</string>
+    <string name="emergency_close_started">Бот остановлен. Запущено закрытие всех позиций.</string>
+    <string name="emergency_close_failed">Не удалось запустить экстренное закрытие позиций.</string>
+</resources>

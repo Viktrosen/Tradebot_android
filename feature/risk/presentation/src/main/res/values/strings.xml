@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="risk_screen_title">Управление рисками</string>
+    <string name="risk_screen_back">Назад</string>
+    <string name="risk_screen_retry">Повторить</string>
+    <string name="risk_screen_reset">Сбросить</string>
+    <string name="risk_screen_save">Сохранить</string>
+    <string name="risk_stop_loss_title">Стоп-лосс</string>
+    <string name="risk_stop_loss_description">Позиция закроется при снижении цены на этот процент от цены покупки</string>
+    <string name="risk_take_profit_title">Тейк-профит</string>
+    <string name="risk_take_profit_description">Позиция закроется при росте цены на этот процент от цены покупки</string>
+    <string name="risk_position_size_title">Размер позиции</string>
+    <string name="risk_position_size_description">Максимальная доля текущего капитала для одной покупки</string>
+    <string name="risk_capital_usage_title">Загрузка капитала</string>
+    <string name="risk_capital_usage_description">Максимальная суммарная доля капитала во всех открытых позициях</string>
+    <string name="risk_max_positions_title">Максимум позиций</string>
+    <string name="risk_max_positions_description">Максимальное количество одновременно открытых позиций</string>
+    <string name="risk_short_trading_title">Торговля в шорт</string>
+    <string name="risk_short_trading_description">Открывает короткие позиции только при достаточной марже, доступности инструмента и активных защитных заявках</string>
+    <string name="risk_short_trading_enabled">Включена</string>
+    <string name="risk_short_trading_disabled">Выключена</string>
+    <string name="risk_short_confirmation_title">Включить торговлю в шорт?</string>
+    <string name="risk_short_confirmation_message">Шорты несут повышенный риск. Бот откроет их только при достаточной марже, доступности инструмента и созданных защитных заявках.</string>
+    <string name="risk_short_confirmation_confirm">Включить</string>
+    <string name="risk_positions_value">%1$d позиций</string>
+    <string name="risk_reset_dialog_title">Сбросить настройки риска</string>
+    <string name="risk_reset_dialog_message">Вы уверены, что хотите вернуть все настройки риска к значениям по умолчанию?</string>
+    <string name="risk_dialog_cancel">Отмена</string>
+    <string name="risk_save_success_title">Настройки сохранены</string>
+    <string name="risk_save_error_title">Не удалось сохранить настройки</string>
+    <string name="risk_dialog_ok">Понятно</string>
+</resources>

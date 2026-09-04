@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pink">#ffffc0cb</color>
+    <color name="coral">#FFFF7F50</color>
+    <color name="turquoise">#FF40E0D0</color>
+    <color name="lavender">#FFE6E6FA</color>
+    <color name="mint">#FF98FF98</color>
+    <color name="peach">#FFFFDAB9</color>
+    <color name="amber">#FFFFBF00</color>
+    <color name="emerald">#FF50C878</color>
+    <color name="sapphire">#FF0F52BA</color>
+    <color name="ruby">#FFE0115F</color>
+    <color name="olive">#FF808000</color>
+    <color name="indigo">#FF4B0082</color>
+    <color name="teal">#FF008080</color>
+    <color name="maroon">#FF800000</color>
+    <color name="mustard">#FFFFDB58</color>
+    <color name="salmon">#FFFA8072</color>
+    <color name="lavender_blush">#FFFFF0F5</color>
+    <color name="sky_blue">#FF87CEEB</color>
+    <color name="mauve">#FFE0B0FF</color>
+    <color name="pear">#FFD1E231</color>
+    <color name="crimson">#FFDC143C</color>
+
+    <integer-array name="expressive_colors">
+        <item>@color/pink</item>
+        <item>@color/coral</item>
+        <item>@color/turquoise</item>
+        <item>@color/lavender</item>
+        <item>@color/mint</item>
+        <item>@color/peach</item>
+        <item>@color/amber</item>
+        <item>@color/emerald</item>
+        <item>@color/sapphire</item>
+        <item>@color/ruby</item>
+        <item>@color/olive</item>
+        <item>@color/indigo</item>
+        <item>@color/teal</item>
+        <item>@color/maroon</item>
+        <item>@color/mustard</item>
+        <item>@color/salmon</item>
+        <item>@color/lavender_blush</item>
+        <item>@color/sky_blue</item>
+        <item>@color/mauve</item>
+        <item>@color/pear</item>
+        <item>@color/crimson</item>
+    </integer-array>
+</resources>

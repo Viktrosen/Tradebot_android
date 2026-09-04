@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="strategy_settings_not_required">Дополнительные параметры не требуются</string>
+    <string name="strategy_auto_selection_description">Бот выбирает стратегию для каждого инструмента по режиму рынка. Настройте карточки ниже.</string>
+    <string name="strategy_candlestick_settings">Таймфрейм: %1$s · Минимальная уверенность: %2$d%%</string>
+    <string name="strategy_confirmation_settings">Индикаторы: %1$s</string>
+    <string name="strategy_voting_settings">Веса: %1$s</string>
+    <string name="strategy_save_success_title">Стратегия обновлена</string>
+    <string name="strategy_save_success_message">Настройки стратегии успешно сохранены.</string>
+    <string name="strategy_save_error_title">Не удалось обновить стратегию</string>
+    <string name="strategy_dialog_confirm">Понятно</string>
+</resources>

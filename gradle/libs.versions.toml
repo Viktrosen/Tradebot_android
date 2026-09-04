@@ -1,0 +1,182 @@
+[versions]
+# Android
+appcompat = "1.7.1"
+composeActivity = "1.10.1"
+coreKtx = "1.17.0"
+datastore = "1.1.7"
+lifecycle = "2.9.2"
+mapsMobile = "4.19.0-navikit"
+playServicesAuth = "21.3.0"
+playServicesAuthApiPhone = "18.2.0"
+playServicesAnalytic = "17.4.1"
+splashScreen = "1.0.1"
+
+# Compose
+composeBom = "2025.08.00"
+composeNavigation = "2.9.2"
+composeMaterial3 = "1.3.2"
+
+# Coil
+coil = "3.3.0"
+
+#libPhoneNumber
+libPhoneNumber = "9.0.5"
+
+# Core
+agp = "8.11.1"
+androidTools = "31.11.1"
+annotationJvm = "1.9.1"
+jetbrainsKotlinJvm = "2.2.0"
+kotlin = "2.2.0"
+
+# Di
+dagger2 = "2.57"
+javaxInject = "1"
+
+# Network
+retrofitVersion = "3.0.0"
+retrofitKtxSerialization = "3.0.0"
+okhttpVersion = "4.12.0"
+ktxSerialization = "1.9.0"
+
+# Firebase
+googleServices = "4.4.2"
+firebaseBom = "33.9.0"
+firebase-crashlytics = "3.0.3"
+firebaseMessagingKtx = "24.1.1"
+
+# Paging
+paging = "3.3.6"
+
+orbit = "10.0.0"
+
+# Jetbrains
+coroutines = "1.10.2"
+
+# Test
+chucker = "4.2.0"
+
+securityCrypto = "1.1.0-beta01"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+material = "1.12.0"
+leakcanary = "1.0.0"
+
+[libraries]
+# Google play services
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+play-services-auth-api-phone = { module = "com.google.android.gms:play-services-auth-api-phone", version.ref = "playServicesAuthApiPhone" }
+firebase-analytic = { group = "com.google.firebase", name = "firebase-analytics"}
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+
+# Build-logic
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+jetbrains-kotlinGradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
+# Android
+androidx-annotation-jvm = { group = "androidx.annotation", name = "annotation-jvm", version.ref = "annotationJvm" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+maps-mobile = { module = "com.yandex.android:maps.mobile", version.ref = "mapsMobile" }
+navigation-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "composeNavigation" }
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
+
+#Crypto
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+
+# Lifecycle
+lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
+lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycle" }
+
+# Compose
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android" }
+compose-animation = { group = "androidx.compose.animation", name = "animation" }
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "composeMaterial3" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime"}
+compose-runtime-android = { group = "androidx.compose.runtime", name = "runtime-android"}
+compose-ui = { group = "androidx.compose.ui", name = "ui-android" }
+compose-uiTooling = { group = "androidx.compose.ui", name = "ui-tooling"}
+compose-uiToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "composeActivity" }
+
+# Coil
+coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-networkOkHttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
+
+# Google libPhoneNumber
+michaelrocks-libphonenumber = { group = "io.michaelrocks", name = "libphonenumber-android", version.ref = "libPhoneNumber" }
+
+# Di
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger2" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger2" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
+
+# Jetbrains
+jetbrains-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "ktxSerialization" }
+jetbrains-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+
+#MVI
+orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit" }
+orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit" }
+orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
+
+# Network
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttpVersion" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttpVersion" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
+retrofit-converter-serialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofitKtxSerialization" }
+
+# Paging
+paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+paging-compose-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+androidx-paging-compose-android = { group = "androidx.paging", name = "paging-compose-android", version.ref = "paging" }
+
+# Test
+chucker = { group = "com.github.chuckerteam.chucker", name = "library", version.ref = "chucker" }
+chucker-noop = { group = "com.github.chuckerteam.chucker", name = "library-no-op", version.ref = "chucker" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+leakcanary = { group = "com.android.tools.studio.leakcanary", name = "leakcanary", version.ref = "leakcanary" }
+
+[plugins]
+# Android Gradle Plugins
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+
+# Kotlin Plugins
+jetbrains-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlinKapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+jetbrains-kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+
+# Google Plugins
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
+
+# Common Plugins
+bolotov-app = { id = "bolotov.app", version = "unspecified" }
+bolotov-dagger = { id = "bolotov.dagger", version = "unspecified" }
+bolotov-compose-core = { id = "bolotov.compose.core", version = "unspecified" }
+bolotov-compose-feature = { id = "bolotov.compose.feature", version = "unspecified" }
+bolotov-lib = { id = "bolotov.libs", version = "unspecified" }
+
+[bundles]
+orbit-mvi = [
+    "orbit-compose",
+    "orbit-core",
+    "orbit-viewmodel",
+]
