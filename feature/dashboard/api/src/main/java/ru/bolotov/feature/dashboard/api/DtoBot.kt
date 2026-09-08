@@ -58,7 +58,10 @@ interface DtoBot {
         val lotSize: Int,
         val entryCommission: Double,
         val entryTime: String,
-        val entryStrategyName: String? = null
+        val entryStrategyName: String? = null,
+        val brokerStopLossPrice: Double? = null,
+        val managedExitPrice: Double? = null,
+        val profitProtectionStage: String? = null
     )
 
     @Serializable
@@ -98,7 +101,10 @@ interface DtoBot {
         val atr: Double?,
         val pnl: Double?,
         val currentPrice: Double?,
-        val entryStrategyName: String? = null
+        val entryStrategyName: String? = null,
+        val brokerStopLossPrice: Double? = null,
+        val managedExitPrice: Double? = null,
+        val profitProtectionStage: String? = null
     )
     @Serializable
     data class RiskConfigResponse(

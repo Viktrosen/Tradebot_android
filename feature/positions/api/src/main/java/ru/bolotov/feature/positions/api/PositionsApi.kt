@@ -36,7 +36,10 @@ data class OpenPositionResponse(
     val lotSize: Int,
     val entryTime: String,
     val entryStrategyName: String? = null,
-    val aiExplanation: String? = null
+    val aiExplanation: String? = null,
+    val brokerStopLossPrice: Double? = null,
+    val managedExitPrice: Double? = null,
+    val profitProtectionStage: String? = null
 )
 
 @Serializable

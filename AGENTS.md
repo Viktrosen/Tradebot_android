@@ -40,6 +40,10 @@ a data repository directly.
   Backend routes and DTOs may reflect TradeBot state but are not owned here.
 - Treat `entryStrategyName` and newly added backend fields as backward-compatible:
   nullable fields and unknown enum/string values must not crash an older app.
+- `brokerStopLossPrice`, `managedExitPrice` and `profitProtectionStage` are
+  executor-owned, nullable display fields. Map and render them when present, but
+  do not calculate risk levels, advance a protection stage or initiate an exit
+  from the Android client.
 - Market regimes are currently private TradeBot logic and are intentionally not a
   mobile contract. Do not add UI models, mappers or screens for them until a
   versioned gateway contract is explicitly introduced.

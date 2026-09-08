@@ -17,7 +17,10 @@ data class Position(
     val atr: Double?,
     val pnl: Double?,
     val currentPrice: Double?,
-    val entryStrategyName: String? = null
+    val entryStrategyName: String? = null,
+    val brokerStopLossPrice: Double? = null,
+    val managedExitPrice: Double? = null,
+    val profitProtectionStage: String? = null
 )
 
 data class Dashboard(

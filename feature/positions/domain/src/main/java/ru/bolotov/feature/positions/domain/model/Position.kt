@@ -17,5 +17,8 @@ data class Position(
     val closeTime: String?,
     val entryStrategyName: String?,
     val aiExplanation: String?,
-    val closeExplanation: String?
+    val closeExplanation: String?,
+    val brokerStopLossPrice: Double? = null,
+    val managedExitPrice: Double? = null,
+    val profitProtectionStage: String? = null
 )

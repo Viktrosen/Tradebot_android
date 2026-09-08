@@ -57,7 +57,10 @@ fun DtoBot.DashboardResponse.toDomain(): Dashboard = Dashboard(
             stopLossPrice = null,
             atr = null,
             pnl = position.unrealizedPnl,
-            entryStrategyName = position.entryStrategyName
+            entryStrategyName = position.entryStrategyName,
+            brokerStopLossPrice = position.brokerStopLossPrice,
+            managedExitPrice = position.managedExitPrice,
+            profitProtectionStage = position.profitProtectionStage
         )
     },
     metrics = DashboardMetrics(
@@ -82,7 +85,10 @@ fun DtoBot.PositionResponse.toDomain(): Position = Position(
     atr = atr,
     pnl = pnl,
     currentPrice = currentPrice,
-    entryStrategyName = entryStrategyName
+    entryStrategyName = entryStrategyName,
+    brokerStopLossPrice = brokerStopLossPrice,
+    managedExitPrice = managedExitPrice,
+    profitProtectionStage = profitProtectionStage
 )
 
 fun DtoBot.RiskConfigResponse.toDomain(): RiskConfig = RiskConfig(

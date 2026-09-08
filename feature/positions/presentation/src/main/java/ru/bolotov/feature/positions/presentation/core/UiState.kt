@@ -38,7 +38,10 @@ data class UiPosition(
     val closeTime: String?,
     val entryStrategyName: String?,
     val aiExplanation: String?,
-    val closeExplanation: String?
+    val closeExplanation: String?,
+    val brokerStopLossPrice: Double? = null,
+    val managedExitPrice: Double? = null,
+    val profitProtectionStage: String? = null
 ) {
     val isProfit: Boolean = (pnl ?: 0.0) > 0
     val isLoss: Boolean = (pnl ?: 0.0) < 0

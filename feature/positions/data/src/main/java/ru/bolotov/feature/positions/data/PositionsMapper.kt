@@ -28,7 +28,10 @@ fun PositionsResponse.toDomain(): List<Position> =
             closeTime = null,
             entryStrategyName = position.entryStrategyName,
             aiExplanation = position.aiExplanation,
-            closeExplanation = null
+            closeExplanation = null,
+            brokerStopLossPrice = position.brokerStopLossPrice,
+            managedExitPrice = position.managedExitPrice,
+            profitProtectionStage = position.profitProtectionStage
         )
     } + closedTrades.map { trade ->
         val entryValue = trade.entryPrice * trade.quantity * trade.lotSize

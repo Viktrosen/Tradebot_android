@@ -599,6 +599,20 @@ private fun PositionItem(position: Position) {
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                position.brokerStopLossPrice?.let { stopLossPrice ->
+                    Text(
+                        text = "Брокерский SL: ${String.format("%.2f", stopLossPrice)} ₽",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                position.managedExitPrice?.let { exitPrice ->
+                    Text(
+                        text = "Защита прибыли: ${String.format("%.2f", exitPrice)} ₽",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
             Column(
                 modifier = Modifier

@@ -93,7 +93,10 @@ internal class PositionsViewModel @Inject constructor(
                     closeTime = position.closeTime,
                     entryStrategyName = position.entryStrategyName,
                     aiExplanation = position.aiExplanation,
-                    closeExplanation = position.closeExplanation
+                    closeExplanation = position.closeExplanation,
+                    brokerStopLossPrice = position.brokerStopLossPrice,
+                    managedExitPrice = position.managedExitPrice,
+                    profitProtectionStage = position.profitProtectionStage
                 )
             }
             updateState(state.filterType)

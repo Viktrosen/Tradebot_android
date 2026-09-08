@@ -121,6 +121,23 @@ fun PositionCard(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+
+                    if (!position.isClosed) {
+                        position.brokerStopLossPrice?.let { stopLossPrice ->
+                            Text(
+                                text = "Брокерский SL: ${String.format("%.2f", stopLossPrice)} ₽",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        position.managedExitPrice?.let { exitPrice ->
+                            Text(
+                                text = "Защита прибыли (${position.profitProtectionStage.toProfitProtectionLabel()}): ${String.format("%.2f", exitPrice)} ₽",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
                 }
 
                 // Time info
@@ -208,6 +225,12 @@ fun PositionCard(
 private fun String.toPositionDateTime(): String = runCatching {
     Instant.parse(this).atZone(ZoneId.systemDefault()).format(POSITION_DATE_TIME_FORMATTER)
 }.getOrElse { this }
+
+private fun String?.toProfitProtectionLabel(): String = when (this) {
+    "BREAKEVEN" -> "безубыток"
+    "TRAILING" -> "трейлинг"
+    else -> "активна"
+}
 
 private val POSITION_DATE_TIME_FORMATTER: DateTimeFormatter =
     DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
