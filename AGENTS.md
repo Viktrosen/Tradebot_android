@@ -56,6 +56,9 @@ a data repository directly.
 
 - Keep durable screen state in `UiState`; emit one-off navigation, snackbar and
   confirmation events through `Effect`.
+- Presentation-only text formatting (for example, readable numeric precision in
+  an AI explanation) belongs in the Compose layer and must not alter a DTO,
+  domain model or the source explanation persisted by TradeBot.
 - Make ViewModel actions the single entry point for user intent. Avoid local
   Compose state for business state that must survive recomposition.
 - Reuse the existing design system and feature conventions before adding another

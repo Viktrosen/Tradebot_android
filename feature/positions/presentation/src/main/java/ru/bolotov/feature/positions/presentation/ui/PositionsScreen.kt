@@ -205,12 +205,18 @@ internal fun PositionsScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
                 Spacer(Modifier.height(12.dp))
-                Text(position.infoExplanation.orEmpty())
+                Text(position.infoExplanation.orEmpty().formatAiExplanationNumbers())
                 Spacer(Modifier.height(24.dp))
             }
         }
     }
 }
+
+/** Keeps AI prose intact while making overly precise decimal values readable. */
+internal fun String.formatAiExplanationNumbers(): String =
+    replace(OVERLY_PRECISE_DECIMAL) { match -> match.groupValues[1] }
+
+private val OVERLY_PRECISE_DECIMAL = Regex("(-?\\d+[.,]\\d{2})\\d+")
 
 @Composable
 private fun StatsRow(
