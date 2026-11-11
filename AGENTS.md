@@ -49,7 +49,7 @@ a data repository directly.
   versioned gateway contract is explicitly introduced.
 - HTTP remains the authoritative complete snapshot. STOMP is incremental UI
   enrichment; a lost WebSocket update must be recoverable through refresh.
-- FCM token registration uses the gateway and must never expose the client API key
+- FCM token registration uses the authenticated gateway session and must never expose tokens
   or Firebase configuration in source control.
 
 ## UI and state rules
@@ -83,6 +83,20 @@ mitigation is needed for user safety, keep it explicit and document the
 root-cause follow-up.
 
 ## Secrets and generated files
+
+- `feature:auth` owns the session flow through the usual api/data/domain/presentation/router
+  boundaries. Domain/UI never receive access or refresh tokens.
+- `AuthEntry` is an ordinary `ComposableFeatureEntry` with a typed route, like other screens.
+  `AppViewModel` restores/observes the session through `AuthInteractor`; MainActivity
+  collects navigation state with lifecycle awareness and replaces Auth/Main, clearing
+  the previous back stack and its ViewModels. Token refresh within a session must
+  not reset navigation. Never restore a protected graph before checking a session.
+- Rotate tokens under one shared data-layer lock, store the entire pair atomically
+  in encrypted preferences, exclude it from backups, and never log credential traffic.
+- Temporary network/5xx failures retain the encrypted session for retry. Definitive
+  refresh rejection clears it. The auth HTTP client must not invoke its own authenticator.
+- WebSocket uses Bearer handshake and reconnects after expiry; FCM registration is
+  bound to the signed-in session. Never embed API keys or disable hostname verification.
 
 - Never commit API keys, `local.properties`, signing material, `google-services.json`
   or generated build artifacts. Use the existing `.gitignore` conventions.

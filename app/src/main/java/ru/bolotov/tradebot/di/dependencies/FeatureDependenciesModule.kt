@@ -22,6 +22,7 @@ import ru.bolotov.tradebot.di.dependencies.feature.StrategyDependenciesModule
         StrategyDependenciesModule::class,
         RiskDependenciesModule::class,
         MoreDependenciesModule::class,
+        AuthDependenciesModule::class,
     ]
 )
 interface FeatureDependenciesModule

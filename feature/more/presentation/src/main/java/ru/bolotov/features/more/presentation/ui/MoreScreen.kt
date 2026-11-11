@@ -34,7 +34,6 @@ internal fun MoreScreen(
     val state by viewModel.collectAsState()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
-    var showApiKeyDialog by remember { mutableStateOf(false) }
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
@@ -46,12 +45,6 @@ internal fun MoreScreen(
             }
             is Effect.ShowError -> {
                 // TODO: Show error dialog
-            }
-            is Effect.ShowApiKeyDialog -> {
-                showApiKeyDialog = true
-            }
-            is Effect.DismissApiKeyDialog -> {
-                showApiKeyDialog = false
             }
             is Effect.NavigateToInstruments -> onNavigateToInstruments()
             is Effect.NavigateToHistory -> onNavigateToHistory()
@@ -112,15 +105,7 @@ internal fun MoreScreen(
                     ) {
                         // User info section
                         item {
-                            UserInfoCard(email = "user@example.com")
-                        }
-
-                        // API Key section
-                        item {
-                            ApiKeyCard(
-                                isConfigured = state.isApiKeySaved,
-                                onConfigure = { viewModel.handleAction(Action.ShowApiKeyDialog) }
-                            )
+                            UserInfoCard(email = state.email)
                         }
 
                         // Notifications toggle
@@ -176,15 +161,6 @@ internal fun MoreScreen(
                 }
             }
         }
-    }
-
-    // API Key dialog
-    if (showApiKeyDialog) {
-        ApiKeyDialog(
-            currentKey = state.apiKey,
-            onSave = { viewModel.handleAction(Action.SaveApiKey(it)) },
-            onDismiss = { viewModel.handleAction(Action.DismissApiKeyDialog) }
-        )
     }
 
     if (state.isEmergencyCloseDialogVisible) {
@@ -310,49 +286,6 @@ private fun UserInfoCard(email: String) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun ApiKeyCard(
-    isConfigured: Boolean,
-    onConfigure: () -> Unit
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onConfigure
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = Icons.Default.Lock,  // ← VpnKey → Lock
-                    contentDescription = null,
-                    tint = if (isConfigured) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text(
-                        text = "API ключ",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Text(
-                        text = if (isConfigured) "Ключ настроен" else "Ключ не настроен",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (isConfigured) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,  // ← ChevronRight → KeyboardArrowRight
-                contentDescription = null
-            )
         }
     }
 }

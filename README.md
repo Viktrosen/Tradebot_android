@@ -46,7 +46,8 @@ Compose UI ← UiState / Effect ← ViewModel ← domain model ← DTO mapper
 
 Создаёт JSON-конвертер, OkHttp-клиент и Retrofit. В `provideBackendUrl()`
 используется `BuildConfig.BACKEND_URL`, а `HeadersInterceptor` добавляет
-`X-API-Key`, язык и часовой пояс к каждому запросу gateway.
+язык и часовой пояс. `BearerInterceptor` добавляет access token, `BearerAuthenticator`
+однократно обновляет пару при HTTP 401. Credential exchange использует отдельный клиент без этих перехватчиков.
 
 ### `TradingStateInteractor` и `StompTradingStateInteractor`
 
@@ -62,7 +63,8 @@ Compose UI ← UiState / Effect ← ViewModel ← domain model ← DTO mapper
 - `TradingAvailability` — состояние торгов по инструментам.
 
 `StompTradingStateInteractor` создаёт одно WebSocket-подключение на коллектора
-Flow и не выполняет собственный автоматический reconnect. Поэтому HTTP остаётся
+Flow и повторяет подключение с ограниченной задержкой (1–30 секунд), в том числе
+при закрытии сокета по истечении JWT. При выходе защищённый граф удаляется и поток отменяется. HTTP остаётся
 источником полного снимка: Dashboard обновляется при открытии/возврате на экран,
 а на экранах данных доступен `PullToRefreshBox`. WebSocket дополняет уже
 загруженное состояние быстрыми изменениями цены, портфеля и статуса.
@@ -193,5 +195,41 @@ stop-loss, take-profit, максимальную загрузку, количе�
 
 Для работы приложения должны быть доступны TradebotBackend, его WebSocket и
 Firebase-конфигурация Android. Адрес gateway задаётся вариантами сборки через
-`BACKEND_URL`; API-ключ следует передавать только через конфигурацию приложения
-и никогда не добавлять в README или Git.
+`BACKEND_URL`; авторизация выполняется вводом почты/пароля через gateway.
+Пароли и токены никогда не добавляются в README или Git.
+
+## Авторизация
+
+`feature:auth:{api,data,domain,presentation,router}` следует той же Clean MVI архитектуре.
+`AuthEntry` использует обычный `ComposableFeatureEntry` и типизированный `AuthGraph.Root`.
+`AppViewModel` один раз восстанавливает сессию через `AuthInteractor`, а MainActivity
+подписывается на её навигационное состояние с `repeatOnLifecycle(STARTED)` и переключает
+Auth/Main. Проверка сессии и временный сбой восстановления отображаются на Auth (progress/retry).
+Выход в разделе «Ещё» удаляет сессию; Activity очищает предыдущий back stack вместе
+с ViewModel вложенных экранов и подписками. Обновление токенов той же сессии не
+перезапускает Main. При восстановлении процесса старый Main back stack не используется
+до проверки сессии; поворот экрана сохраняет навигацию в рамках живого AppViewModel.
+
+Gateway endpoints: POST `/api/auth/login`, `/api/auth/refresh`, `/api/auth/logout`.
+Первичного владельца создаёт оператор на gateway, регистрации в клиенте нет.
+Пароль живёт только в состоянии формы и очищается после попытки входа, не сохраняется.
+Токены не передаются в domain/presentation: data хранит пару атомарно в
+EncryptedSharedPreferences с Android Keystore; файл исключён из backup/device-transfer,
+backup приложения отключён. Credential traffic не попадает в Chucker/HTTP body logs.
+Проверка TLS/hostname не отключается в debug.
+
+Refresh сериализован одним lock для HTTP и WebSocket: параллельные старые 401
+не вызывают несколько ротаций. При старте сохранённая сессия проверяется через refresh.
+Сетевой сбой/5xx сохраняет пару и предлагает повторить, подтверждённый отказ refresh
+возвращает экран входа. После потери ответа уже выполненной ротации может потребоваться
+повторный login (сервер защищён от replay). При недоставленном logout локальная сессия
+всё равно удаляется; серверный отзыв не гарантирован без сети, access ограничен TTL.
+
+FCM регистрируется после входа и связан с серверной сессией устройства.
+Старый hardcoded X-API-Key и фиктивная настройка ключа удалены. Старые версии
+клиента не совместимы с JWT-защитой gateway — обновлять согласованно.
+
+Проверки: `./gradlew.bat :feature:auth:data:testDebugUnitTest :app:assembleDevDebug`.
+Ручной прогон: чистый запуск → вход → HTTP/WS → рестарт → refresh → logout →
+Back не возвращает портфель; без сети — retry, при истёкшем refresh — повторный вход.
+Не использовать реальные торговые команды для проверки авторизации.

@@ -8,8 +8,10 @@ import ru.bolotov.feature.risk.presentation.di.RiskDependencies
 import ru.bolotov.feature.splashScreen.presentation.di.SplashScreenDependencies
 import ru.bolotov.feature.strategy.presentation.di.StrategyDependencies
 import ru.bolotov.features.more.presentation.di.MoreDependencies
+import ru.bolotov.feature.auth.presentation.AuthDependencies
 
 interface FeaturesScreenDependencies :
+    AuthDependencies,
     MainDependencies,
     AppEffectsHandlerDependencies,
     SplashScreenDependencies,

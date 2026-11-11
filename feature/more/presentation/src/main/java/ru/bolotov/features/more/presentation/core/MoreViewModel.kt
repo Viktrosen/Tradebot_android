@@ -9,11 +9,15 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.bolotov.core.utils.AnalyticManager
 import ru.bolotov.feature.more.domain.interactor.EmergencyCloseInteractor
 import ru.bolotov.tradebot.feature.more.presentation.R
+import ru.bolotov.feature.auth.domain.AuthInteractor
+import ru.bolotov.feature.auth.domain.AuthSession
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 @Stable
 internal class MoreViewModel @Inject constructor(
     private val analyticManager: AnalyticManager,
+    private val auth: AuthInteractor,
     private val emergencyCloseInteractor: EmergencyCloseInteractor
 ) : ViewModel(), ContainerHost<UiState, Effect> {
 
@@ -27,9 +31,6 @@ internal class MoreViewModel @Inject constructor(
         when (action) {
             is Action.LoadData -> loadData()
             is Action.Refresh -> refresh()
-            is Action.ShowApiKeyDialog -> showApiKeyDialog()
-            is Action.SaveApiKey -> saveApiKey(action.key)
-            is Action.DismissApiKeyDialog -> dismissApiKeyDialog()
             is Action.SetThemeMode -> setThemeMode(action.mode)
             is Action.SetNotificationsEnabled -> setNotificationsEnabled(action.enabled)
             is Action.ShowEmergencyCloseDialog -> showEmergencyCloseDialog()
@@ -44,17 +45,10 @@ internal class MoreViewModel @Inject constructor(
         reduce { state.copy(isLoading = true) }
 
         try {
-            // TODO: Загрузить из DataStore
-            // val apiKey = preferencesRepository.getApiKey()
-            // val themeMode = preferencesRepository.getThemeMode()
-            // val notificationsEnabled = preferencesRepository.getNotificationsEnabled()
-
-            // Mock data
             reduce {
                 state.copy(
                     isLoading = false,
-                    apiKey = "••••••••••••••••",
-                    isApiKeySaved = true,
+                    email = (auth.session.value as? AuthSession.SignedIn)?.email.orEmpty(),
                     themeMode = ThemeMode.SYSTEM,
                     notificationsEnabled = true,
                     appVersion = getAppVersion(),
@@ -77,34 +71,6 @@ internal class MoreViewModel @Inject constructor(
 
     private fun refresh() = intent {
         loadData()
-    }
-
-    private fun showApiKeyDialog() = intent {
-        postSideEffect(Effect.ShowApiKeyDialog(state.apiKey))
-    }
-
-    private fun saveApiKey(key: String) = intent {
-        try {
-            // TODO: Сохранить API ключ в DataStore
-            // preferencesRepository.saveApiKey(key)
-
-            reduce {
-                state.copy(
-                    apiKey = "••••••••••••••••",
-                    isApiKeySaved = true
-                )
-            }
-
-            postSideEffect(Effect.ShowToast("API ключ сохранён"))
-            analyticManager.logEvent("api_key_saved")
-        } catch (e: Exception) {
-            postSideEffect(Effect.ShowError(e.message ?: "Ошибка сохранения API ключа"))
-        }
-        postSideEffect(Effect.DismissApiKeyDialog)
-    }
-
-    private fun dismissApiKeyDialog() = intent {
-        postSideEffect(Effect.DismissApiKeyDialog)
     }
 
     private fun setThemeMode(mode: ThemeMode) = intent {
@@ -176,20 +142,14 @@ internal class MoreViewModel @Inject constructor(
                 analyticManager.logEvent("navigate_to_about")
                 postSideEffect(Effect.NavigateToAbout)
             }
-            "logout" -> {
-                analyticManager.logEvent("logout_attempt")
-                postSideEffect(Effect.Logout)
-            }
+            "logout" -> logout()
         }
     }
 
     private fun logout() = intent {
-        // TODO: Очистить DataStore, API ключ и т.д.
-        // preferencesRepository.clear()
-
-        postSideEffect(Effect.ShowToast("Выход выполнен"))
-        analyticManager.logEvent("logout_success")
-        postSideEffect(Effect.Logout)
+        try { auth.logout() }
+        catch (cancelled: CancellationException) { throw cancelled }
+        catch (_: Exception) { postSideEffect(Effect.ShowError("Не удалось завершить выход")) }
     }
 
     private fun getAppVersion(): String {

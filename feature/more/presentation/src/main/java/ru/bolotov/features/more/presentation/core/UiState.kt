@@ -10,8 +10,7 @@ import androidx.compose.material.icons.filled.Star
 
 data class UiState(
     val isLoading: Boolean = false,
-    val apiKey: String = "",
-    val isApiKeySaved: Boolean = false,
+    val email: String = "",
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val notificationsEnabled: Boolean = true,
     val appVersion: String = "1.0.0",
@@ -64,8 +63,6 @@ sealed interface Effect {
     data class ShowToast(val message: String) : Effect
     data class ShowMessage(val messageResId: Int) : Effect
     data class ShowError(val error: String) : Effect
-    data class ShowApiKeyDialog(val currentKey: String) : Effect
-    data object DismissApiKeyDialog : Effect
     data object NavigateToInstruments : Effect
     data object NavigateToHistory : Effect
     data object NavigateToSettings : Effect
@@ -76,11 +73,6 @@ sealed interface Effect {
 sealed interface Action {
     data object LoadData : Action
     data object Refresh : Action
-
-    // API Key
-    data object ShowApiKeyDialog : Action
-    data class SaveApiKey(val key: String) : Action
-    data object DismissApiKeyDialog : Action
 
     // Theme
     data class SetThemeMode(val mode: ThemeMode) : Action

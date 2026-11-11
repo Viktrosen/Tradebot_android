@@ -27,6 +27,10 @@ import ru.bolotov.feature.strategy.domain.repository.StrategyRepository
 
 @Module(includes = [DataModule::class])
 class CommonModule {
+    @Provides
+    @javax.inject.Singleton
+    fun authInteractor(repository: ru.bolotov.feature.auth.domain.AuthRepository): ru.bolotov.feature.auth.domain.AuthInteractor =
+        ru.bolotov.feature.auth.domain.AuthInteractorImpl(repository)
 
 
     @Provides

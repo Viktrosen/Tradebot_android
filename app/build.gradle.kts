@@ -9,6 +9,11 @@ plugins {
 android.namespace = moduleNamespace.versions.app.get()
 
 dependencies {
+    implementation(projects.feature.auth.api)
+    implementation(projects.feature.auth.domain)
+    implementation(projects.feature.auth.data)
+    implementation(projects.feature.auth.presentation)
+    implementation(projects.feature.auth.router)
 // Module
     implementation(projects.common.router)
     implementation(projects.core.uikit)
@@ -94,6 +99,7 @@ dependencies {
     //implementation(libs.firebase.analytics)
 
     // Test
+    testImplementation(libs.junit)
     debugImplementation(libs.chucker)
     debugImplementation(libs.leakcanary)
     releaseImplementation(libs.chucker.noop)

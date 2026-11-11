@@ -4,6 +4,9 @@ import android.util.Log
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.retryWhen
+import kotlinx.coroutines.delay
+import java.io.IOException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.JsonObject
@@ -33,6 +36,20 @@ class StompTradingStateInteractor @Inject constructor(
         val socket = client.newWebSocket(
             Request.Builder().url(webSocketUrl).build(),
             object : WebSocketListener() {
+                override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+                    webSocket.close(code, null)
+                    close(IOException("Realtime connection closing"))
+                }
+
+                override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                    close(IOException("Realtime connection closed"))
+                }
+
+                override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                    response?.close()
+                    close(IOException("Realtime connection unavailable", t))
+                }
+
                 override fun onOpen(webSocket: WebSocket, response: Response) {
                     webSocket.send("CONNECT\naccept-version:1.2\n\n\u0000")
                 }
@@ -51,6 +68,11 @@ class StompTradingStateInteractor @Inject constructor(
             }
         )
         awaitClose { socket.close(1000, null) }
+    }.retryWhen { cause, attempt ->
+        if (cause !is IOException) false else {
+            delay(minOf(30_000L, 1_000L * (1L shl minOf(attempt.toInt(), 5))))
+            true
+        }
     }
 
     /** Разбирает STOMP frame; неизвестные или неполные события безопасно отбрасываются. */

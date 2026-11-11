@@ -19,6 +19,8 @@ import ru.bolotov.feature.strategy.domain.repository.StrategyRepository
 
 @Module(includes = [NetworkModule::class])
 interface DataModule {
+    @Binds
+    fun authRepository(impl: ru.bolotov.feature.auth.data.AuthRepositoryImpl): ru.bolotov.feature.auth.domain.AuthRepository
 
     @Binds
     fun bindsBotRepository(impl: BotRepositoryImpl): BotRepository

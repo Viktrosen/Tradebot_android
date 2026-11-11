@@ -5,6 +5,7 @@ import ru.bolotov.core.utils.AnalyticManager
 import ru.bolotov.feature.more.domain.interactor.EmergencyCloseInteractor
 
 interface MoreDependencies : Dependencies {
+    val authInteractor: ru.bolotov.feature.auth.domain.AuthInteractor
 
     val analyticManager: AnalyticManager
     val emergencyCloseInteractor: EmergencyCloseInteractor

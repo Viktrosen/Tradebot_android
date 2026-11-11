@@ -27,7 +27,7 @@ class MoreMenuItemTest {
     }
 
     @Test
-    fun `MoreMenuItem.Instruments must have correct properties`() {
+    fun `Instruments menu item must have correct properties`() {
         val item = MoreMenuItem.Instruments
 
         assertEquals("instruments", item.id)
@@ -36,7 +36,7 @@ class MoreMenuItemTest {
     }
 
     @Test
-    fun `MoreMenuItem.History must have correct properties`() {
+    fun `History menu item must have correct properties`() {
         val item = MoreMenuItem.History
 
         assertEquals("history", item.id)
@@ -45,7 +45,7 @@ class MoreMenuItemTest {
     }
 
     @Test
-    fun `MoreMenuItem.Settings must have correct properties`() {
+    fun `Settings menu item must have correct properties`() {
         val item = MoreMenuItem.Settings
 
         assertEquals("settings", item.id)
@@ -54,7 +54,7 @@ class MoreMenuItemTest {
     }
 
     @Test
-    fun `MoreMenuItem.About must have correct properties`() {
+    fun `About menu item must have correct properties`() {
         val item = MoreMenuItem.About
 
         assertEquals("about", item.id)
@@ -63,7 +63,7 @@ class MoreMenuItemTest {
     }
 
     @Test
-    fun `MoreMenuItem.Logout must have correct properties`() {
+    fun `Logout menu item must have correct properties`() {
         val item = MoreMenuItem.Logout
 
         assertEquals("logout", item.id)
@@ -129,11 +129,8 @@ class MoreMenuItemTest {
     }
 
     @Test
-    fun `MoreMenuItem must support copy with badge`() {
-        val item = MoreMenuItem.Settings.copy(badge = "New")
-
-        assertEquals("settings", item.id)
-        assertEquals("Настройки", item.title)
-        assertEquals("New", item.badge)
+    fun `Settings menu item is a singleton without mutable badge`() {
+        assertSame(MoreMenuItem.Settings, MoreMenuItem.Settings)
+        assertNull(MoreMenuItem.Settings.badge)
     }
 }
