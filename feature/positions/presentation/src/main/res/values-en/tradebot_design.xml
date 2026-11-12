@@ -1,0 +1,28 @@
+<resources>
+    <string name="positions_title">Positions</string>
+    <string name="positions_subtitle">Trades and capital protection</string>
+    <string name="positions_total">Total P&amp;L</string>
+    <string name="positions_open_count">Open</string>
+    <string name="positions_closed_count">Closed</string>
+    <string name="positions_all">All</string>
+    <string name="positions_open">Open</string>
+    <string name="positions_profit">Profit</string>
+    <string name="positions_loss">Loss</string>
+    <string name="positions_empty">No positions</string>
+    <string name="positions_empty_all">You have no positions yet</string>
+    <string name="positions_empty_open">No open positions</string>
+    <string name="positions_empty_profit">No profitable positions</string>
+    <string name="positions_empty_loss">No losing positions</string>
+    <string name="positions_entry">Entry</string>
+    <string name="positions_current">Current</string>
+    <string name="positions_broker_sl">Broker SL: %1$s</string>
+    <string name="positions_protection">Profit protection · %1$s: %2$s</string>
+    <string name="positions_breakeven">breakeven</string>
+    <string name="positions_trailing">trailing</string>
+    <string name="positions_active">active</string>
+    <string name="positions_opened">Opened %1$s</string>
+    <string name="positions_closed_at">Closed %1$s</string>
+    <string name="positions_close_title">Close position</string>
+    <string name="positions_close_message">Are you sure you want to close “%1$s”?</string>
+    <string name="positions_cancel">Cancel</string>
+</resources>

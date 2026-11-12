@@ -1,0 +1,24 @@
+<resources>
+    <string name="more_title">More</string>
+    <string name="more_subtitle">Settings and controls</string>
+    <string name="more_preferences">Preferences</string>
+    <string name="more_navigation">Navigation</string>
+    <string name="more_application">Application</string>
+    <string name="more_user">TradeBot User</string>
+    <string name="more_push">Push notifications</string>
+    <string name="more_push_detail">Trades and bot activity</string>
+    <string name="more_appearance">Appearance</string>
+    <string name="more_light">Light</string>
+    <string name="more_dark">Dark</string>
+    <string name="more_system">System</string>
+    <string name="more_confirmation_hint">Confirmation required</string>
+    <string name="more_instruments">Instruments</string>
+    <string name="more_history">Trade history</string>
+    <string name="more_settings">Settings</string>
+    <string name="more_about">About</string>
+    <string name="more_logout">Sign out</string>
+    <string name="more_version">Version %1$s (%2$s)</string>
+    <string name="more_copyright">© 2026 TradeBot</string>
+    <string name="more_app_name">TradeBot</string>
+    <string name="more_theme_save_failed">Could not save the theme. Please try again.</string>
+</resources>

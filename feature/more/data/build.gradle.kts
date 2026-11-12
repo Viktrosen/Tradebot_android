@@ -8,4 +8,6 @@ android.namespace = moduleNamespace.versions.feature.more.data.get()
 dependencies {
     implementation(projects.feature.more.api)
     implementation(projects.feature.more.domain)
+    implementation(libs.androidx.datastore)
+    implementation(libs.jetbrains.coroutines.core)
 }

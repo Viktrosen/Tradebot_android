@@ -1,0 +1,36 @@
+<resources>
+    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_subtitle">Trading overview</string>
+    <string name="dashboard_bot_running">Bot running</string>
+    <string name="dashboard_bot_stopped">Bot stopped</string>
+    <string name="dashboard_available">Trading available</string>
+    <string name="dashboard_unavailable">Trading unavailable</string>
+    <string name="dashboard_total_pnl">Total P&amp;L</string>
+    <string name="dashboard_today">Today</string>
+    <string name="dashboard_win_rate">Win rate</string>
+    <string name="dashboard_free_cash">Available cash</string>
+    <string name="dashboard_control_section">Control</string>
+    <string name="dashboard_control_title">Bot control</string>
+    <string name="dashboard_strategies_link">Strategies →</string>
+    <string name="dashboard_start">Start</string>
+    <string name="dashboard_stop">Stop</string>
+    <string name="dashboard_risk_title">Risk settings</string>
+    <string name="dashboard_risk_pending">Settings have not loaded yet</string>
+    <string name="dashboard_position_capital">Per position</string>
+    <string name="dashboard_tp">Take-profit</string>
+    <string name="dashboard_sl">Stop-loss</string>
+    <string name="dashboard_max_positions">Max. positions</string>
+    <string name="dashboard_usage">Capital limit</string>
+    <string name="dashboard_shorts">Shorts</string>
+    <string name="dashboard_on">enabled</string>
+    <string name="dashboard_off">disabled</string>
+    <string name="dashboard_instruments">Bot instruments</string>
+    <string name="dashboard_selected_count">Selected for trading: %1$d</string>
+    <string name="dashboard_open_positions">Open positions</string>
+    <string name="dashboard_show_all">Show all (%1$d) →</string>
+    <string name="dashboard_warning">Trading paused: extreme market volatility</string>
+    <string name="dashboard_entry_detail">%1$s · Entry %2$s</string>
+    <string name="dashboard_current">Current %1$s</string>
+    <string name="dashboard_broker_sl">Broker SL: %1$s</string>
+    <string name="dashboard_profit_protection">Profit protection: %1$s</string>
+</resources>

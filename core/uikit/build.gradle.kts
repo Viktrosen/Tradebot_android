@@ -13,8 +13,8 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.activity)
     implementation(libs.compose.material3)
-    /*implementation(libs.compose.uiToolingPreview)
-    debugImplementation(libs.compose.uiTooling)*/
+    implementation(libs.compose.uiToolingPreview)
+    debugImplementation(libs.compose.uiTooling)
     //Coil
     implementation(libs.coil.compose)
 

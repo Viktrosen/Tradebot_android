@@ -1,0 +1,9 @@
+<resources>
+    <string name="position_ai_explanation_title">AI decision</string>
+    <string name="position_close_reason_title">Close reason</string>
+    <string name="position_side_long">Long</string>
+    <string name="position_side_short">Short</string>
+    <string name="position_close">Close</string>
+    <string name="position_closed">Closed</string>
+    <string name="position_entry_strategy">Strategy: %1$s</string>
+</resources>

@@ -2,235 +2,244 @@ package ru.bolotov.feature.positions.presentation.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.*
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import ru.bolotov.feature.positions.presentation.core.UiPosition
-import ru.bolotov.tradebot.feature.positions.presentation.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import ru.bolotov.core.uikit.TradebotTheme
+import ru.bolotov.core.uikit.components.*
+import ru.bolotov.core.uikit.dimensions.TradebotDimens
+import ru.bolotov.core.uikit.format.formatMoney
+import ru.bolotov.core.uikit.format.formatPercent
+import ru.bolotov.feature.positions.presentation.core.UiPosition
+import ru.bolotov.tradebot.core.uikit.R as UiR
+import ru.bolotov.tradebot.feature.positions.presentation.R
 
+/** Text-first card: no remote logos, invented ticker or inferred protection values. */
 @Composable
 fun PositionCard(
     position: UiPosition,
     onCloseClick: () -> Unit,
     onInstrumentClick: () -> Unit,
     onInfoClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onInstrumentClick),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (position.isClosed)
-                MaterialTheme.colorScheme.surfaceVariant
-            else
-                MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+    val colors = TradebotTheme.colors
+    val pnlColor =
+        when {
+            position.isProfit -> colors.profit
+            position.isLoss -> colors.loss
+            else -> colors.textSecondary
+        }
+    TradebotCard(modifier.fillMaxWidth().clickable(onClick = onInstrumentClick)) {
+        Column(
+            Modifier.padding(TradebotDimens.cardPadding),
+            verticalArrangement = Arrangement.spacedBy(TradebotDimens.itemGap),
         ) {
-            // Левая часть: информация об инструменте
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Row(
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = position.instrumentName,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.weight(1f)
-                    )
-                    if (!position.infoExplanation.isNullOrBlank()) {
-                        IconButton(onClick = onInfoClick) {
-                            Icon(
-                                imageVector = Icons.Outlined.Info,
-                                contentDescription = stringResource(
-                                    if (position.isClosed) {
-                                        R.string.position_close_reason_title
-                                    } else {
-                                        R.string.position_ai_explanation_title
-                                    }
-                                )
-                            )
-                        }
-                    }
-                }
-
-                // Quantity and prices
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = stringResource(
-                            if (position.positionSide == "SHORT") {
-                                R.string.position_side_short
-                            } else {
-                                R.string.position_side_long
-                            }
-                        ),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    if (!position.isClosed && !position.entryStrategyName.isNullOrBlank()) {
-                        Text(
-                            text = stringResource(
-                                R.string.position_entry_strategy,
-                                position.entryStrategyName
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(position.instrumentName, style = MaterialTheme.typography.titleMedium)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        TradebotBadge(
+                            stringResource(
+                                if (position.positionSide == "SHORT") UiR.string.tb_short
+                                else UiR.string.tb_long
                             ),
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color =
+                                if (position.positionSide == "SHORT") colors.short
+                                else colors.accent,
                         )
-                    }
-
-                    Text(
-                        text = "${position.quantity} лотов",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    Text(
-                        text = "Вход: ${String.format("%.2f", position.entryPrice)} ₽",
-                        fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-
-                    if (!position.isClosed && position.currentPrice != null) {
-                        Text(
-                            text = "Текущая: ${String.format("%.2f", position.currentPrice)} ₽",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    if (!position.isClosed) {
-                        position.brokerStopLossPrice?.let { stopLossPrice ->
-                            Text(
-                                text = "Брокерский SL: ${String.format("%.2f", stopLossPrice)} ₽",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                        if (position.isClosed)
+                            TradebotBadge(
+                                stringResource(R.string.position_closed),
+                                color = colors.textSecondary,
                             )
-                        }
-                        position.managedExitPrice?.let { exitPrice ->
-                            Text(
-                                text = "Защита прибыли (${position.profitProtectionStage.toProfitProtectionLabel()}): ${String.format("%.2f", exitPrice)} ₽",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
                     }
-                }
-
-                // Time info
-                if (position.entryTime != null) {
+                    val details =
+                        listOfNotNull(
+                                position.entryStrategyName?.takeIf {
+                                    !position.isClosed && it.isNotBlank()
+                                },
+                                pluralStringResource(
+                                    UiR.plurals.tb_lot_quantity,
+                                    position.quantity.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
+                                    position.quantity,
+                                ),
+                            )
+                            .joinToString(" · ")
                     Text(
-                        text = "Открыта: ${position.entryTime.toPositionDateTime()}",
-                        fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        details,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colors.textSecondary,
                     )
                 }
-
-                if (position.isClosed && position.closeTime != null) {
-                    Text(
-                        text = "Закрыта: ${position.closeTime.toPositionDateTime()}",
-                        fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                if (!position.infoExplanation.isNullOrBlank()) {
+                    IconButton(onClick = onInfoClick) {
+                        TradebotIcon(
+                            UiR.drawable.ic_info_outline,
+                            contentDescription =
+                                stringResource(
+                                    if (position.isClosed) R.string.position_close_reason_title
+                                    else R.string.position_ai_explanation_title
+                                ),
+                        )
+                    }
                 }
             }
-
-            // Правая часть: P&L и кнопка закрытия
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
             ) {
-                // P&L values
-                if (position.pnl != null) {
-                    val isPositive = position.pnl > 0
+                PositionPrice(
+                    stringResource(R.string.positions_entry),
+                    position.entryPrice,
+                    Modifier.weight(1f),
+                )
+                if (!position.isClosed)
+                    position.currentPrice?.let {
+                        PositionPrice(
+                            stringResource(R.string.positions_current),
+                            it,
+                            Modifier.weight(1f),
+                        )
+                    }
+                Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
+                    position.pnl?.let {
+                        Text(
+                            formatMoney(it, signed = true),
+                            color = pnlColor,
+                            style = MaterialTheme.typography.titleMedium,
+                        )
+                    }
+                    position.pnlPercent?.let {
+                        Text(
+                            formatPercent(it, signed = true),
+                            color = pnlColor,
+                            style = MaterialTheme.typography.bodySmall,
+                        )
+                    }
+                }
+            }
+            if (
+                !position.isClosed &&
+                    (position.brokerStopLossPrice != null || position.managedExitPrice != null)
+            ) {
+                TradebotCard(Modifier.fillMaxWidth(), containerColor = colors.surfaceRaised) {
                     Row(
+                        Modifier.padding(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Icon(
-                            imageVector = if (isPositive) Icons.Default.Close else Icons.Default.Warning,
-                            contentDescription = null,
-                            tint = if (isPositive) Color(0xFF4CAF50) else Color(0xFFF44336),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "${if (isPositive) "+" else ""}${String.format("%.2f", position.pnl)} ₽",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isPositive) Color(0xFF4CAF50) else Color(0xFFF44336)
-                        )
-                    }
-
-                    if (position.pnlPercent != null) {
-                        Text(
-                            text = "${if (position.pnlPercent > 0) "+" else ""}${String.format("%.2f", position.pnlPercent)}%",
-                            fontSize = 12.sp,
-                            color = if (position.pnlPercent > 0) Color(0xFF4CAF50) else Color(0xFFF44336)
-                        )
+                        TradebotIcon(UiR.drawable.ic_risk_outline)
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(TradebotDimens.smallGap)
+                        ) {
+                            position.brokerStopLossPrice?.let {
+                                Text(
+                                    stringResource(R.string.positions_broker_sl, it.money()),
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
+                            }
+                            position.managedExitPrice?.let {
+                                Text(
+                                    stringResource(
+                                        R.string.positions_protection,
+                                        position.profitProtectionStage.toProfitProtectionLabel(),
+                                        it.money(),
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = colors.accent,
+                                )
+                            }
+                        }
                     }
                 }
-
-                // Close button (only for open positions)
-                if (!position.isClosed) {
-                    Button(
-                        onClick = onCloseClick,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFF44336),
-                            contentColor = Color.White
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
+            ) {
+                Column(
+                    Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(TradebotDimens.smallGap),
+                ) {
+                    position.entryTime?.let {
+                        Text(
+                            stringResource(R.string.positions_opened, it.toPositionDateTime()),
+                            style = TradebotTheme.typography.label,
+                            color = colors.textSecondary,
                         )
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.position_close),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(stringResource(R.string.position_close), fontSize = 12.sp)
                     }
-                } else {
-                    Text(
-                        text = stringResource(R.string.position_closed),
-                        fontSize = 11.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    if (position.isClosed)
+                        position.closeTime?.let {
+                            Text(
+                                stringResource(
+                                    R.string.positions_closed_at,
+                                    it.toPositionDateTime(),
+                                ),
+                                style = TradebotTheme.typography.label,
+                                color = colors.textSecondary,
+                            )
+                        }
+                }
+                if (!position.isClosed)
+                    TradebotButton(
+                        stringResource(R.string.position_close),
+                        onCloseClick,
+                        outlined = true,
+                        destructive = true,
                     )
-                }
             }
         }
     }
 }
 
-private fun String.toPositionDateTime(): String = runCatching {
-    Instant.parse(this).atZone(ZoneId.systemDefault()).format(POSITION_DATE_TIME_FORMATTER)
-}.getOrElse { this }
-
-private fun String?.toProfitProtectionLabel(): String = when (this) {
-    "BREAKEVEN" -> "безубыток"
-    "TRAILING" -> "трейлинг"
-    else -> "активна"
+@Composable
+private fun PositionPrice(label: String, value: Double, modifier: Modifier) {
+    Column(modifier) {
+        Text(
+            label,
+            style = MaterialTheme.typography.bodySmall,
+            color = TradebotTheme.colors.textSecondary,
+        )
+        Text(value.money(), style = MaterialTheme.typography.titleSmall)
+    }
 }
 
-private val POSITION_DATE_TIME_FORMATTER: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+@Composable private fun Double.money() = formatMoney(this)
+
+@Composable
+private fun String.toPositionDateTime(): String {
+    val locale = LocalConfiguration.current.locales[0]
+    return runCatching {
+            Instant.parse(this)
+                .atZone(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(locale))
+        }
+        .getOrElse { this }
+}
+
+@Composable
+private fun String?.toProfitProtectionLabel(): String =
+    when (this) {
+        "BREAKEVEN" -> stringResource(R.string.positions_breakeven)
+        "TRAILING" -> stringResource(R.string.positions_trailing)
+        else -> stringResource(R.string.positions_active)
+    }

@@ -1,21 +1,26 @@
 package ru.bolotov.feature.auth.data
 
+import java.time.Instant
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.MediaType.Companion.toMediaType
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import ru.bolotov.feature.auth.api.AuthApi
-import ru.bolotov.feature.auth.domain.AuthSession
-import java.time.Instant
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
+import ru.bolotov.feature.auth.data.local.TokenStore
+import ru.bolotov.feature.auth.data.local.data.StoredTokens
+import ru.bolotov.feature.auth.data.network.BearerAuthenticator
+import ru.bolotov.feature.auth.data.network.BearerInterceptor
+import ru.bolotov.feature.auth.data.repository.AuthRepositoryImpl
+import ru.bolotov.feature.auth.domain.model.AuthSession
 
 class AuthRepositoryTest {
     private val server = MockWebServer().apply { start() }

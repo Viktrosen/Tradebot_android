@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Eight identical teeth around the same optical centre as the inner ring. -->
+    <path
+        android:pathData="M10.663,4.417 L10.350,2.644 L13.650,2.644 L13.337,4.417 L16.417,5.693 L17.449,4.218 L19.782,6.551 L18.307,7.583 L19.583,10.663 L21.356,10.350 L21.356,13.650 L19.583,13.337 L18.307,16.417 L19.782,17.449 L17.449,19.782 L16.417,18.307 L13.337,19.583 L13.650,21.356 L10.350,21.356 L10.663,19.583 L7.583,18.307 L6.551,19.782 L4.218,17.449 L5.693,16.417 L4.417,13.337 L2.644,13.650 L2.644,10.350 L4.417,10.663 L5.693,7.583 L4.218,6.551 L6.551,4.218 L7.583,5.693 Z"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.7"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M15.3,12 A3.3,3.3 0,1 1,8.7,12 A3.3,3.3 0,1 1,15.3,12 Z"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.7" />
+</vector>

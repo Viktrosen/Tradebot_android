@@ -3,16 +3,16 @@ package ru.bolotov.tradebot.notifications
 import android.app.Application
 import android.provider.Settings
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import ru.bolotov.feature.auth.domain.AuthInteractor
-import ru.bolotov.feature.auth.domain.AuthSession
-import com.google.firebase.messaging.FirebaseMessaging
+import ru.bolotov.feature.auth.domain.interactor.AuthInteractor
+import ru.bolotov.feature.auth.domain.model.AuthSession
 import ru.bolotov.feature.notifications.domain.interactor.NotificationsInteractor
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 /** Регистрирует FCM-токен текущей Android-установки в TradebotBackend. */

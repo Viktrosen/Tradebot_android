@@ -5,6 +5,9 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import ru.bolotov.feature.auth.api.data.LoginRequest
+import ru.bolotov.feature.auth.api.data.RefreshRequest
+import ru.bolotov.feature.auth.api.data.TokenResponse
 
 /** Separate unauthenticated client: refresh must never call its own Authenticator. */
 interface AuthApi {
@@ -12,13 +15,3 @@ interface AuthApi {
     @POST("/api/auth/refresh") fun refresh(@Body request: RefreshRequest): Call<TokenResponse>
     @POST("/api/auth/logout") fun logout(@Header("Authorization") bearer: String): Call<Unit>
 }
-
-@Serializable class LoginRequest(val email: String, val password: String)
-@Serializable class RefreshRequest(val refreshToken: String)
-@Serializable
-class TokenResponse(
-    val accessToken: String,
-    val refreshToken: String,
-    val accessTokenExpiresAt: String,
-    val refreshTokenExpiresAt: String
-)

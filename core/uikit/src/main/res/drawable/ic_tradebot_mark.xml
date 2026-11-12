@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="44dp"
+    android:height="44dp"
+    android:viewportWidth="44"
+    android:viewportHeight="44">
+    <!-- Single brand mark shared by screen headers and the adaptive launcher foreground. -->
+    <path
+        android:fillColor="#C6FF00"
+        android:pathData="M5,4H35L39,8V11H25.5V29L22.5,32H18.5V11H5Z" />
+    <path
+        android:fillColor="#FF2E88"
+        android:pathData="M13,35H33L31,40H11Z" />
+</vector>

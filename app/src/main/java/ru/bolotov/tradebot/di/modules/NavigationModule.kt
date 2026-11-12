@@ -27,7 +27,7 @@ interface NavigationModule {
     @Binds
     @IntoMap
     @FeatureEntryKey(ru.bolotov.feature.auth.router.AuthEntry::class)
-    fun bindAuthEntry(entry: ru.bolotov.feature.auth.presentation.AuthEntryCore): FeatureEntry
+    fun bindAuthEntry(entry: ru.bolotov.feature.auth.presentation.core.AuthEntryCore): FeatureEntry
 
 
     @Binds

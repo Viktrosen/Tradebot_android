@@ -92,7 +92,9 @@ root-cause follow-up.
   the previous back stack and its ViewModels. Token refresh within a session must
   not reset navigation. Never restore a protected graph before checking a session.
 - Rotate tokens under one shared data-layer lock, store the entire pair atomically
-  in encrypted preferences, exclude it from backups, and never log credential traffic.
+  in encrypted preferences, exclude it from backups, and never log credential payloads.
+- HTTP logging is debug-only BASIC metadata (`TradebotHttp`); release uses NONE.
+  Never enable BODY on the shared API/auth clients or put credentials in URLs.
 - Temporary network/5xx failures retain the encrypted session for retry. Definitive
   refresh rejection clears it. The auth HTTP client must not invoke its own authenticator.
 - WebSocket uses Bearer handshake and reconnects after expiry; FCM registration is
@@ -122,3 +124,52 @@ WebSocket behavior; compilation alone does not validate those flows.
 
 Preserve unrelated local Android Studio files and generated outputs. Do not create
 commits unless the user explicitly asks for one.
+
+## Kotlin source layout
+
+Follow [docs/CODE_LAYOUT.md](docs/CODE_LAYOUT.md) for exact package placement.
+Keep independent DTOs, entities, events, exceptions and interfaces in separate named files
+at their owning layer. Do not mix unrelated types into service/controller/ViewModel files.
+Android MVI is an explicit exception: keep UiState, Action and Effect together in
+presentation/core/UiState.kt, separate from the ViewModel. Preserve nested sealed variants,
+private implementation details, visibility, contracts and behaviour during moves.
+
+## Shared visual system
+
+Use the semantic roles from `TradebotTheme.colors` and MaterialTheme, not ad-hoc
+hex colors in feature screens. The raw `color/ColorPalette` is internal to UI-kit.
+Typography, spacing and shapes belong to `core:uikit/{typography,dimensions,shapes}`;
+shared components belong to `core:uikit/components`. Keep the clipped-corner shape
+in its own file. Shared outline icons are XML vectors in UI-kit resources.
+The brand mark has one source: `ic_tradebot_mark.xml`. Adaptive foreground refers
+to it; regenerate legacy WebP sizes and the store PNG with
+`python tools/export_launcher_icons.py` (Pillow), never position separate copies
+of the mark manually. Keep the exporter's per-size centering checks passing.
+Do not introduce remote equity logos, made-up tickers or dummy portfolio data.
+Profit/loss, LONG/SHORT and dangerous actions have distinct semantic colors.
+Refresh styling must not change PullToRefresh placement, state or callbacks.
+Do not add skeleton/loading modes as part of this redesign. Do not remove existing
+menu actions, confirmation dialogs or risk settings to fit a static mockup.
+
+Every main screen Content must have a private @Preview in the same file, using
+TradebotTheme and preview-only data without ViewModel/network access. Keep UI
+strings in the owning feature resources, or UI-kit resources for shared components.
+Russian is the default values catalog; provide matching English values-en strings.
+Never hardcode translated labels or embed localized prose into domain models.
+
+Use TradebotDialog/TradebotConfirmationDialog and TradebotDialogButton from UI-kit
+for dialogs. Keep body content scrollable and actions reachable on small screens;
+destructive confirmations use the danger variant, with a neutral cancellation.
+Feature resources own titles and messages (ru/en). Preserve dismissal/confirmation
+callbacks and add private, network-free dialog previews.
+
+## Appearance preference
+
+Theme belongs to feature:more domain/data, not UI-kit or auth. Keep AppThemeMode,
+ThemeRepository and ThemeInteractor domain-only; inject the single Preferences
+DataStore into ThemeRepositoryImpl. UI ThemeMode maps explicitly at presentation.
+Both MoreViewModel and AppViewModel observe the persisted flow: refresh must not
+reset it and failed writes must not show an unsaved selection. MainActivity
+resolves SYSTEM against system configuration, collects with lifecycle awareness
+and applies one root TradebotTheme plus matching system bar icons. Keep the splash
+until the initial preference is ready; never key navigation by the palette.

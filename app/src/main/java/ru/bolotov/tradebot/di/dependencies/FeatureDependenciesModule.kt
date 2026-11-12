@@ -12,17 +12,19 @@ import ru.bolotov.tradebot.di.dependencies.feature.SplashDependenciesModule
 import ru.bolotov.tradebot.di.dependencies.feature.StrategyDependenciesModule
 
 @Module(
-    includes = [
-        MainDependenciesModule::class,
-        AppEffectsHandlerDependenciesModule::class,
-        SplashDependenciesModule::class,
-        DashboardDependenciesModule::class,
-        InstrumentsDependenciesModule::class,
-        PositionsDependenciesModule::class,
-        StrategyDependenciesModule::class,
-        RiskDependenciesModule::class,
-        MoreDependenciesModule::class,
-        AuthDependenciesModule::class,
-    ]
+    includes =
+        [
+            MainDependenciesModule::class,
+            AppEffectsHandlerDependenciesModule::class,
+            SplashDependenciesModule::class,
+            DashboardDependenciesModule::class,
+            InstrumentsDependenciesModule::class,
+            PositionsDependenciesModule::class,
+            StrategyDependenciesModule::class,
+            RiskDependenciesModule::class,
+            MoreDependenciesModule::class,
+            AuthDependenciesModule::class,
+            AppNavigationDependenciesModule::class,
+        ]
 )
 interface FeatureDependenciesModule

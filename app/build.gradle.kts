@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.datastore)
+    implementation(libs.lifecycle.runtime.compose)
     implementation(libs.androidx.splashscreen)
     implementation(libs.compose.activity)
     implementation(libs.compose.material3)
@@ -100,6 +101,8 @@ dependencies {
 
     // Test
     testImplementation(libs.junit)
+    testImplementation(libs.jetbrains.coroutines.test)
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     debugImplementation(libs.chucker)
     debugImplementation(libs.leakcanary)
     releaseImplementation(libs.chucker.noop)

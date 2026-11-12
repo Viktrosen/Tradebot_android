@@ -2,109 +2,83 @@ package ru.bolotov.feature.strategy.presentation.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import ru.bolotov.core.uikit.TradebotTheme
+import ru.bolotov.core.uikit.components.*
+import ru.bolotov.core.uikit.dimensions.TradebotDimens
 import ru.bolotov.feature.strategy.presentation.core.StrategyItem
+import ru.bolotov.tradebot.core.uikit.R as UiR
+import ru.bolotov.tradebot.feature.strategy.presentation.R
 
-/**
- * Возвращает `true`, когда стратегия должна быть отмечена как недавно добавленная.
- *
- * Backend может передать отображаемое имя в другом регистре, поэтому сравнение
- * выполняется по нормализованному идентификатору.
- */
 internal fun isNewStrategy(strategyName: String): Boolean =
     strategyName.trim().lowercase() in NEW_STRATEGY_IDS
 
 private val NEW_STRATEGY_IDS = setOf("supertrend", "vwap")
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun StrategyCard(
-    strategy: StrategyItem,
-    onSelect: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onSelect),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (strategy.isCurrent)
-                MaterialTheme.colorScheme.primaryContainer
-            else
-                MaterialTheme.colorScheme.surface
-        )
-    ) {
+fun StrategyCard(strategy: StrategyItem, onSelect: () -> Unit, modifier: Modifier = Modifier) {
+    val icon =
+        when (strategy.name.trim().lowercase()) {
+            "voting" -> UiR.drawable.ic_dashboard_outline
+            "candlestick" -> UiR.drawable.ic_candles_outline
+            "supertrend" -> UiR.drawable.ic_trend_outline
+            "vwap" -> UiR.drawable.ic_positions_outline
+            else -> UiR.drawable.ic_strategy_outline
+        }
+    TradebotCard(modifier.fillMaxWidth().clickable(onClick = onSelect)) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            Modifier.padding(TradebotDimens.cardPadding),
+            horizontalArrangement = Arrangement.spacedBy(TradebotDimens.itemGap),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
+            TradebotIcon(icon)
             Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
+                    verticalArrangement = Arrangement.spacedBy(TradebotDimens.smallGap),
                 ) {
-                    Text(
-                        text = strategy.name.uppercase(),
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = if (strategy.isCurrent)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurface
-                    )
-
+                    Text(strategy.name.uppercase(), style = MaterialTheme.typography.titleMedium)
                     if (isNewStrategy(strategy.name) && !strategy.isCurrent) {
-                        Badge(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        ) {
-                            Text(
-                                text = "NEW",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    if (strategy.isCurrent) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "Current",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(16.dp)
+                        TradebotBadge(
+                            stringResource(R.string.strategies_new),
+                            color = TradebotTheme.colors.brand,
                         )
                     }
+                    if (strategy.isCurrent)
+                        TradebotBadge(stringResource(R.string.strategies_current))
                 }
 
                 Text(
-                    text = strategy.description,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    strategy.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TradebotTheme.colors.textSecondary,
+                )
+                if (strategy.name.equals("voting", ignoreCase = true)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        listOf("EMA", "RSI", "MACD", "BB").forEach {
+                            TradebotBadge(it, color = TradebotTheme.colors.textSecondary)
+                        }
+                    }
+                }
+            }
+            IconButton(onClick = onSelect) {
+                TradebotIcon(
+                    UiR.drawable.ic_settings_outline,
+                    contentDescription =
+                        stringResource(R.string.strategies_configure, strategy.name),
                 )
             }
-
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "Configure",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(20.dp)
-            )
         }
     }
 }

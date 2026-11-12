@@ -1,0 +1,21 @@
+<resources>
+    <string name="strategies_title">Strategies</string>
+    <string name="strategies_subtitle">Trading signal logic</string>
+    <string name="strategies_parameters">Strategy parameters</string>
+    <string name="strategies_auto">AUTO</string>
+    <string name="strategies_new">NEW</string>
+    <string name="strategies_current">Current</string>
+    <string name="strategies_configure">Configure %1$s</string>
+    <string name="strategies_simple_title">Simple strategy settings</string>
+    <string name="strategies_simple_message">Switch to %1$s?</string>
+    <string name="strategies_yes">Yes</string>
+    <string name="strategies_cancel">Cancel</string>
+    <string name="strategies_confirmation_title">Confirmation strategy settings</string>
+    <string name="strategies_select_indicators">Select indicators to vote:</string>
+    <string name="strategies_apply">Apply</string>
+    <string name="strategies_candlestick_title">Candlestick strategy settings</string>
+    <string name="strategies_timeframe">Timeframe:</string>
+    <string name="strategies_min_confidence">Minimum confidence: %1$d%%</string>
+    <string name="strategies_voting_title">Voting strategy settings</string>
+    <string name="strategies_total_weight">Total weight: %1$d</string>
+</resources>

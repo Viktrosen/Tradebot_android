@@ -29,11 +29,11 @@ object Config {
         }
 
     object Dev {
-        const val BACKEND_URL = "\"https://tradebotbackend-viktrosen.amvera.io/api/bot/\""
+        const val BACKEND_URL = "\"https://tradebotbackend-viktrosen.msk1.amvera.tech/api/bot/\""
         const val APPLICATION_ID_SUFFIX = ".dev"
     }
 
     object Prod {
-        const val BACKEND_URL = "\"https://tradebotbackend-viktrosen.amvera.io/api/bot/\""
+        const val BACKEND_URL = "\"https://tradebotbackend-viktrosen.msk1.amvera.tech/api/bot/\""
     }
 }

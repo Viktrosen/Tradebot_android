@@ -1,0 +1,9 @@
+<resources>
+    <string name="instruments_filters_title">Фильтры отбора</string>
+    <string name="instruments_filter_volume">Мин. дневной объём</string>
+    <string name="instruments_filter_min_volatility">Мин. волатильность, %</string>
+    <string name="instruments_filter_max_volatility">Макс. волатильность, %</string>
+    <string name="instruments_filter_max_count">Макс. инструментов</string>
+    <string name="instruments_filters_save">Сохранить</string>
+    <string name="instruments_filters_cancel">Отмена</string>
+</resources>

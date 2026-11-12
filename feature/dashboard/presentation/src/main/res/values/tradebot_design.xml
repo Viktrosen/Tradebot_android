@@ -1,0 +1,36 @@
+<resources>
+    <string name="dashboard_title">Дашборд</string>
+    <string name="dashboard_subtitle">Обзор торговли</string>
+    <string name="dashboard_bot_running">Бот работает</string>
+    <string name="dashboard_bot_stopped">Бот остановлен</string>
+    <string name="dashboard_available">Торги доступны</string>
+    <string name="dashboard_unavailable">Торги недоступны</string>
+    <string name="dashboard_total_pnl">Общий P&amp;L</string>
+    <string name="dashboard_today">Сегодня</string>
+    <string name="dashboard_win_rate">Win Rate</string>
+    <string name="dashboard_free_cash">Свободные средства</string>
+    <string name="dashboard_control_section">Управление</string>
+    <string name="dashboard_control_title">Управление ботом</string>
+    <string name="dashboard_strategies_link">Стратегии →</string>
+    <string name="dashboard_start">Старт</string>
+    <string name="dashboard_stop">Стоп</string>
+    <string name="dashboard_risk_title">Настройки риска</string>
+    <string name="dashboard_risk_pending">Настройки ещё не получены</string>
+    <string name="dashboard_position_capital">На позицию</string>
+    <string name="dashboard_tp">Тейк-профит</string>
+    <string name="dashboard_sl">Стоп-лосс</string>
+    <string name="dashboard_max_positions">Макс. позиций</string>
+    <string name="dashboard_usage">Загрузка до</string>
+    <string name="dashboard_shorts">Шорты</string>
+    <string name="dashboard_on">включены</string>
+    <string name="dashboard_off">выключены</string>
+    <string name="dashboard_instruments">Инструменты бота</string>
+    <string name="dashboard_selected_count">Выбрано для торговли: %1$d</string>
+    <string name="dashboard_open_positions">Открытые позиции</string>
+    <string name="dashboard_show_all">Показать все (%1$d) →</string>
+    <string name="dashboard_warning">Торговля приостановлена: экстремальная волатильность рынка</string>
+    <string name="dashboard_entry_detail">%1$s · Вход %2$s</string>
+    <string name="dashboard_current">Текущая %1$s</string>
+    <string name="dashboard_broker_sl">Брокерский SL: %1$s</string>
+    <string name="dashboard_profit_protection">Защита прибыли: %1$s</string>
+</resources>

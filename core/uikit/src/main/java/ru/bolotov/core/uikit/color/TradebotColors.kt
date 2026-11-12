@@ -1,35 +1,55 @@
 package ru.bolotov.core.uikit.color
 
-import androidx.compose.runtime.Stable
-import ru.bolotov.core.uikit.theme.color.ColorPalette
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 
-@Stable
+/** Semantic roles shared by Material components and custom trading components. */
+@Immutable
 data class TradebotColors(
-    val base: ColorPalette.Base,
-    val additional: ColorPalette.Additional,
-    val gray: ColorPalette.GrayTones,
-    val red: ColorPalette.RedTones,
-    val text: ColorPalette.Text,
-    val icon: ColorPalette.IconColors,
-    val inputsIcons: ColorPalette.InputsIcons,
-    val stroke: ColorPalette.StrokeColors,
-    val main: ColorPalette.Main,
-    val smsInputColors: ColorPalette.SmsInputColors,
-    val background: ColorPalette.BackgroundColors,
-    val button: ColorPalette.ButtonColors,
+    val background: Color,
+    val surface: Color,
+    val surfaceRaised: Color,
+    val border: Color,
+    val text: Color,
+    val textSecondary: Color,
+    val accent: Color,
+    val onAccent: Color,
+    val brand: Color,
+    val profit: Color,
+    val loss: Color,
+    val short: Color,
+    val dangerSurface: Color,
 )
 
-internal val AppColorDefault = TradebotColors(
-    base = ColorPalette.Base,
-    additional = ColorPalette.Additional,
-    gray = ColorPalette.GrayTones,
-    red = ColorPalette.RedTones,
-    text = ColorPalette.Text,
-    icon = ColorPalette.IconColors,
-    inputsIcons = ColorPalette.InputsIcons,
-    stroke = ColorPalette.StrokeColors,
-    main = ColorPalette.Main,
-    smsInputColors = ColorPalette.SmsInputColors,
-    background = ColorPalette.BackgroundColors,
-    button = ColorPalette.ButtonColors,
-)
+val DarkTradebotColors =
+    TradebotColors(
+        background = ColorPalette.Ink,
+        surface = ColorPalette.Graphite,
+        surfaceRaised = ColorPalette.RaisedGraphite,
+        border = ColorPalette.Slate,
+        text = ColorPalette.White,
+        textSecondary = ColorPalette.Mist,
+        accent = ColorPalette.Lime,
+        onAccent = ColorPalette.Ink,
+        brand = ColorPalette.Magenta,
+        profit = ColorPalette.Mint,
+        loss = ColorPalette.Coral,
+        short = ColorPalette.Sky,
+        dangerSurface = ColorPalette.Burgundy,
+    )
+
+val LightTradebotColors =
+    DarkTradebotColors.copy(
+        background = ColorPalette.Paper,
+        surface = Color.White,
+        surfaceRaised = Color(0xFFE7EDF5),
+        border = ColorPalette.LightSlate,
+        text = ColorPalette.Ink,
+        textSecondary = Color(0xFF526176),
+        accent = Color(0xFF4B6500),
+        onAccent = Color.White,
+        profit = Color(0xFF167246),
+        loss = Color(0xFFB62E43),
+        short = Color(0xFF12658A),
+        dangerSurface = Color(0xFFFFEAED),
+    )

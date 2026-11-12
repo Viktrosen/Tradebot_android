@@ -2,7 +2,10 @@ package ru.bolotov.tradebot.navigation
 
 import org.junit.Assert.*
 import org.junit.Test
-import ru.bolotov.feature.auth.domain.AuthSession
+import ru.bolotov.feature.auth.domain.model.AuthSession
+import ru.bolotov.tradebot.navigation.data.AppNavigationState
+import ru.bolotov.tradebot.navigation.data.requiresNavigation
+import ru.bolotov.tradebot.navigation.data.toAppNavigationState
 
 class AppNavigationStateTest {
     @Test fun `unchecked offline and signed out sessions never select Main`() {

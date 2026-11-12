@@ -1,0 +1,31 @@
+<resources>
+    <string name="risk_screen_title">Risk management</string>
+    <string name="risk_screen_back">Back</string>
+    <string name="risk_screen_retry">Retry</string>
+    <string name="risk_screen_reset">Reset</string>
+    <string name="risk_screen_save">Save</string>
+    <string name="risk_stop_loss_title">Stop-loss</string>
+    <string name="risk_stop_loss_description">Allowed price movement against the position</string>
+    <string name="risk_take_profit_title">Take-profit</string>
+    <string name="risk_take_profit_description">Target price movement in favor of the position</string>
+    <string name="risk_position_size_title">Position size</string>
+    <string name="risk_position_size_description">Maximum capital share per position</string>
+    <string name="risk_capital_usage_title">Capital utilization</string>
+    <string name="risk_capital_usage_description">Maximum capital share across all open positions</string>
+    <string name="risk_max_positions_title">Maximum positions</string>
+    <string name="risk_max_positions_description">Maximum number of concurrent open positions</string>
+    <string name="risk_short_trading_title">Short trading</string>
+    <string name="risk_short_trading_description">Opens shorts only with sufficient margin, instrument availability and active protection</string>
+    <string name="risk_short_trading_enabled">Enabled</string>
+    <string name="risk_short_trading_disabled">Disabled</string>
+    <string name="risk_short_confirmation_title">Enable short trading?</string>
+    <string name="risk_short_confirmation_message">Shorts carry extra risk. The bot requires sufficient margin, available instruments and confirmed protection.</string>
+    <string name="risk_short_confirmation_confirm">Enable</string>
+    <string name="risk_positions_value">%1$d positions</string>
+    <string name="risk_reset_dialog_title">Reset risk settings</string>
+    <string name="risk_reset_dialog_message">Restore all risk settings to defaults?</string>
+    <string name="risk_dialog_cancel">Cancel</string>
+    <string name="risk_save_success_title">Settings saved</string>
+    <string name="risk_save_error_title">Could not save settings</string>
+    <string name="risk_dialog_ok">OK</string>
+</resources>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="more_title">Ещё</string>
+    <string name="more_subtitle">Настройки и управление</string>
+    <string name="more_preferences">Предпочтения</string>
+    <string name="more_navigation">Навигация</string>
+    <string name="more_application">Приложение</string>
+    <string name="more_user">TradeBot User</string>
+    <string name="more_push">Push-уведомления</string>
+    <string name="more_push_detail">События сделок и работа бота</string>
+    <string name="more_appearance">Оформление</string>
+    <string name="more_light">Светлая</string>
+    <string name="more_dark">Тёмная</string>
+    <string name="more_system">Система</string>
+    <string name="more_confirmation_hint">Потребуется подтверждение</string>
+    <string name="more_instruments">Инструменты</string>
+    <string name="more_history">История сделок</string>
+    <string name="more_settings">Настройки</string>
+    <string name="more_about">О приложении</string>
+    <string name="more_logout">Выход</string>
+    <string name="more_version">Версия %1$s (%2$s)</string>
+    <string name="more_copyright">© 2026 TradeBot</string>
+    <string name="more_app_name">TradeBot</string>
+    <string name="more_theme_save_failed">Не удалось сохранить тему. Попробуйте ещё раз.</string>
+</resources>

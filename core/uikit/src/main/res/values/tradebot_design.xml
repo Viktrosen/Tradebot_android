@@ -1,0 +1,20 @@
+<resources>
+    <string name="tb_brand">TRADEBOT_</string>
+    <string name="tb_back">Назад</string>
+    <string name="tb_retry">Повторить</string>
+    <string name="tb_money">%1$s ₽</string>
+    <string name="tb_percent">%1$s%%</string>
+    <string name="tb_summary">%1$s: %2$s</string>
+    <string name="tb_long">LONG</string>
+    <string name="tb_short">SHORT</string>
+    <plurals name="tb_lot_quantity">
+        <item quantity="one">%1$d лот</item>
+        <item quantity="few">%1$d лота</item>
+        <item quantity="many">%1$d лотов</item>
+        <item quantity="other">%1$d лота</item>
+    </plurals>
+    <string name="tb_dialog_preview_title">Подтвердите действие</string>
+    <string name="tb_dialog_preview_message">Изменения будут применены после подтверждения.</string>
+    <string name="tb_dialog_confirm">Подтвердить</string>
+    <string name="tb_dialog_cancel">Отмена</string>
+</resources>

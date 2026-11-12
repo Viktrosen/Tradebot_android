@@ -124,6 +124,7 @@ javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInjec
 # Jetbrains
 jetbrains-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "ktxSerialization" }
 jetbrains-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+jetbrains-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 #MVI
 orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit" }

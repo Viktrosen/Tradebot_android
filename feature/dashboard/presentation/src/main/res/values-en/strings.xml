@@ -1,0 +1,19 @@
+<resources>
+    <string name="risk_settings_title">Risk settings</string>
+    <string name="risk_position_size">Capital per position: %1$d%%</string>
+    <string name="risk_stop_loss">Stop-loss: %1$d%%</string>
+    <string name="risk_take_profit">Take-profit: %1$d%%</string>
+    <string name="risk_max_capital_usage">Max. capital utilization: %1$d%%</string>
+    <string name="risk_max_positions">Max. positions: %1$d</string>
+    <string name="risk_short_trading_enabled">Shorts: enabled</string>
+    <string name="risk_short_trading_disabled">Shorts: disabled</string>
+    <string name="dashboard_candlestick_strategy_summary">Timeframe: %1$s · Threshold: %2$d%%</string>
+    <string name="dashboard_confirmation_strategy_summary">Indicators: %1$s</string>
+    <string name="dashboard_voting_strategy_summary">Weights: %1$s</string>
+    <string name="dashboard_trading_available_chip">TRADING AVAILABLE</string>
+    <string name="dashboard_trading_unavailable_chip">TRADING UNAVAILABLE</string>
+    <string name="dashboard_position_side_long">Long</string>
+    <string name="dashboard_position_side_short">Short</string>
+    <string name="dashboard_configure_strategies">Configure strategies →</string>
+    <string name="dashboard_position_strategy">Strategy: %1$s</string>
+</resources>

@@ -1,8 +1,14 @@
 package ru.bolotov.feature.main.presentation.navigation
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -11,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -20,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.bolotov.feature.main.presentation.ui.util.reducedRoute
 import ru.bolotov.core.uikit.TradebotTheme
+import ru.bolotov.feature.main.presentation.ui.util.reducedRoute
 import ru.bolotov.tradebot.router.navigateWithClearStack
 
 @Composable
@@ -31,7 +38,7 @@ internal fun NavigationBottomBar(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     currentSection: Any?,
-    updateCurrentSection: (Any?) -> Unit
+    updateCurrentSection: (Any?) -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -41,11 +48,8 @@ internal fun NavigationBottomBar(
 
     AnimatedVisibility(!invisibleBottomBarEntries.contains(currentDestination?.reducedRoute)) {
         NavigationBar(
-            modifier = modifier.border(
-                width = .5.dp,
-                color = TradebotTheme.colors.gray.Gray60,
-            ),
-            containerColor = TradebotTheme.colors.base.White,
+            modifier = modifier.border(width = .5.dp, color = TradebotTheme.colors.border),
+            containerColor = TradebotTheme.colors.surface,
         ) {
             routes.forEach { screen ->
                 key(screen) {
@@ -53,37 +57,51 @@ internal fun NavigationBottomBar(
                     NavigationBarItem(
                         selected = selected,
                         icon = {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(screen.icon),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = if (selected) {
-                                    TradebotTheme.colors.icon.Selected
-                                } else {
-                                    TradebotTheme.colors.icon.Unselected
-                                }
-                            )
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Box(
+                                    Modifier.width(28.dp)
+                                        .height(2.dp)
+                                        .background(
+                                            if (selected) TradebotTheme.colors.accent
+                                            else Color.Transparent
+                                        )
+                                )
+                                Spacer(Modifier.height(6.dp))
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(screen.icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp),
+                                    tint =
+                                        if (selected) {
+                                            TradebotTheme.colors.accent
+                                        } else {
+                                            TradebotTheme.colors.textSecondary
+                                        },
+                                )
+                            }
                         },
                         label = {
                             Text(
                                 text = stringResource(screen.text),
-                                style = TradebotTheme.typography.helperMed,
-                                color = if (selected) {
-                                    TradebotTheme.colors.icon.Selected
-                                } else {
-                                    TradebotTheme.colors.icon.Unselected
-                                }
+                                style = TradebotTheme.typography.label,
+                                color =
+                                    if (selected) {
+                                        TradebotTheme.colors.accent
+                                    } else {
+                                        TradebotTheme.colors.textSecondary
+                                    },
                             )
                         },
-                        colors = NavigationBarItemColors(
-                            selectedIconColor = Color.Unspecified,
-                            selectedTextColor = Color.Unspecified,
-                            selectedIndicatorColor = TradebotTheme.colors.base.White90,
-                            unselectedIconColor = Color.Unspecified,
-                            unselectedTextColor = Color.Unspecified,
-                            disabledIconColor = Color.Unspecified,
-                            disabledTextColor = Color.Unspecified
-                        ),
+                        colors =
+                            NavigationBarItemColors(
+                                selectedIconColor = Color.Unspecified,
+                                selectedTextColor = Color.Unspecified,
+                                selectedIndicatorColor = Color.Transparent,
+                                unselectedIconColor = Color.Unspecified,
+                                unselectedTextColor = Color.Unspecified,
+                                disabledIconColor = Color.Unspecified,
+                                disabledTextColor = Color.Unspecified,
+                            ),
                         onClick = {
                             updateCurrentSection(screen.graphRoute)
                             if (!selected) {
@@ -101,10 +119,10 @@ internal fun NavigationBottomBar(
                                 val targetRoute = screen.graphRoute ?: screen.route
                                 navController.navigateWithClearStack(
                                     route = targetRoute,
-                                    popUpToRoute = targetRoute
+                                    popUpToRoute = targetRoute,
                                 )
                             }
-                        }
+                        },
                     )
                 }
             }

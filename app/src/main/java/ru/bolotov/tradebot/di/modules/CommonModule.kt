@@ -7,20 +7,20 @@ import ru.bolotov.feature.dashboard.domain.core.DashboardInteractorImpl
 import ru.bolotov.feature.dashboard.domain.interactor.DashboardInteractor
 import ru.bolotov.feature.dashboard.domain.repository.BotRepository
 import ru.bolotov.feature.instruments.domain.core.InstrumentsInteractorImpl
+import ru.bolotov.feature.instruments.domain.interactor.InstrumentsInteractor
+import ru.bolotov.feature.instruments.domain.repository.InstrumentsRepository
 import ru.bolotov.feature.more.domain.core.EmergencyCloseInteractorImpl
 import ru.bolotov.feature.more.domain.interactor.EmergencyCloseInteractor
 import ru.bolotov.feature.more.domain.repository.EmergencyCloseRepository
-import ru.bolotov.feature.risk.domain.core.RiskInteractorImpl
-import ru.bolotov.feature.risk.domain.interactor.RiskInteractor
-import ru.bolotov.feature.risk.domain.repository.RiskRepository
-import ru.bolotov.feature.instruments.domain.interactor.InstrumentsInteractor
-import ru.bolotov.feature.instruments.domain.repository.InstrumentsRepository
 import ru.bolotov.feature.notifications.domain.core.NotificationsInteractorImpl
 import ru.bolotov.feature.notifications.domain.interactor.NotificationsInteractor
 import ru.bolotov.feature.notifications.domain.repository.NotificationsRepository
 import ru.bolotov.feature.positions.domain.core.PositionsInteractorImpl
 import ru.bolotov.feature.positions.domain.interactor.PositionsInteractor
 import ru.bolotov.feature.positions.domain.repository.PositionsRepository
+import ru.bolotov.feature.risk.domain.core.RiskInteractorImpl
+import ru.bolotov.feature.risk.domain.interactor.RiskInteractor
+import ru.bolotov.feature.risk.domain.repository.RiskRepository
 import ru.bolotov.feature.strategy.domain.core.StrategyInteractorImpl
 import ru.bolotov.feature.strategy.domain.interactor.StrategyInteractor
 import ru.bolotov.feature.strategy.domain.repository.StrategyRepository
@@ -29,8 +29,8 @@ import ru.bolotov.feature.strategy.domain.repository.StrategyRepository
 class CommonModule {
     @Provides
     @javax.inject.Singleton
-    fun authInteractor(repository: ru.bolotov.feature.auth.domain.AuthRepository): ru.bolotov.feature.auth.domain.AuthInteractor =
-        ru.bolotov.feature.auth.domain.AuthInteractorImpl(repository)
+    fun authInteractor(repository: ru.bolotov.feature.auth.domain.repository.AuthRepository): ru.bolotov.feature.auth.domain.interactor.AuthInteractor =
+        ru.bolotov.feature.auth.domain.core.AuthInteractorImpl(repository)
 
 
     @Provides

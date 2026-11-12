@@ -1,0 +1,21 @@
+<resources>
+    <string name="strategies_title">Стратегии</string>
+    <string name="strategies_subtitle">Логика торговых сигналов</string>
+    <string name="strategies_parameters">Параметры стратегий</string>
+    <string name="strategies_auto">АВТО</string>
+    <string name="strategies_new">NEW</string>
+    <string name="strategies_current">Текущая</string>
+    <string name="strategies_configure">Настроить %1$s</string>
+    <string name="strategies_simple_title">Настройка простой стратегии</string>
+    <string name="strategies_simple_message">Вы уверены, что хотите переключиться на %1$s?</string>
+    <string name="strategies_yes">Да</string>
+    <string name="strategies_cancel">Отмена</string>
+    <string name="strategies_confirmation_title">Настройка стратегии подтверждения</string>
+    <string name="strategies_select_indicators">Выберите индикаторы для голосования:</string>
+    <string name="strategies_apply">Применить</string>
+    <string name="strategies_candlestick_title">Настройка свечной стратегии</string>
+    <string name="strategies_timeframe">Таймфрейм:</string>
+    <string name="strategies_min_confidence">Минимальная уверенность: %1$d%%</string>
+    <string name="strategies_voting_title">Настройка стратегии голосования</string>
+    <string name="strategies_total_weight">Суммарный вес: %1$d</string>
+</resources>

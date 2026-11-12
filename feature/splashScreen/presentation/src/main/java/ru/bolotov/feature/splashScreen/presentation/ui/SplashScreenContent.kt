@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.bolotov.core.uikit.TradebotTheme
-import ru.bolotov.core.uikit.theme.color.ColorPalette
 import ru.bolotov.tradebot.core.uikit.R
 
 
@@ -71,7 +70,7 @@ internal fun SplashScreenContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(ColorPalette.Base.Graphite),
+            .background(TradebotTheme.colors.background),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -94,7 +93,7 @@ internal fun SplashScreenContent() {
             text = "SmartTrade",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            color = ColorPalette.Base.White,
+            color = TradebotTheme.colors.text,
             modifier = Modifier.alpha(textAlpha.value)
         )
 
@@ -104,7 +103,7 @@ internal fun SplashScreenContent() {
         Text(
             text = "Автоматическая торговля",
             fontSize = 14.sp,
-            color = ColorPalette.GrayTones.Gray400,
+            color = TradebotTheme.colors.textSecondary,
             modifier = Modifier.alpha(textAlpha.value)
         )
     }

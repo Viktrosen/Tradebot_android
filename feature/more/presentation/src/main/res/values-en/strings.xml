@@ -1,0 +1,12 @@
+<resources>
+    <string name="emergency_close_title">Emergency close</string>
+    <string name="emergency_close_description">Stop the bot and close all open positions with market orders.</string>
+    <string name="emergency_close_action">Close all positions</string>
+    <string name="emergency_close_in_progress">Starting closure…</string>
+    <string name="emergency_close_dialog_title">Close all positions?</string>
+    <string name="emergency_close_dialog_message">Are you sure you want to close all positions? The bot will be stopped.</string>
+    <string name="emergency_close_confirm">Yes, close</string>
+    <string name="emergency_close_cancel">No</string>
+    <string name="emergency_close_started">Bot stopped. Closing all positions has started.</string>
+    <string name="emergency_close_failed">Could not start emergency closure.</string>
+</resources>

@@ -24,7 +24,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.delay
-import ru.bolotov.feature.main.presentation.ui.util.reducedRoute
 import ru.bolotov.core.dependency.destinationsProvider
 import ru.bolotov.core.dependency.findDestinations
 import ru.bolotov.core.uikit.TradebotTheme
@@ -38,6 +37,7 @@ import ru.bolotov.feature.main.presentation.core.UiState
 import ru.bolotov.feature.main.presentation.navigation.BottomBarItem
 import ru.bolotov.feature.main.presentation.navigation.BottomBarTag
 import ru.bolotov.feature.main.presentation.navigation.NavigationBottomBar
+import ru.bolotov.feature.main.presentation.ui.util.reducedRoute
 import ru.bolotov.feature.more.router.MoreEntry
 import ru.bolotov.feature.more.router.MoreGraph
 import ru.bolotov.feature.positions.router.PositionsEntry
@@ -66,48 +66,47 @@ internal fun MainScreenHost(
     val riskEntry = activity.findDestinations<RiskEntry>()
     val moreEntry = activity.findDestinations<MoreEntry>()
 
-    val invisibleBottomBarEntries = listOf(
-        InstrumentsGraph.Instruments::class.qualifiedName.orEmpty()
-    )
+    val invisibleBottomBarEntries =
+        listOf(InstrumentsGraph.Instruments::class.qualifiedName.orEmpty())
 
     val bottomItems by remember {
         derivedStateOf {
             listOf(
                 BottomBarItem(
                     route = dashboardEntry.featureRoute,
-                    icon = R.drawable.ic_map,
+                    icon = R.drawable.ic_dashboard_outline,
                     text = R.string.dashboard,
                     tag = BottomBarTag.Dashboard,
-                    graphRoute = DashboardGraph.Root  // Добавляем типизированный route
+                    graphRoute = DashboardGraph.Root, // Добавляем типизированный route
                 ),
                 BottomBarItem(
                     route = positionsEntry.featureRoute,
-                    icon = R.drawable.ic_calendar,
+                    icon = R.drawable.ic_positions_outline,
                     text = R.string.positions,
                     tag = BottomBarTag.Positions,
-                    graphRoute = PositionsGraph.Root  // Добавляем типизированный route
+                    graphRoute = PositionsGraph.Root, // Добавляем типизированный route
                 ),
                 BottomBarItem(
                     route = strategyEntry.featureRoute,
-                    icon = R.drawable.ic_chat,
+                    icon = R.drawable.ic_strategy_outline,
                     text = R.string.strategy,
                     tag = BottomBarTag.Strategy,
-                    graphRoute = StrategyGraph.Root  // Добавляем типизированный route
+                    graphRoute = StrategyGraph.Root, // Добавляем типизированный route
                 ),
                 BottomBarItem(
                     route = riskEntry.featureRoute,
-                    icon = R.drawable.ic_profile,
+                    icon = R.drawable.ic_risk_outline,
                     text = R.string.risk,
                     tag = BottomBarTag.Risk,
-                    graphRoute = RiskGraph.Root  // Добавляем типизированный route
+                    graphRoute = RiskGraph.Root, // Добавляем типизированный route
                 ),
                 BottomBarItem(
                     route = moreEntry.featureRoute,
-                    icon = R.drawable.ic_profile,
+                    icon = R.drawable.ic_more_outline,
                     text = R.string.more,
                     tag = BottomBarTag.More,
-                    graphRoute = MoreGraph.Root  // Добавляем типизированный route
-                )
+                    graphRoute = MoreGraph.Root, // Добавляем типизированный route
+                ),
             )
         }
     }
@@ -116,9 +115,11 @@ internal fun MainScreenHost(
     val currentDestination = navBackStackEntry?.destination
 
     LaunchedEffect(currentDestination) {
-        val destination = bottomItems.find {
-            it.reducedRoute == currentDestination?.reducedRoute?.split(".")?.lastOrNull()?.trim()?.lowercase()
-        }
+        val destination =
+            bottomItems.find {
+                it.reducedRoute ==
+                    currentDestination?.reducedRoute?.split(".")?.lastOrNull()?.trim()?.lowercase()
+            }
         if (destination != null) {
             action(Action.UpdateCurrentSection(destination.graphRoute))
         }
@@ -129,13 +130,12 @@ internal fun MainScreenHost(
         currentSection = state.currentSection,
         currentDestination = currentDestination,
         mainEntryRoute = dashboardEntry.featureRoute,
-        navController = navController
+        navController = navController,
     )
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
-        containerColor = TradebotTheme.colors.background.Base,
+        modifier = Modifier.fillMaxSize(),
+        containerColor = TradebotTheme.colors.background,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             NavigationBottomBar(
@@ -143,25 +143,21 @@ internal fun MainScreenHost(
                 invisibleBottomBarEntries = invisibleBottomBarEntries,
                 navController = navController,
                 currentSection = state.currentSection,
-                updateCurrentSection = { route ->
-                    action(Action.UpdateCurrentSection(route))
-                }
+                updateCurrentSection = { route -> action(Action.UpdateCurrentSection(route)) },
             )
-        }
+        },
     ) { paddingValues ->
         NavHost(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .consumeWindowInsets(paddingValues),
+            modifier =
+                Modifier.fillMaxSize().padding(paddingValues).consumeWindowInsets(paddingValues),
             startDestination = DashboardGraph.Root,
-            navController = navController
+            navController = navController,
         ) {
             with(dashboardEntry) {
                 navigation(
                     globalNavController = globalNavController,
                     navController = navController,
-                    destinations = activity.destinationsProvider
+                    destinations = activity.destinationsProvider,
                 )
             }
 
@@ -169,19 +165,23 @@ internal fun MainScreenHost(
                 navigation(
                     globalNavController = globalNavController,
                     navController = navController,
-                    destinations = activity.destinationsProvider
+                    destinations = activity.destinationsProvider,
                 )
             }
 
             with(instrumentsEntry) {
-                navigation(globalNavController = globalNavController, navController = navController, destinations = activity.destinationsProvider)
+                navigation(
+                    globalNavController = globalNavController,
+                    navController = navController,
+                    destinations = activity.destinationsProvider,
+                )
             }
 
             with(strategyEntry) {
                 navigation(
                     globalNavController = globalNavController,
                     navController = navController,
-                    destinations = activity.destinationsProvider
+                    destinations = activity.destinationsProvider,
                 )
             }
 
@@ -189,7 +189,7 @@ internal fun MainScreenHost(
                 navigation(
                     globalNavController = globalNavController,
                     navController = navController,
-                    destinations = activity.destinationsProvider
+                    destinations = activity.destinationsProvider,
                 )
             }
 
@@ -197,7 +197,7 @@ internal fun MainScreenHost(
                 navigation(
                     globalNavController = globalNavController,
                     navController = navController,
-                    destinations = activity.destinationsProvider
+                    destinations = activity.destinationsProvider,
                 )
             }
         }
@@ -212,7 +212,7 @@ private fun BackDoublePressExit(
     currentDestination: NavDestination?,
     bottomItemsFirstItemRoute: String?,
     currentSection: Any?,
-    mainEntryRoute: String
+    mainEntryRoute: String,
 ) {
     var exit by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -228,7 +228,7 @@ private fun BackDoublePressExit(
         if (currentDestination?.route?.split("/")?.firstOrNull() != bottomItemsFirstItemRoute) {
             navController.navigateWithClearStack(
                 currentSection ?: mainEntryRoute,
-                currentSection ?: mainEntryRoute
+                currentSection ?: mainEntryRoute,
             )
         } else if (exit) {
             finishAffinity(context as Activity)

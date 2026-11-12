@@ -3,7 +3,6 @@ package ru.bolotov.feature.instruments.presentation.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,15 +28,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.orbitmvi.orbit.compose.collectAsState
+import ru.bolotov.core.uikit.TradebotTheme
+import ru.bolotov.core.uikit.components.TradebotDialog
+import ru.bolotov.core.uikit.components.TradebotDialogButton
 import ru.bolotov.feature.instruments.presentation.core.Action
 import ru.bolotov.feature.instruments.presentation.core.InstrumentFiltersUi
 import ru.bolotov.feature.instruments.presentation.core.InstrumentUi
 import ru.bolotov.feature.instruments.presentation.core.InstrumentsViewModel
 import ru.bolotov.feature.instruments.presentation.core.UiState
+import ru.bolotov.tradebot.feature.instruments.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,50 +55,53 @@ internal fun InstrumentsScreen(viewModel: InstrumentsViewModel) {
             Button(
                 onClick = { viewModel.handleAction(Action.Rescan) },
                 enabled = !state.isRescanning,
-                modifier = Modifier.fillMaxWidth().padding(16.dp)
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
             ) {
                 if (state.isRescanning) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(18.dp).padding(end = 8.dp),
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 } else {
                     Icon(
                         imageVector = Icons.Default.Refresh,
                         contentDescription = null,
-                        modifier = Modifier.padding(end = 8.dp)
+                        modifier = Modifier.padding(end = 8.dp),
                     )
                 }
                 Text(if (state.isRescanning) "Выполняется рескан…" else "Рескан")
             }
-        }
+        },
     ) { paddingValues ->
         PullToRefreshBox(
             isRefreshing = state.isLoading,
             onRefresh = { viewModel.handleAction(Action.Load) },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             when {
-                state.isLoading && state.instruments.isEmpty() -> ScreenMessage(paddingValues) {
-                    CircularProgressIndicator()
-                }
-                state.errorMessage != null -> ScreenMessage(paddingValues) {
-                    Text(state.errorMessage.orEmpty(), color = MaterialTheme.colorScheme.error)
-                }
-                else -> InstrumentsList(state, paddingValues) {
-                    viewModel.handleAction(Action.ShowFilters)
-                }
+                state.isLoading && state.instruments.isEmpty() ->
+                    ScreenMessage(paddingValues) { CircularProgressIndicator() }
+                state.errorMessage != null ->
+                    ScreenMessage(paddingValues) {
+                        Text(state.errorMessage.orEmpty(), color = MaterialTheme.colorScheme.error)
+                    }
+                else ->
+                    InstrumentsList(state, paddingValues) {
+                        viewModel.handleAction(Action.ShowFilters)
+                    }
             }
         }
     }
 
-    state.filters?.takeIf { state.showFiltersDialog }?.let { filters ->
-        FiltersDialog(
-            filters = filters,
-            onSave = { viewModel.handleAction(Action.SaveFilters(it)) },
-            onDismiss = { viewModel.handleAction(Action.DismissFilters) }
-        )
-    }
+    state.filters
+        ?.takeIf { state.showFiltersDialog }
+        ?.let { filters ->
+            FiltersDialog(
+                filters = filters,
+                onSave = { viewModel.handleAction(Action.SaveFilters(it)) },
+                onDismiss = { viewModel.handleAction(Action.DismissFilters) },
+            )
+        }
 }
 
 @Composable
@@ -102,33 +110,29 @@ private fun ScreenMessage(paddingValues: PaddingValues, content: @Composable () 
         modifier = Modifier.fillMaxSize().padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-    ) { content() }
+    ) {
+        content()
+    }
 }
 
 @Composable
 private fun InstrumentsList(
     state: UiState,
     paddingValues: PaddingValues,
-    onShowFilters: () -> Unit
+    onShowFilters: () -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(paddingValues),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        state.filters?.let { filters ->
-            item { FiltersCard(filters, onShowFilters) }
-        }
-        item {
-            InstrumentsCount(state.instruments.size)
-        }
+        state.filters?.let { filters -> item { FiltersCard(filters, onShowFilters) } }
+        item { InstrumentsCount(state.instruments.size) }
 
         if (state.instruments.isEmpty()) {
             item { EmptyInstrumentsMessage() }
         } else {
-            items(state.instruments, key = { it.id }) { instrument ->
-                InstrumentCard(instrument)
-            }
+            items(state.instruments, key = { it.id }) { instrument -> InstrumentCard(instrument) }
         }
     }
 }
@@ -138,7 +142,7 @@ private fun InstrumentsCount(count: Int) {
     Text(
         text = "Бот отслеживает $count инструментов",
         color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontSize = 14.sp
+        fontSize = 14.sp,
     )
 }
 
@@ -147,13 +151,13 @@ private fun EmptyInstrumentsMessage() {
     Column(
         modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text("Нет выбранных инструментов")
         Text(
             text = "Измените фильтры или запустите рескан, чтобы сформировать список",
             fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -177,55 +181,61 @@ private fun FiltersCard(filters: InstrumentFiltersUi, onShowFilters: () -> Unit)
 private fun FiltersDialog(
     filters: InstrumentFiltersUi,
     onSave: (InstrumentFiltersUi) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     var volume by remember { mutableStateOf(filters.minDailyVolume.toString()) }
     var minVolatility by remember { mutableStateOf(filters.minVolatility.toString()) }
     var maxVolatility by remember { mutableStateOf(filters.maxVolatility.toString()) }
     var maxCount by remember { mutableStateOf(filters.maxCount.toString()) }
 
-    androidx.compose.material3.AlertDialog(
+    TradebotDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Фильтры отбора") },
+        title = { Text(stringResource(R.string.instruments_filters_title)) },
         text = {
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 androidx.compose.material3.OutlinedTextField(
                     value = volume,
                     onValueChange = { volume = it },
-                    label = { Text("Мин. дневной объём") }
+                    label = { Text(stringResource(R.string.instruments_filter_volume)) },
                 )
                 androidx.compose.material3.OutlinedTextField(
                     value = minVolatility,
                     onValueChange = { minVolatility = it },
-                    label = { Text("Мин. волатильность, %") }
+                    label = { Text(stringResource(R.string.instruments_filter_min_volatility)) },
                 )
                 androidx.compose.material3.OutlinedTextField(
                     value = maxVolatility,
                     onValueChange = { maxVolatility = it },
-                    label = { Text("Макс. волатильность, %") }
+                    label = { Text(stringResource(R.string.instruments_filter_max_volatility)) },
                 )
                 androidx.compose.material3.OutlinedTextField(
                     value = maxCount,
                     onValueChange = { maxCount = it },
-                    label = { Text("Макс. инструментов") }
+                    label = { Text(stringResource(R.string.instruments_filter_max_count)) },
                 )
             }
         },
         confirmButton = {
-            Button(
+            TradebotDialogButton(
                 onClick = {
                     onSave(
                         InstrumentFiltersUi(
                             minDailyVolume = volume.toLongOrNull() ?: filters.minDailyVolume,
                             minVolatility = minVolatility.toDoubleOrNull() ?: filters.minVolatility,
                             maxVolatility = maxVolatility.toDoubleOrNull() ?: filters.maxVolatility,
-                            maxCount = maxCount.toIntOrNull() ?: filters.maxCount
+                            maxCount = maxCount.toIntOrNull() ?: filters.maxCount,
                         )
                     )
                 }
-            ) { Text("Сохранить") }
+            ) {
+                Text(stringResource(R.string.instruments_filters_save))
+            }
         },
-        dismissButton = { Button(onClick = onDismiss) { Text("Отмена") } }
+        dismissButton = {
+            TradebotDialogButton(onClick = onDismiss, outlined = true) {
+                Text(stringResource(R.string.instruments_filters_cancel))
+            }
+        },
     )
 }
 
@@ -237,8 +247,20 @@ private fun InstrumentCard(instrument: InstrumentUi) {
             Text(
                 text = instrument.name,
                 fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun FiltersDialogPreview() {
+    TradebotTheme {
+        FiltersDialog(
+            filters = InstrumentFiltersUi(100_000L, 0.5, 5.0, 15),
+            onSave = {},
+            onDismiss = {},
+        )
     }
 }

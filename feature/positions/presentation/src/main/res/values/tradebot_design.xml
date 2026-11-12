@@ -1,0 +1,28 @@
+<resources>
+    <string name="positions_title">Позиции</string>
+    <string name="positions_subtitle">Сделки и защита капитала</string>
+    <string name="positions_total">Общий P&amp;L</string>
+    <string name="positions_open_count">Открыто</string>
+    <string name="positions_closed_count">Закрыто</string>
+    <string name="positions_all">Все</string>
+    <string name="positions_open">Открытые</string>
+    <string name="positions_profit">Прибыль</string>
+    <string name="positions_loss">Убыток</string>
+    <string name="positions_empty">Нет позиций</string>
+    <string name="positions_empty_all">У вас пока нет ни одной позиции</string>
+    <string name="positions_empty_open">Нет открытых позиций</string>
+    <string name="positions_empty_profit">Нет прибыльных позиций</string>
+    <string name="positions_empty_loss">Нет убыточных позиций</string>
+    <string name="positions_entry">Вход</string>
+    <string name="positions_current">Текущая</string>
+    <string name="positions_broker_sl">Брокерский SL: %1$s</string>
+    <string name="positions_protection">Защита прибыли · %1$s: %2$s</string>
+    <string name="positions_breakeven">безубыток</string>
+    <string name="positions_trailing">трейлинг</string>
+    <string name="positions_active">активна</string>
+    <string name="positions_opened">Открыта %1$s</string>
+    <string name="positions_closed_at">Закрыта %1$s</string>
+    <string name="positions_close_title">Закрыть позицию</string>
+    <string name="positions_close_message">Вы уверены, что хотите закрыть позицию «%1$s»?</string>
+    <string name="positions_cancel">Отмена</string>
+</resources>

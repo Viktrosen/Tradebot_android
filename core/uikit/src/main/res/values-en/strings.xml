@@ -1,0 +1,13 @@
+<resources>
+    <string name="common_press_again_message">Press again to exit</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="positions">Positions</string>
+    <string name="strategy">Strategies</string>
+    <string name="risk">Risk</string>
+    <string name="more">More</string>
+    <string name="profile_main_logout_alert_title">Sign out of your account?</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="profile_main_logout_alert_confirm">Sign out</string>
+    <string name="geo_unavailable">Current location unavailable</string>
+    <string name="geo_reset">Hmm...</string>
+</resources>

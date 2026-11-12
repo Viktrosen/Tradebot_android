@@ -11,6 +11,10 @@ import org.junit.Test
  * - корректность значений
  */
 class ThemeModeTest {
+    @Test
+    fun `UI and domain modes map explicitly in both directions`() {
+        ThemeMode.entries.forEach { assertEquals(it, it.toDomain().toUi()) }
+    }
 
     @Test
     fun `All 3 theme modes must exist`() {

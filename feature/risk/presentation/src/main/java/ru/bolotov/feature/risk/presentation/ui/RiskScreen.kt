@@ -11,25 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,22 +28,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import ru.bolotov.tradebot.feature.risk.presentation.R
+import ru.bolotov.core.uikit.TradebotTheme
+import ru.bolotov.core.uikit.components.TradebotConfirmationDialog
+import ru.bolotov.core.uikit.components.TradebotDialog
+import ru.bolotov.core.uikit.components.TradebotDialogButton
+import ru.bolotov.core.uikit.components.TradebotHeader
+import ru.bolotov.core.uikit.components.TradebotPullToRefreshBox
+import ru.bolotov.core.uikit.components.TradebotSwitch
+import ru.bolotov.core.uikit.dimensions.TradebotDimens
+import ru.bolotov.core.uikit.format.formatPercent
 import ru.bolotov.feature.risk.presentation.core.Action
 import ru.bolotov.feature.risk.presentation.core.Effect
 import ru.bolotov.feature.risk.presentation.core.RiskConfigUi
 import ru.bolotov.feature.risk.presentation.core.RiskViewModel
-import kotlin.math.roundToInt
+import ru.bolotov.tradebot.feature.risk.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun RiskScreen(
-    viewModel: RiskViewModel,
-    onNavigateBack: () -> Unit = {}
-) {
+internal fun RiskScreen(viewModel: RiskViewModel, onNavigateBack: () -> Unit = {}) {
     val state by viewModel.collectAsState()
     var showResetDialog by remember { mutableStateOf(false) }
     var statusDialog by remember { mutableStateOf<RiskStatusDialogData?>(null) }
@@ -70,19 +67,9 @@ internal fun RiskScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.risk_screen_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.risk_screen_back)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+            TradebotHeader(
+                stringResource(R.string.risk_title_compact),
+                stringResource(R.string.risk_subtitle),
             )
         },
         bottomBar = {
@@ -90,21 +77,19 @@ internal fun RiskScreen(
                 onSave = { viewModel.handleAction(Action.Save) },
                 onReset = { viewModel.handleAction(Action.ShowResetConfirmation) },
                 isSaving = state.isSaving,
-                isResetting = state.isResetting
+                isResetting = state.isResetting,
             )
-        }
+        },
     ) { paddingValues ->
-        PullToRefreshBox(
+        TradebotPullToRefreshBox(
             isRefreshing = state.isLoading,
             onRefresh = { viewModel.handleAction(Action.Refresh) },
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
         ) {
             if (state.errorMessage != null) {
                 ErrorContent(
                     message = state.errorMessage.orEmpty(),
-                    onRetry = { viewModel.handleAction(Action.LoadData) }
+                    onRetry = { viewModel.handleAction(Action.LoadData) },
                 )
             } else {
                 RiskContent(
@@ -112,9 +97,7 @@ internal fun RiskScreen(
                     onUpdatePositionSize = {
                         viewModel.handleAction(Action.UpdatePositionSizePercent(it))
                     },
-                    onUpdateStopLoss = {
-                        viewModel.handleAction(Action.UpdateStopLossPercent(it))
-                    },
+                    onUpdateStopLoss = { viewModel.handleAction(Action.UpdateStopLossPercent(it)) },
                     onUpdateTakeProfit = {
                         viewModel.handleAction(Action.UpdateTakeProfitPercent(it))
                     },
@@ -126,7 +109,7 @@ internal fun RiskScreen(
                     },
                     onUpdateShortTradingEnabled = {
                         viewModel.handleAction(Action.RequestShortTradingEnabled(it))
-                    }
+                    },
                 )
             }
         }
@@ -135,57 +118,44 @@ internal fun RiskScreen(
     if (showResetDialog) {
         ResetConfirmationDialog(
             onConfirm = { viewModel.handleAction(Action.ConfirmReset) },
-            onDismiss = { viewModel.handleAction(Action.DismissResetConfirmation) }
+            onDismiss = { viewModel.handleAction(Action.DismissResetConfirmation) },
         )
     }
 
     if (state.isShortTradingConfirmationVisible) {
-        AlertDialog(
-            onDismissRequest = { viewModel.handleAction(Action.DismissShortTradingConfirmation) },
-            title = { Text(stringResource(R.string.risk_short_confirmation_title)) },
-            text = { Text(stringResource(R.string.risk_short_confirmation_message)) },
-            confirmButton = {
-                Button(onClick = { viewModel.handleAction(Action.ConfirmShortTradingEnabled) }) {
-                    Text(stringResource(R.string.risk_short_confirmation_confirm))
-                }
-            },
-            dismissButton = {
-                OutlinedButton(onClick = {
-                    viewModel.handleAction(Action.DismissShortTradingConfirmation)
-                }) {
-                    Text(stringResource(R.string.risk_dialog_cancel))
-                }
-            }
+        TradebotConfirmationDialog(
+            title = stringResource(R.string.risk_short_confirmation_title),
+            message = stringResource(R.string.risk_short_confirmation_message),
+            confirmText = stringResource(R.string.risk_short_confirmation_confirm),
+            dismissText = stringResource(R.string.risk_dialog_cancel),
+            onConfirm = { viewModel.handleAction(Action.ConfirmShortTradingEnabled) },
+            onDismiss = { viewModel.handleAction(Action.DismissShortTradingConfirmation) },
         )
     }
 
     statusDialog?.let { dialog ->
-        RiskStatusDialog(
-            status = dialog,
-            onDismiss = { statusDialog = null }
-        )
+        RiskStatusDialog(status = dialog, onDismiss = { statusDialog = null })
     }
 }
 
 @Composable
-private fun RiskStatusDialog(
-    status: RiskStatusDialogData,
-    onDismiss: () -> Unit
-) {
-    val title = when (status) {
-        is RiskStatusDialogData.Success -> stringResource(R.string.risk_save_success_title)
-        is RiskStatusDialogData.Error -> stringResource(R.string.risk_save_error_title)
-    }
+private fun RiskStatusDialog(status: RiskStatusDialogData, onDismiss: () -> Unit) {
+    val title =
+        when (status) {
+            is RiskStatusDialogData.Success -> stringResource(R.string.risk_save_success_title)
+            is RiskStatusDialogData.Error -> stringResource(R.string.risk_save_error_title)
+        }
 
-    AlertDialog(
+    TradebotDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
+        destructive = status is RiskStatusDialogData.Error,
         text = { Text(status.message) },
         confirmButton = {
-            Button(onClick = onDismiss) {
+            TradebotDialogButton(onClick = onDismiss) {
                 Text(stringResource(R.string.risk_dialog_ok))
             }
-        }
+        },
     )
 }
 
@@ -195,9 +165,7 @@ private fun ErrorContent(message: String, onRetry: () -> Unit) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(message, color = MaterialTheme.colorScheme.error)
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = onRetry) {
-                Text(stringResource(R.string.risk_screen_retry))
-            }
+            Button(onClick = onRetry) { Text(stringResource(R.string.risk_screen_retry)) }
         }
     }
 }
@@ -210,14 +178,14 @@ private fun RiskContent(
     onUpdateTakeProfit: (Double) -> Unit,
     onUpdateCapitalUsage: (Double) -> Unit,
     onUpdateMaxPositions: (Int) -> Unit,
-    onUpdateShortTradingEnabled: (Boolean) -> Unit
+    onUpdateShortTradingEnabled: (Boolean) -> Unit,
 ) {
     if (config == null) return
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        contentPadding = PaddingValues(TradebotDimens.screenPadding),
+        verticalArrangement = Arrangement.spacedBy(TradebotDimens.largeGap),
     ) {
         item {
             PercentageRiskCard(
@@ -225,7 +193,7 @@ private fun RiskContent(
                 description = stringResource(R.string.risk_stop_loss_description),
                 value = config.stopLossPercent,
                 percentRange = 1..20,
-                onValueChange = onUpdateStopLoss
+                onValueChange = onUpdateStopLoss,
             )
         }
         item {
@@ -234,7 +202,7 @@ private fun RiskContent(
                 description = stringResource(R.string.risk_take_profit_description),
                 value = config.takeProfitPercent,
                 percentRange = 1..50,
-                onValueChange = onUpdateTakeProfit
+                onValueChange = onUpdateTakeProfit,
             )
         }
         item {
@@ -243,7 +211,7 @@ private fun RiskContent(
                 description = stringResource(R.string.risk_position_size_description),
                 value = config.positionSizePercent,
                 percentRange = 1..80,
-                onValueChange = onUpdatePositionSize
+                onValueChange = onUpdatePositionSize,
             )
         }
         item {
@@ -252,7 +220,7 @@ private fun RiskContent(
                 description = stringResource(R.string.risk_capital_usage_description),
                 value = config.maxCapitalUsage,
                 percentRange = 10..95,
-                onValueChange = onUpdateCapitalUsage
+                onValueChange = onUpdateCapitalUsage,
             )
         }
         item {
@@ -260,16 +228,14 @@ private fun RiskContent(
                 title = stringResource(R.string.risk_max_positions_title),
                 description = stringResource(R.string.risk_max_positions_description),
                 value = config.maxPositions.toString(),
-                unit = ""
+                unit = "",
             ) {
                 RiskSlider(
                     value = config.maxPositions.toFloat(),
                     onValueChange = { onUpdateMaxPositions(it.toInt()) },
                     valueRange = 1f..50f,
                     steps = 48,
-                    formatValue = {
-                        stringResource(R.string.risk_positions_value, it.toInt())
-                    }
+                    formatValue = { stringResource(R.string.risk_positions_value, it.toInt()) },
                 )
             }
         }
@@ -277,16 +243,17 @@ private fun RiskContent(
             RiskCard(
                 title = stringResource(R.string.risk_short_trading_title),
                 description = stringResource(R.string.risk_short_trading_description),
-                value = if (config.shortTradingEnabled) {
-                    stringResource(R.string.risk_short_trading_enabled)
-                } else {
-                    stringResource(R.string.risk_short_trading_disabled)
-                },
-                unit = ""
+                value =
+                    if (config.shortTradingEnabled) {
+                        stringResource(R.string.risk_short_trading_enabled)
+                    } else {
+                        stringResource(R.string.risk_short_trading_disabled)
+                    },
+                unit = "",
             ) {
-                Switch(
+                TradebotSwitch(
                     checked = config.shortTradingEnabled,
-                    onCheckedChange = onUpdateShortTradingEnabled
+                    onCheckedChange = onUpdateShortTradingEnabled,
                 )
             }
         }
@@ -299,20 +266,15 @@ private fun PercentageRiskCard(
     description: String,
     value: Double,
     percentRange: IntRange,
-    onValueChange: (Double) -> Unit
+    onValueChange: (Double) -> Unit,
 ) {
-    RiskCard(
-        title = title,
-        description = description,
-        value = value.toPercentText(),
-        unit = ""
-    ) {
+    RiskCard(title = title, description = description, value = value.toPercentText(), unit = "") {
         RiskSlider(
             value = value.toPercentValue(),
             onValueChange = { onValueChange(it.toInt() / 100.0) },
             valueRange = percentRange.first.toFloat()..percentRange.last.toFloat(),
             steps = percentRange.last - percentRange.first - 1,
-            formatValue = { "${it.toInt()}%" }
+            formatValue = { formatPercent(it.toDouble(), digits = 0) },
         )
     }
 }
@@ -322,17 +284,17 @@ private fun RiskBottomBar(
     onSave: () -> Unit,
     onReset: () -> Unit,
     isSaving: Boolean,
-    isResetting: Boolean
+    isResetting: Boolean,
 ) {
-    Surface(tonalElevation = 3.dp, shadowElevation = 3.dp) {
+    Surface(color = MaterialTheme.colorScheme.background) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.fillMaxWidth().padding(TradebotDimens.cardPadding),
+            horizontalArrangement = Arrangement.spacedBy(TradebotDimens.itemGap),
         ) {
             OutlinedButton(
                 onClick = onReset,
                 modifier = Modifier.weight(1f),
-                enabled = !isSaving && !isResetting
+                enabled = !isSaving && !isResetting,
             ) {
                 if (isResetting) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
@@ -343,13 +305,13 @@ private fun RiskBottomBar(
             Button(
                 onClick = onSave,
                 modifier = Modifier.weight(1f),
-                enabled = !isSaving && !isResetting
+                enabled = !isSaving && !isResetting,
             ) {
                 if (isSaving) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = MaterialTheme.colorScheme.onPrimary,
                     )
                 } else {
                     Text(stringResource(R.string.risk_screen_save))
@@ -359,7 +321,7 @@ private fun RiskBottomBar(
     }
 }
 
-private fun Double.toPercentText(): String = "${(this * 100).roundToInt()}%"
+@Composable private fun Double.toPercentText(): String = formatPercent(this * 100, digits = 0)
 
 private fun Double.toPercentValue(): Float = (this * 100).roundToInt().toFloat()
 
@@ -367,5 +329,45 @@ private sealed interface RiskStatusDialogData {
     val message: String
 
     data class Success(override val message: String) : RiskStatusDialogData
+
     data class Error(override val message: String) : RiskStatusDialogData
+}
+
+@Preview(name = "Risk · configuration", showBackground = true, widthDp = 412, heightDp = 915)
+@Composable
+private fun RiskContentPreview() {
+    TradebotTheme {
+        Scaffold(
+            topBar = {
+                TradebotHeader(
+                    stringResource(R.string.risk_title_compact),
+                    stringResource(R.string.risk_subtitle),
+                )
+            },
+            bottomBar = { RiskBottomBar({}, {}, isSaving = false, isResetting = false) },
+        ) { padding ->
+            Box(Modifier.padding(padding)) {
+                RiskContent(
+                    config = RiskConfigUi(positionSizePercent = 0.02),
+                    onUpdatePositionSize = {},
+                    onUpdateStopLoss = {},
+                    onUpdateTakeProfit = {},
+                    onUpdateCapitalUsage = {},
+                    onUpdateMaxPositions = {},
+                    onUpdateShortTradingEnabled = {},
+                )
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun RiskStatusDialogPreview() {
+    TradebotTheme {
+        RiskStatusDialog(
+            status = RiskStatusDialogData.Success(stringResource(R.string.risk_save_success_title)),
+            onDismiss = {},
+        )
+    }
 }

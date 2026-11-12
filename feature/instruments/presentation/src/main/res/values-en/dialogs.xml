@@ -1,0 +1,9 @@
+<resources>
+    <string name="instruments_filters_title">Instrument filters</string>
+    <string name="instruments_filter_volume">Min. daily volume</string>
+    <string name="instruments_filter_min_volatility">Min. volatility, %</string>
+    <string name="instruments_filter_max_volatility">Max. volatility, %</string>
+    <string name="instruments_filter_max_count">Max. instruments</string>
+    <string name="instruments_filters_save">Save</string>
+    <string name="instruments_filters_cancel">Cancel</string>
+</resources>

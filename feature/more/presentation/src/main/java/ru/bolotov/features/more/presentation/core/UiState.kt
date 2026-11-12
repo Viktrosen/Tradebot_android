@@ -1,12 +1,9 @@
 package ru.bolotov.features.more.presentation.core
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
-
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import ru.bolotov.tradebot.core.uikit.R as UiR
+import ru.bolotov.tradebot.feature.more.presentation.R
 
 data class UiState(
     val isLoading: Boolean = false,
@@ -17,61 +14,72 @@ data class UiState(
     val buildNumber: String = "1",
     val isEmergencyCloseDialogVisible: Boolean = false,
     val isEmergencyCloseInProgress: Boolean = false,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
-
-enum class ThemeMode {
-    LIGHT,
-    DARK,
-    SYSTEM
-}
 
 sealed class MoreMenuItem(
     val id: String,
-    val title: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
-    val badge: String? = null
+    @StringRes val titleRes: Int,
+    @DrawableRes val iconRes: Int,
+    val badge: String? = null,
 ) {
-    object Instruments : MoreMenuItem(
-        id = "instruments",
-        title = "Инструменты",
-        icon = Icons.Default.Star  // ← ShowChart → Star
-    )
-    object History : MoreMenuItem(
-        id = "history",
-        title = "История сделок",
-        icon = Icons.Default.Favorite  // ← History → Favorite
-    )
-    object Settings : MoreMenuItem(
-        id = "settings",
-        title = "Настройки",
-        icon = Icons.Default.Settings
-    )
-    object About : MoreMenuItem(
-        id = "about",
-        title = "О приложении",
-        icon = Icons.Default.Info
-    )
-    object Logout : MoreMenuItem(
-        id = "logout",
-        title = "Выход",
-        icon = Icons.Default.Close  // ← Logout → Close
-    )
+    object Instruments :
+        MoreMenuItem(
+            id = "instruments",
+            titleRes = R.string.more_instruments,
+            iconRes = UiR.drawable.ic_candles_outline,
+        )
+
+    object History :
+        MoreMenuItem(
+            id = "history",
+            titleRes = R.string.more_history,
+            iconRes = UiR.drawable.ic_positions_outline,
+        )
+
+    object Settings :
+        MoreMenuItem(
+            id = "settings",
+            titleRes = R.string.more_settings,
+            iconRes = UiR.drawable.ic_settings_outline,
+        )
+
+    object About :
+        MoreMenuItem(
+            id = "about",
+            titleRes = R.string.more_about,
+            iconRes = UiR.drawable.ic_info_outline,
+        )
+
+    object Logout :
+        MoreMenuItem(
+            id = "logout",
+            titleRes = R.string.more_logout,
+            iconRes = UiR.drawable.ic_close_24,
+        )
 }
 
 sealed interface Effect {
     data class ShowToast(val message: String) : Effect
+
     data class ShowMessage(val messageResId: Int) : Effect
+
     data class ShowError(val error: String) : Effect
+
     data object NavigateToInstruments : Effect
+
     data object NavigateToHistory : Effect
+
     data object NavigateToSettings : Effect
+
     data object NavigateToAbout : Effect
+
     data object Logout : Effect
 }
 
 sealed interface Action {
     data object LoadData : Action
+
     data object Refresh : Action
 
     // Theme
@@ -81,10 +89,13 @@ sealed interface Action {
     data class SetNotificationsEnabled(val enabled: Boolean) : Action
 
     data object ShowEmergencyCloseDialog : Action
+
     data object ConfirmEmergencyClose : Action
+
     data object DismissEmergencyCloseDialog : Action
 
     // Navigation
     data class NavigateTo(val itemId: String) : Action
+
     data object Logout : Action
 }

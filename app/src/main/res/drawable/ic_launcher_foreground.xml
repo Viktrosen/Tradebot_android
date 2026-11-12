@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp" android:height="108dp"
-    android:viewportWidth="108" android:viewportHeight="108">
-
-    <!-- ПЕРЕКЛАДИНА: 28..80, центр 54 -->
-    <path android:fillColor="#C6FF00"
-        android:pathData="M28,29 L76,29 L80,33 L80,43 L28,43 Z" />
-
-    <!-- НОЖКА: 46..60, центр 53 -> сдвигаем на 1 вправо: 47..61, центр 54 -->
-    <path android:fillColor="#C6FF00"
-        android:pathData="M47,43 L61,43 L61,67 L57,71 L47,71 Z" />
-
-    <!-- ПОДЧЁРКИВАНИЕ: центр 54, шире ножки -->
-    <path android:fillColor="#FF2E88"
-        android:pathData="M43,75 L65,75 L65,79 L43,79 Z" />
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Preserve the adaptive icon's 108dp canvas; only the shared mark is visible. -->
+    <item>
+        <shape android:shape="rectangle">
+            <size android:width="108dp" android:height="108dp" />
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    <!-- 60/108 of the canvas; fractional padding also scales at smaller launcher sizes. -->
+    <item>
+        <inset
+            android:drawable="@drawable/ic_tradebot_mark"
+            android:inset="22.2222%" />
+    </item>
+</layer-list>
