@@ -26,7 +26,11 @@ import ru.bolotov.tradebot.core.uikit.R
 
 /** Header used in Scaffold.topBar; it does not own refreshing or navigation state. */
 @Composable
-fun TradebotHeader(title: String, subtitle: String, onBack: (() -> Unit)? = null) {
+fun TradebotHeader(
+    title: String,
+    subtitle: String,
+    onBack: (() -> Unit)? = null
+) {
     Column(
         Modifier
             .fillMaxWidth()

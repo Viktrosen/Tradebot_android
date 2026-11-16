@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
 import kotlinx.serialization.json.Json
 import org.junit.Assert.*
@@ -38,6 +39,44 @@ class AppLinkStateTest {
                 themeMode.value = mode
             }
         }
+
+    @Test
+    fun `state stays current without UI subscribers and is shared between collectors`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        val store = ViewModelStore()
+        try {
+            val auth = Auth()
+            val model =
+                AppViewModel(
+                    auth = auth,
+                    themeInteractor = themes,
+                    savedStateHandle = SavedStateHandle(),
+                    json = Json,
+                )
+            store.put("host", model)
+            assertEquals(AppNavigationState.Auth, model.navigationState.value)
+            runCurrent()
+            assertEquals(1, auth.session.subscriptionCount.value)
+            auth.session.value = AuthSession.SignedIn("owner@example.com", "session")
+            model.acceptLink(destination = destination)
+            runCurrent()
+            val state = model.navigationState.value as AppNavigationState.Main
+            assertEquals(destination, state.pendingLink?.destination)
+            val first = backgroundScope.launch { model.navigationState.collect {} }
+            val second = backgroundScope.launch { model.navigationState.collect {} }
+            runCurrent()
+            assertEquals(1, auth.session.subscriptionCount.value)
+            first.cancel()
+            second.cancel()
+            auth.session.value = AuthSession.SignedOut
+            runCurrent()
+            assertEquals(AppNavigationState.Auth, model.navigationState.value)
+        } finally {
+            store.clear()
+            Dispatchers.resetMain()
+        }
+    }
+
     private val destination =
         AppLink.PositionDetails(positionId = "31fcf18a-350d-443d-9d69-871d4c25a4d9")
 
@@ -69,7 +108,9 @@ class AppLinkStateTest {
                     )
                 store.put("second", second)
                 auth.session.value = AuthSession.SignedIn("owner@example.com", "session")
-                val main = second.navigationState.first() as AppNavigationState.Main
+                val main =
+                    second.navigationState.first { it is AppNavigationState.Main }
+                        as AppNavigationState.Main
                 val pending = requireNotNull(main.pendingLink)
                 assertEquals(destination, pending.destination)
                 assertEquals(destination.positionId, pending.toMainRoute().initialPositionId)
@@ -81,7 +122,10 @@ class AppLinkStateTest {
                     )
                 )
                 second.acknowledgeLink(requestId = pending.requestId)
-                val consumed = second.navigationState.first() as AppNavigationState.Main
+                val consumed =
+                    second.navigationState.first {
+                        it is AppNavigationState.Main && it.pendingLink == null
+                    } as AppNavigationState.Main
                 assertNull(consumed.pendingLink)
                 assertFalse(
                     consumed.requiresNavigation(
@@ -116,12 +160,20 @@ class AppLinkStateTest {
             model.acceptLink(destination = destination)
             val first =
                 requireNotNull(
-                    (model.navigationState.first() as AppNavigationState.Main).pendingLink
+                    (model.navigationState.first {
+                            it is AppNavigationState.Main && it.pendingLink != null
+                        } as AppNavigationState.Main)
+                        .pendingLink
                 )
             model.acceptLink(destination = destination)
             val second =
                 requireNotNull(
-                    (model.navigationState.first() as AppNavigationState.Main).pendingLink
+                    (model.navigationState.first {
+                            it is AppNavigationState.Main &&
+                                it.pendingLink?.requestId != null &&
+                                it.pendingLink.requestId != first.requestId
+                        } as AppNavigationState.Main)
+                        .pendingLink
                 )
             assertNotEquals(first.requestId, second.requestId)
             model.acknowledgeLink(requestId = first.requestId)

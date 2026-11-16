@@ -65,9 +65,12 @@ internal fun DashboardScreen(
         ) {
             when {
                 state.errorMessage != null ->
-                    TradebotErrorState(state.errorMessage!!) {
-                        viewModel.handleAction(Action.Refresh)
-                    }
+                    TradebotErrorState(
+                        message = state.errorMessage!!,
+                        onRetry = {
+                            viewModel.handleAction(Action.Refresh)
+                        }
+                    )
 
                 else ->
                     DashboardContent(

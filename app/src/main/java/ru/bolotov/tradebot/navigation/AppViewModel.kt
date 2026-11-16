@@ -3,9 +3,11 @@ package ru.bolotov.tradebot.navigation
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import java.util.UUID
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -17,10 +19,11 @@ import ru.bolotov.tradebot.navigation.data.AppLink
 import ru.bolotov.tradebot.navigation.data.AppNavigationState
 import ru.bolotov.tradebot.navigation.data.PendingAppLink
 import ru.bolotov.tradebot.navigation.data.toAppNavigationState
-import java.util.UUID
-import javax.inject.Inject
 
-/** Restores a session once per application host; Activity owns navigation, data owns tokens. */
+/**
+ * Restores a session once per application host; AppNavigationHost owns navigation, data owns
+ * tokens.
+ */
 class AppViewModel
 @Inject
 constructor(
@@ -30,24 +33,32 @@ constructor(
     private val json: Json,
 ) : ViewModel() {
     // Null means the initial disk read is pending, not a default dark preference.
-    val themeMode = themeInteractor.themeMode
-        .map<AppThemeMode, AppThemeMode?> { it }
-        .stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = null)
+    val themeMode =
+        themeInteractor.themeMode
+            .map<AppThemeMode, AppThemeMode?> { it }
+            .stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = null)
 
     // Retained on rotation, renewed after process death. Do not restore an unchecked Main back
     // stack.
     val navigationInstanceId: String = UUID.randomUUID().toString()
-    private val pendingLinkJson = savedStateHandle.getStateFlow<String?>(
-        key = PENDING_LINK,
-        initialValue = null
-    )
-    val navigationState = combine(auth.session, pendingLinkJson) { session, encoded ->
-        when (val state = session.toAppNavigationState()) {
-            AppNavigationState.Auth -> state
-            is AppNavigationState.Main -> state.copy(pendingLink = decodeLink(encoded))
-        }
+    private val pendingLinkJson =
+        savedStateHandle.getStateFlow<String?>(key = PENDING_LINK, initialValue = null)
+    val navigationState: StateFlow<AppNavigationState> =
+        combine(auth.session, pendingLinkJson) { session, encoded ->
+                when (val state = session.toAppNavigationState()) {
+                    AppNavigationState.Auth -> state
+                    is AppNavigationState.Main -> state.copy(pendingLink = decodeLink(encoded))
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = AppNavigationState.Auth,
+            )
+
+    init {
+        viewModelScope.launch { auth.restore() }
     }
-        .distinctUntilChanged()
 
     fun acceptLink(destination: AppLink) {
         savedStateHandle[PENDING_LINK] =
@@ -66,9 +77,5 @@ constructor(
 
     private companion object {
         const val PENDING_LINK = "navigation.pendingAppLink"
-    }
-
-    init {
-        viewModelScope.launch { auth.restore() }
     }
 }

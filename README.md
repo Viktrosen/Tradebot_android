@@ -202,10 +202,11 @@ Firebase-конфигурация Android. Адрес gateway задаётся �
 
 `feature:auth:{api,data,domain,presentation,router}` следует той же Clean MVI архитектуре.
 `AuthEntry` использует обычный `ComposableFeatureEntry` и типизированный `AuthGraph.Root`.
-`AppViewModel` один раз восстанавливает сессию через `AuthInteractor`, а MainActivity
-подписывается на её навигационное состояние с `repeatOnLifecycle(STARTED)` и переключает
-Auth/Main. Проверка сессии и временный сбой восстановления отображаются на Auth (progress/retry).
-Выход в разделе «Ещё» удаляет сессию; Activity очищает предыдущий back stack вместе
+`AppViewModel` один раз восстанавливает сессию через `AuthInteractor` и отдаёт
+`navigationState: StateFlow<AppNavigationState>` с `SharingStarted.Eagerly`.
+`AppNavigationHost` собирает его внутри `repeatOnLifecycle(STARTED)` и переключает
+Auth/Main; MainActivity только размещает host под общей темой. Проверка сессии и временный сбой восстановления отображаются на Auth (progress/retry).
+Выход в разделе «Ещё» удаляет сессию; host очищает предыдущий back stack вместе
 с ViewModel вложенных экранов и подписками. Обновление токенов той же сессии не
 перезапускает Main. При восстановлении процесса старый Main back stack не используется
 до проверки сессии; поворот экрана сохраняет навигацию в рамках живого AppViewModel.

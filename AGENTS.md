@@ -87,8 +87,8 @@ root-cause follow-up.
 - `feature:auth` owns the session flow through the usual api/data/domain/presentation/router
   boundaries. Domain/UI never receive access or refresh tokens.
 - `AuthEntry` is an ordinary `ComposableFeatureEntry` with a typed route, like other screens.
-  `AppViewModel` restores/observes the session through `AuthInteractor`; MainActivity
-  collects navigation state with lifecycle awareness and replaces Auth/Main, clearing
+  `AppViewModel` restores/observes the session through `AuthInteractor`; AppNavigationHost
+  collects the eager navigation StateFlow with repeatOnLifecycle(STARTED) and replaces Auth/Main, clearing
   the previous back stack and its ViewModels. Token refresh within a session must
   not reset navigation. Never restore a protected graph before checking a session.
 - Rotate tokens under one shared data-layer lock, store the entire pair atomically
@@ -190,3 +190,8 @@ router flow. Integrate authorization and pending links in the same root navigati
 collector. Main accepts typed entry arguments only and owns Dashboard → Details.
 TaskStackBuilder manages Activity tasks, not Compose destinations. Keep foreground,
 background, legacy notification, repeat-tap and rotation behavior compatible.
+AppNavigationHost owns the root NavController, session/back-stack replacement and
+external-link acknowledgement. MainActivity hosts it under the shared theme and
+adapts incoming Intents. StateFlow retains current state but does not suspend
+navigation by itself: keep the host's lifecycle-aware collection. Keep the
+navigation instance key independent of palette changes.
