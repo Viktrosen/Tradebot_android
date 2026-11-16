@@ -42,6 +42,7 @@ internal fun DashboardContent(
     onNavigateToPositions: () -> Unit,
     onNavigateToInstruments: () -> Unit,
     onShowAllPositions: () -> Unit,
+    onOpenPositionDetails: (String) -> Unit = {},
 ) {
     val colors = TradebotTheme.colors
     val running = state.botStatus?.running == true
@@ -199,7 +200,7 @@ internal fun DashboardContent(
                 )
             }
             items(state.positions.take(5), key = { it.positionId }) { position ->
-                DashboardPositionCard(position, onNavigateToPositions)
+                DashboardPositionCard(position = position, onClick = { onOpenPositionDetails(position.positionId) })
             }
             if (state.positions.size > 5) {
                 item {

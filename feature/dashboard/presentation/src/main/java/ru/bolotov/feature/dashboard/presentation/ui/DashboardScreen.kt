@@ -27,6 +27,7 @@ internal fun DashboardScreen(
     onNavigateToRisk: () -> Unit,
     onNavigateToPositions: () -> Unit,
     onNavigateToStrategy: () -> Unit,
+    onOpenPositionDetails: (String) -> Unit,
     onNavigateToInstruments: () -> Unit = {},
 ) {
     val state by viewModel.collectAsState()
@@ -35,6 +36,7 @@ internal fun DashboardScreen(
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
+            is Effect.NavigateToPositionDetails -> onOpenPositionDetails(effect.positionId)
             is Effect.NavigateToRisk -> onNavigateToRisk()
             is Effect.NavigateToPositions -> onNavigateToPositions()
             is Effect.NavigateToStrategy -> onNavigateToStrategy()
@@ -81,6 +83,7 @@ internal fun DashboardScreen(
                         },
                         onNavigateToInstruments = onNavigateToInstruments,
                         onShowAllPositions = { viewModel.handleAction(Action.NavigateToPositions) },
+                        onOpenPositionDetails = { viewModel.handleAction(Action.OpenPositionDetails(positionId = it)) },
                     )
             }
         }

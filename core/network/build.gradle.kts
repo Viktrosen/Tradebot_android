@@ -13,6 +13,7 @@ android {
 }
 
 dependencies {
+    testImplementation(libs.jetbrains.coroutines.test)
     implementation(libs.androidx.core.ktx)
     implementation(libs.okhttp)
     implementation(libs.jetbrains.serializationJson)

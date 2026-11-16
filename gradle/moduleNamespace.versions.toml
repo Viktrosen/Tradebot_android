@@ -67,4 +67,9 @@ feature-scheduler-router = "ru.bolotov.tradebot.feature.scheduler.router"
 
 feature-chats-presentation = "ru.bolotov.tradebot.feature.chats.presentation"
 feature-chats-router = "ru.bolotov.tradebot.feature.chats.router"
+feature-positionDetails-api = "ru.bolotov.tradebot.feature.positionDetails.api"
+feature-positionDetails-data = "ru.bolotov.tradebot.feature.positionDetails.data"
+feature-positionDetails-domain = "ru.bolotov.tradebot.feature.positionDetails.domain"
+feature-positionDetails-presentation = "ru.bolotov.tradebot.feature.positionDetails.presentation"
+feature-positionDetails-router = "ru.bolotov.tradebot.feature.positionDetails.router"
 

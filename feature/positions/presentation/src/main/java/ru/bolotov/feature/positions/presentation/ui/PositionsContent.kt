@@ -136,7 +136,7 @@ internal fun PositionsContent(
                                             onAction(
                                                 Action.NavigateToInstrument(position.instrumentId)
                                             )
-                                            onNavigateToInstrument(position.instrumentId)
+                                            onAction(Action.OpenPositionDetails(positionId = position.id))
                                         },
                                         onInfoClick = {
                                             onAction(Action.ShowPositionInfo(position.id))

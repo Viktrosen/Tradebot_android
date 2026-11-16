@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.bolotov.core.dependency.FeatureEntryKey
+import ru.bolotov.feature.auth.presentation.core.AuthEntryCore
+import ru.bolotov.feature.auth.router.AuthEntry
 import ru.bolotov.feature.dashboard.presentation.core.DashboardEntryCore
 import ru.bolotov.feature.dashboard.router.DashboardEntry
 import ru.bolotov.feature.instruments.presentation.core.InstrumentsEntryCore
@@ -11,6 +13,8 @@ import ru.bolotov.feature.instruments.router.InstrumentsEntry
 import ru.bolotov.feature.main.presentation.core.MainEntryCore
 import ru.bolotov.feature.main.route.MainEntry
 import ru.bolotov.feature.more.router.MoreEntry
+import ru.bolotov.feature.positionDetails.presentation.core.PositionDetailsEntryCore
+import ru.bolotov.feature.positionDetails.router.PositionDetailsEntry
 import ru.bolotov.feature.positions.presentation.core.PositionsEntryCore
 import ru.bolotov.feature.positions.router.PositionsEntry
 import ru.bolotov.feature.risk.presentation.core.RiskEntryCore
@@ -26,9 +30,13 @@ import ru.bolotov.tradebot.router.FeatureEntry
 interface NavigationModule {
     @Binds
     @IntoMap
-    @FeatureEntryKey(ru.bolotov.feature.auth.router.AuthEntry::class)
-    fun bindAuthEntry(entry: ru.bolotov.feature.auth.presentation.core.AuthEntryCore): FeatureEntry
+    @FeatureEntryKey(PositionDetailsEntry::class)
+    fun bindPositionDetailsEntry(entry: PositionDetailsEntryCore): FeatureEntry
 
+    @Binds
+    @IntoMap
+    @FeatureEntryKey(AuthEntry::class)
+    fun bindAuthEntry(entry: AuthEntryCore): FeatureEntry
 
     @Binds
     @IntoMap
@@ -45,7 +53,9 @@ interface NavigationModule {
     @FeatureEntryKey(DashboardEntry::class)
     fun bindDashboardScreenEntry(entry: DashboardEntryCore): FeatureEntry
 
-    @Binds @IntoMap @FeatureEntryKey(InstrumentsEntry::class)
+    @Binds
+    @IntoMap
+    @FeatureEntryKey(InstrumentsEntry::class)
     fun bindInstrumentsScreenEntry(entry: InstrumentsEntryCore): FeatureEntry
 
     @Binds
@@ -67,6 +77,4 @@ interface NavigationModule {
     @IntoMap
     @FeatureEntryKey(MoreEntry::class)
     fun bindMoreScreenEntry(entry: MoreEntryCore): FeatureEntry
-
-
 }

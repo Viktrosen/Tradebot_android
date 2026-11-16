@@ -17,7 +17,8 @@ sealed interface TradingStateUpdate {
         val instrumentId: String,
         val currentPrice: Double,
         val unrealizedPnl: Double,
-        val pnlPercent: Double
+        val pnlPercent: Double,
+        val positionId: String? = null,
     ) : TradingStateUpdate
 
     data class Portfolio(
@@ -25,6 +26,8 @@ sealed interface TradingStateUpdate {
         val availableCash: Double?,
         val blockedCash: Double?
     ) : TradingStateUpdate
+
+    data object Reconnected : TradingStateUpdate
 
     data object PositionsChanged : TradingStateUpdate
     data class BotStatus(val running: Boolean) : TradingStateUpdate

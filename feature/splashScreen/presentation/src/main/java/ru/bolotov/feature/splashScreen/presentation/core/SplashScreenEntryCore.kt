@@ -54,7 +54,7 @@ class SplashScreenEntryCore @Inject constructor() : SplashScreenEntry() {
 
     private fun NavHostController.navigateToHomepage() {
         this.currentBackStackEntry?.withLifecycle {
-            navigate(MainGraph.Root) {
+            navigate(MainGraph.Root()) {
                 popUpTo(this@navigateToHomepage.graph.id) { inclusive = true }
             }
         }

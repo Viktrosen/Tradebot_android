@@ -1,5 +1,6 @@
 package ru.bolotov.feature.positions.presentation.ui
 
+import ru.bolotov.core.uikit.format.formatExplanationNumbers
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,12 +26,14 @@ import ru.bolotov.tradebot.feature.positions.presentation.R
 @Composable
 internal fun PositionsScreen(
     viewModel: PositionsViewModel,
+    onOpenPositionDetails: (String) -> Unit,
     onNavigateToInstrument: (String) -> Unit = {},
 ) {
     val state by viewModel.collectAsState()
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
+            is Effect.NavigateToPositionDetails -> onOpenPositionDetails(effect.positionId)
             is Effect.ShowToast -> {
                 // TODO: Show toast implementation
             }
@@ -86,6 +89,4 @@ internal fun PositionsScreen(
 
 /** Keeps AI prose intact while making overly precise decimal values readable. */
 internal fun String.formatAiExplanationNumbers(): String =
-    replace(OVERLY_PRECISE_DECIMAL) { match -> match.groupValues[1] }
-
-private val OVERLY_PRECISE_DECIMAL = Regex("(-?\\d+[.,]\\d{2})\\d+")
+    formatExplanationNumbers()

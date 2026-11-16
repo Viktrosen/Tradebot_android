@@ -11,6 +11,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import javax.inject.Inject
 import ru.bolotov.core.dependency.findDependencies
 import ru.bolotov.core.dependency.injectedViewModel
 import ru.bolotov.core.dependency.rememberScoped
@@ -22,10 +23,11 @@ import ru.bolotov.feature.dashboard.presentation.ui.DashboardScreen
 import ru.bolotov.feature.dashboard.router.DashboardEntry
 import ru.bolotov.feature.dashboard.router.DashboardGraph
 import ru.bolotov.feature.instruments.router.InstrumentsGraph
+import ru.bolotov.feature.positionDetails.router.PositionDetailsGraph
+import ru.bolotov.feature.positions.router.PositionsGraph
 import ru.bolotov.tradebot.router.Destinations
 import ru.bolotov.tradebot.router.RootComponentHolder
 import ru.bolotov.tradebot.router.rememberBackStackEntry
-import javax.inject.Inject
 
 class DashboardEntryCore @Inject constructor() : DashboardEntry(),
     RootComponentHolder<DashboardFeatureComponent> {
@@ -58,7 +60,10 @@ class DashboardEntryCore @Inject constructor() : DashboardEntry(),
                         backStackEntry = backStackEntry,
                         navController = navController,
                     ),
-                    onNavigateToPositions = {},
+                    onOpenPositionDetails = { positionId ->
+                        navController.navigate(PositionDetailsGraph.Root(positionId = positionId))
+                    },
+                    onNavigateToPositions = { navController.navigate(PositionsGraph.Root) },
                     onNavigateToRisk = {},
                     onNavigateToStrategy = {},
                     onNavigateToInstruments = { navController.navigate(InstrumentsGraph.Root) }

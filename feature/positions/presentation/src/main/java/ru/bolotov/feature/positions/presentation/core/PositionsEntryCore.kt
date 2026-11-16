@@ -11,9 +11,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import javax.inject.Inject
 import ru.bolotov.core.dependency.findDependencies
 import ru.bolotov.core.dependency.injectedViewModel
 import ru.bolotov.core.dependency.rememberScoped
+import ru.bolotov.feature.positionDetails.router.PositionDetailsGraph
 import ru.bolotov.feature.positions.presentation.di.DaggerPositionsComponent
 import ru.bolotov.feature.positions.presentation.di.DaggerPositionsFeatureComponent
 import ru.bolotov.feature.positions.presentation.di.PositionsComponent
@@ -24,7 +26,6 @@ import ru.bolotov.feature.positions.router.PositionsGraph
 import ru.bolotov.tradebot.router.Destinations
 import ru.bolotov.tradebot.router.RootComponentHolder
 import ru.bolotov.tradebot.router.rememberBackStackEntry
-import javax.inject.Inject
 
 class PositionsEntryCore @Inject constructor() : PositionsEntry(),
     RootComponentHolder<PositionsFeatureComponent> {
@@ -52,6 +53,9 @@ class PositionsEntryCore @Inject constructor() : PositionsEntry(),
         navigation<PositionsGraph.Root>(startDestination = PositionsGraph.Positions) {
             composable<PositionsGraph.Positions> { backStackEntry ->
                 PositionsScreen(
+                    onOpenPositionDetails = { positionId ->
+                        navController.navigate(PositionDetailsGraph.Root(positionId = positionId))
+                    },
                     viewModel = getDashboardViewModel(
                         backStackEntry = backStackEntry,
                         navController = navController

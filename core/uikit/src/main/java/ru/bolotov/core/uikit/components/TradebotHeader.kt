@@ -55,7 +55,7 @@ fun TradebotHeader(title: String, subtitle: String, onBack: (() -> Unit)? = null
             }
             Column(Modifier.weight(1f)) {
                 Text(title, style = TradebotTheme.typography.screenTitle)
-                Text(
+                if (subtitle.isNotBlank()) Text(
                     subtitle,
                     style = MaterialTheme.typography.bodyMedium,
                     color = TradebotTheme.colors.textSecondary,

@@ -17,6 +17,6 @@ internal sealed interface Effect {
         val message: String,
         val iconResName: String?,
         val duration: SnackbarDuration = SnackbarDuration.Short,
-        val action: () -> Unit = {}
+        val action: () -> Unit = {},
     ) : Effect
 }

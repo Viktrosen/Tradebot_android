@@ -14,11 +14,13 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -38,8 +40,11 @@ import ru.bolotov.feature.main.presentation.navigation.BottomBarItem
 import ru.bolotov.feature.main.presentation.navigation.BottomBarTag
 import ru.bolotov.feature.main.presentation.navigation.NavigationBottomBar
 import ru.bolotov.feature.main.presentation.ui.util.reducedRoute
+import ru.bolotov.feature.main.route.MainGraph
 import ru.bolotov.feature.more.router.MoreEntry
 import ru.bolotov.feature.more.router.MoreGraph
+import ru.bolotov.feature.positionDetails.router.PositionDetailsEntry
+import ru.bolotov.feature.positionDetails.router.PositionDetailsGraph
 import ru.bolotov.feature.positions.router.PositionsEntry
 import ru.bolotov.feature.positions.router.PositionsGraph
 import ru.bolotov.feature.risk.router.RiskEntry
@@ -53,6 +58,7 @@ import ru.bolotov.tradebot.router.navigateWithClearStack
 @Composable
 internal fun MainScreenHost(
     state: UiState,
+    initialRoute: MainGraph.Root,
     activity: Activity,
     globalNavController: NavHostController,
     action: (Action) -> Unit,
@@ -65,9 +71,13 @@ internal fun MainScreenHost(
     val strategyEntry = activity.findDestinations<StrategyEntry>()
     val riskEntry = activity.findDestinations<RiskEntry>()
     val moreEntry = activity.findDestinations<MoreEntry>()
+    val detailsEntry = activity.findDestinations<PositionDetailsEntry>()
 
     val invisibleBottomBarEntries =
-        listOf(InstrumentsGraph.Instruments::class.qualifiedName.orEmpty())
+        listOf(
+            InstrumentsGraph.Instruments::class.qualifiedName.orEmpty(),
+            PositionDetailsGraph.Details::class.qualifiedName.orEmpty(),
+        )
 
     val bottomItems by remember {
         derivedStateOf {
@@ -126,12 +136,27 @@ internal fun MainScreenHost(
     }
 
     BackDoublePressExit(
+        enabled = currentDestination?.hasRoute<PositionDetailsGraph.Details>() != true,
         bottomItemsFirstItemRoute = bottomItems.firstOrNull()?.route,
         currentSection = state.currentSection,
         currentDestination = currentDestination,
         mainEntryRoute = dashboardEntry.featureRoute,
         navController = navController,
     )
+
+    var handledLaunchId by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(initialRoute.launchId) {
+        val positionId = initialRoute.initialPositionId ?: return@LaunchedEffect
+        val launchId = initialRoute.launchId ?: return@LaunchedEffect
+        if (handledLaunchId == launchId) return@LaunchedEffect
+        navController.navigate(DashboardGraph.Root) {
+            popUpTo(navController.graph.id) { inclusive = true }
+            launchSingleTop = true
+        }
+        navController.navigate(PositionDetailsGraph.Root(positionId = positionId))
+        action(Action.UpdateCurrentSection(DashboardGraph.Root))
+        handledLaunchId = launchId
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -193,6 +218,14 @@ internal fun MainScreenHost(
                 )
             }
 
+            with(detailsEntry) {
+                navigation(
+                    globalNavController = globalNavController,
+                    navController = navController,
+                    destinations = activity.destinationsProvider,
+                )
+            }
+
             with(moreEntry) {
                 navigation(
                     globalNavController = globalNavController,
@@ -208,6 +241,7 @@ private const val EXIT_TIME_MILLS = 2000L
 
 @Composable
 private fun BackDoublePressExit(
+    enabled: Boolean,
     navController: NavHostController,
     currentDestination: NavDestination?,
     bottomItemsFirstItemRoute: String?,
@@ -224,7 +258,7 @@ private fun BackDoublePressExit(
         }
     }
 
-    BackHandler(enabled = true) {
+    BackHandler(enabled = enabled) {
         if (currentDestination?.route?.split("/")?.firstOrNull() != bottomItemsFirstItemRoute) {
             navController.navigateWithClearStack(
                 currentSection ?: mainEntryRoute,

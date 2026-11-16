@@ -51,10 +51,12 @@ data class UiPosition(
 sealed interface Effect {
     data class ShowToast(val message: String) : Effect
     data class ShowError(val error: String) : Effect
+    data class NavigateToPositionDetails(val positionId: String) : Effect
     data object Refresh : Effect
 }
 
 sealed interface Action {
+    data class OpenPositionDetails(val positionId: String) : Action
     data object LoadData : Action
     data object Refresh : Action
     data class Filter(val filterType: PositionFilter) : Action

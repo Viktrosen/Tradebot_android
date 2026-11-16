@@ -53,7 +53,7 @@ internal class PositionsViewModel @Inject constructor(
                 }
                 updateState(state.filterType)
             }
-            TradingStateUpdate.PositionsChanged -> loadData()
+            TradingStateUpdate.PositionsChanged, TradingStateUpdate.Reconnected -> loadData()
             else -> Unit
         }
     }
@@ -69,6 +69,7 @@ internal class PositionsViewModel @Inject constructor(
             Action.DismissCloseDialog -> dismissCloseDialog()
             is Action.ShowPositionInfo -> showPositionInfo(action.positionId)
             Action.DismissPositionInfo -> dismissPositionInfo()
+            is Action.OpenPositionDetails -> intent { postSideEffect(Effect.NavigateToPositionDetails(positionId = action.positionId)) }
             is Action.NavigateToInstrument -> navigateToInstrument(action.instrumentId)
         }
     }

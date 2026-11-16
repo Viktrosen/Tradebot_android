@@ -6,7 +6,8 @@ import ru.bolotov.tradebot.router.ComposableFeatureEntry
 @Serializable
 sealed interface MainGraph {
     @Serializable
-    object Root: MainGraph
+    data class Root(val initialPositionId: String? = null, val launchId: String? = null) :
+        MainGraph
 }
 
 abstract class MainEntry : ComposableFeatureEntry {

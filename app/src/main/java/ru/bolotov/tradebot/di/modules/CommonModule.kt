@@ -2,7 +2,10 @@ package ru.bolotov.tradebot.di.modules
 
 import dagger.Module
 import dagger.Provides
-import ru.bolotov.core.utils.UserToken
+import javax.inject.Singleton
+import ru.bolotov.feature.auth.domain.core.AuthInteractorImpl
+import ru.bolotov.feature.auth.domain.interactor.AuthInteractor
+import ru.bolotov.feature.auth.domain.repository.AuthRepository
 import ru.bolotov.feature.dashboard.domain.core.DashboardInteractorImpl
 import ru.bolotov.feature.dashboard.domain.interactor.DashboardInteractor
 import ru.bolotov.feature.dashboard.domain.repository.BotRepository
@@ -15,6 +18,9 @@ import ru.bolotov.feature.more.domain.repository.EmergencyCloseRepository
 import ru.bolotov.feature.notifications.domain.core.NotificationsInteractorImpl
 import ru.bolotov.feature.notifications.domain.interactor.NotificationsInteractor
 import ru.bolotov.feature.notifications.domain.repository.NotificationsRepository
+import ru.bolotov.feature.positionDetails.domain.core.PositionDetailsInteractorImpl
+import ru.bolotov.feature.positionDetails.domain.interactor.PositionDetailsInteractor
+import ru.bolotov.feature.positionDetails.domain.repository.PositionDetailsRepository
 import ru.bolotov.feature.positions.domain.core.PositionsInteractorImpl
 import ru.bolotov.feature.positions.domain.interactor.PositionsInteractor
 import ru.bolotov.feature.positions.domain.repository.PositionsRepository
@@ -28,27 +34,44 @@ import ru.bolotov.feature.strategy.domain.repository.StrategyRepository
 @Module(includes = [DataModule::class])
 class CommonModule {
     @Provides
-    @javax.inject.Singleton
-    fun authInteractor(repository: ru.bolotov.feature.auth.domain.repository.AuthRepository): ru.bolotov.feature.auth.domain.interactor.AuthInteractor =
-        ru.bolotov.feature.auth.domain.core.AuthInteractorImpl(repository)
-
+    fun positionDetailsInteractor(
+        repository: PositionDetailsRepository
+    ): PositionDetailsInteractor = PositionDetailsInteractorImpl(repository)
 
     @Provides
-    fun provideDashboardInteractor(
-        repository: BotRepository,
-    ): DashboardInteractor {
-        return DashboardInteractorImpl(
-            repository = repository
-        )
+    @Singleton
+    fun authInteractor(repository: AuthRepository): AuthInteractor = AuthInteractorImpl(repository)
+
+    @Provides
+    fun provideDashboardInteractor(repository: BotRepository): DashboardInteractor {
+        return DashboardInteractorImpl(repository = repository)
     }
 
     @Provides
-    fun providePositionsInteractor(repository: PositionsRepository): PositionsInteractor = PositionsInteractorImpl(repository)
-    @Provides fun provideInstrumentsInteractor(repository: InstrumentsRepository): InstrumentsInteractor = InstrumentsInteractorImpl(repository)
-    @Provides fun provideEmergencyCloseInteractor(repository: EmergencyCloseRepository): EmergencyCloseInteractor = EmergencyCloseInteractorImpl(repository)
-    @Provides fun provideRiskInteractor(repository: RiskRepository): RiskInteractor = RiskInteractorImpl(repository)
-    @Provides fun provideNotificationsInteractor(repository: NotificationsRepository): NotificationsInteractor = NotificationsInteractorImpl(repository)
-    @Provides fun provideStrategyInteractor(repository: StrategyRepository): StrategyInteractor = StrategyInteractorImpl(repository)
+    fun providePositionsInteractor(repository: PositionsRepository): PositionsInteractor =
+        PositionsInteractorImpl(repository)
+
+    @Provides
+    fun provideInstrumentsInteractor(repository: InstrumentsRepository): InstrumentsInteractor =
+        InstrumentsInteractorImpl(repository)
+
+    @Provides
+    fun provideEmergencyCloseInteractor(
+        repository: EmergencyCloseRepository
+    ): EmergencyCloseInteractor = EmergencyCloseInteractorImpl(repository)
+
+    @Provides
+    fun provideRiskInteractor(repository: RiskRepository): RiskInteractor =
+        RiskInteractorImpl(repository)
+
+    @Provides
+    fun provideNotificationsInteractor(
+        repository: NotificationsRepository
+    ): NotificationsInteractor = NotificationsInteractorImpl(repository)
+
+    @Provides
+    fun provideStrategyInteractor(repository: StrategyRepository): StrategyInteractor =
+        StrategyInteractorImpl(repository)
 
     /*@Provides
     fun provideMapInteractor(

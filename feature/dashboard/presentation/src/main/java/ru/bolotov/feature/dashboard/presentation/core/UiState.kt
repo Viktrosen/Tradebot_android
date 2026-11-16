@@ -29,6 +29,7 @@ internal sealed interface Action {
     data object StopBot : Action
     data object Refresh : Action
     data object ScreenResumed : Action
+    data class OpenPositionDetails(val positionId: String) : Action
     data object NavigateToRisk : Action
     data object NavigateToPositions : Action
     data object NavigateToStrategy : Action
@@ -39,6 +40,7 @@ internal sealed interface Action {
  */
 internal sealed interface Effect {
     data class ShowToast(val message: String) : Effect
+    data class NavigateToPositionDetails(val positionId: String) : Effect
     data object NavigateToRisk : Effect
     data object NavigateToPositions : Effect
     data object NavigateToStrategy : Effect

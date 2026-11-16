@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlinSerialization)
 }
 
+android.defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
 android.namespace = moduleNamespace.versions.app.get()
 
 dependencies {
@@ -61,6 +63,11 @@ dependencies {
     implementation(projects.feature.risk.presentation)
     implementation(projects.feature.risk.router)
 
+    implementation(projects.feature.positionDetails.api)
+    implementation(projects.feature.positionDetails.data)
+    implementation(projects.feature.positionDetails.domain)
+    implementation(projects.feature.positionDetails.presentation)
+    implementation(projects.feature.positionDetails.router)
     implementation(projects.feature.more.presentation)
     implementation(projects.feature.more.router)
     implementation(projects.feature.more.api)
@@ -100,6 +107,8 @@ dependencies {
     //implementation(libs.firebase.analytics)
 
     // Test
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:runner:1.6.1")
     testImplementation(libs.junit)
     testImplementation(libs.jetbrains.coroutines.test)
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")

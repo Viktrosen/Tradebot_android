@@ -2,14 +2,20 @@ package ru.bolotov.tradebot.di.modules
 
 import dagger.Binds
 import dagger.Module
+import ru.bolotov.feature.auth.data.repository.AuthRepositoryImpl
+import ru.bolotov.feature.auth.domain.repository.AuthRepository
 import ru.bolotov.feature.dashboard.data.BotRepositoryImpl
 import ru.bolotov.feature.dashboard.domain.repository.BotRepository
 import ru.bolotov.feature.instruments.data.InstrumentsRepositoryImpl
 import ru.bolotov.feature.instruments.domain.repository.InstrumentsRepository
 import ru.bolotov.feature.more.data.EmergencyCloseRepositoryImpl
+import ru.bolotov.feature.more.data.repository.ThemeRepositoryImpl
 import ru.bolotov.feature.more.domain.repository.EmergencyCloseRepository
+import ru.bolotov.feature.more.domain.repository.ThemeRepository
 import ru.bolotov.feature.notifications.data.NotificationsRepositoryImpl
 import ru.bolotov.feature.notifications.domain.repository.NotificationsRepository
+import ru.bolotov.feature.positionDetails.data.repository.PositionDetailsRepositoryImpl
+import ru.bolotov.feature.positionDetails.domain.repository.PositionDetailsRepository
 import ru.bolotov.feature.positions.data.PositionsRepositoryImpl
 import ru.bolotov.feature.positions.domain.repository.PositionsRepository
 import ru.bolotov.feature.risk.data.RiskRepositoryImpl
@@ -20,14 +26,11 @@ import ru.bolotov.feature.strategy.domain.repository.StrategyRepository
 @Module(includes = [NetworkModule::class, ThemeModule::class])
 interface DataModule {
     @Binds
-    fun authRepository(
-        impl: ru.bolotov.feature.auth.data.repository.AuthRepositoryImpl
-    ): ru.bolotov.feature.auth.domain.repository.AuthRepository
+    fun positionDetailsRepository(impl: PositionDetailsRepositoryImpl): PositionDetailsRepository
 
-    @Binds
-    fun bindsThemeRepository(
-        impl: ru.bolotov.feature.more.data.repository.ThemeRepositoryImpl
-    ): ru.bolotov.feature.more.domain.repository.ThemeRepository
+    @Binds fun authRepository(impl: AuthRepositoryImpl): AuthRepository
+
+    @Binds fun bindsThemeRepository(impl: ThemeRepositoryImpl): ThemeRepository
 
     @Binds fun bindsBotRepository(impl: BotRepositoryImpl): BotRepository
 

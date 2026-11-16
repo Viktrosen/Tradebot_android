@@ -98,3 +98,7 @@ UI-строки лежат в ресурсах владельца компоне
 - `app/navigation/AppViewModel` — наблюдение начальной настройки;
   `app/theme/ResolveDarkTheme.kt` — разрешение SYSTEM на UI-границе.
   MainActivity применяет тему ко всей навигации, не меняя её ключ.
+## Position details
+
+`feature/positionDetails` keeps api/data/domain/presentation/router boundaries. MVI UiState, Action and Effect share presentation/core/UiState.kt; components are in presentation/di, DTOs in api/data/response, mappers in their owning layer. App owns AppLinkParser/Encoder and NotificationPendingIntentFactory. AppViewModel stores a PendingAppLink in SavedStateHandle. Main's router exposes entry arguments, never a notification coordinator or shared launch flow.
+- `app/navigation/deeplink` — AppLinkContract, AppLinkParser, AppLinkEncoder; `app/navigation/data` — AppLink and PendingAppLink. `app/notifications/NotificationPendingIntentFactory` creates Activity PendingIntents. AppViewModelFactory supplies the restored SavedStateHandle to Dagger.

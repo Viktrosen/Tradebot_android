@@ -9,6 +9,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import javax.inject.Inject
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.bolotov.core.dependency.findDependencies
 import ru.bolotov.core.dependency.injectedViewModel
@@ -17,7 +19,6 @@ import ru.bolotov.feature.main.presentation.ui.MainScreenHost
 import ru.bolotov.feature.main.route.MainEntry
 import ru.bolotov.feature.main.route.MainGraph
 import ru.bolotov.tradebot.router.Destinations
-import javax.inject.Inject
 
 class MainEntryCore @Inject constructor() : MainEntry() {
 
@@ -28,19 +29,18 @@ class MainEntryCore @Inject constructor() : MainEntry() {
         enterTransition: (() -> EnterTransition?)?,
         exitTransition: (() -> ExitTransition?)?,
         popEnterTransition: (() -> EnterTransition?)?,
-        popExitTransition: (() -> ExitTransition?)?
+        popExitTransition: (() -> ExitTransition?)?,
     ) {
         composable<MainGraph.Root>(
             enterTransition = { enterTransition?.invoke() },
             exitTransition = { exitTransition?.invoke() },
             popEnterTransition = { popEnterTransition?.invoke() },
-            popExitTransition = { popExitTransition?.invoke() }
+            popExitTransition = { popExitTransition?.invoke() },
         ) { backstackEntry ->
             val context = LocalContext.current
             val activity = remember { context as? Activity }
             val viewModel: MainHostViewModel = injectedViewModel {
-                DaggerHomeComponent
-                    .builder()
+                DaggerHomeComponent.builder()
                     .dependencies((context as Activity).findDependencies())
                     .build()
                     .viewModel
@@ -50,6 +50,7 @@ class MainEntryCore @Inject constructor() : MainEntry() {
             activity?.let {
                 MainScreenHost(
                     state = state,
+                    initialRoute = backstackEntry.toRoute<MainGraph.Root>(),
                     activity = it,
                     globalNavController = globalNavController,
                     action = viewModel::handleAction,

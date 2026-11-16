@@ -50,7 +50,13 @@ class AppThemeStateTest {
                         session.value = AuthSession.SignedOut
                     }
                 }
-            val viewModel = AppViewModel(auth, themes)
+            val viewModel =
+                AppViewModel(
+                    auth = auth,
+                    themeInteractor = themes,
+                    savedStateHandle = androidx.lifecycle.SavedStateHandle(),
+                    json = kotlinx.serialization.json.Json,
+                )
             store.put("host", viewModel)
             val navigationInstance = viewModel.navigationInstanceId
             runCurrent()

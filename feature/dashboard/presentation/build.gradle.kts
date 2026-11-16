@@ -8,6 +8,8 @@ plugins {
 android.namespace = moduleNamespace.versions.feature.dashboard.presentation.get()
 
 dependencies {
+    implementation(projects.feature.positionDetails.router)
+    implementation(projects.feature.positions.router)
     // Module
     //implementation(projects.feature.feed.router)
     //implementation(projects.feature.notifications.router)

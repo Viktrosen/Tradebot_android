@@ -57,10 +57,11 @@ class StompTradingStateInteractor @Inject constructor(
                 override fun onMessage(webSocket: WebSocket, text: String) {
                     if (text.startsWith("CONNECTED")) {
                         subscribeToTradingState(webSocket)
+                        trySend(TradingStateUpdate.Reconnected)
                         return
                     }
 
-                    parseUpdate(text)?.let { update ->
+                    runCatching { parseUpdate(text) }.getOrNull()?.let { update ->
                         logPriceUpdate(update)
                         trySend(update)
                     }
@@ -87,7 +88,8 @@ class StompTradingStateInteractor @Inject constructor(
                 instrumentId = data.string("instrumentId") ?: return null,
                 currentPrice = data.double("currentPrice") ?: return null,
                 unrealizedPnl = data.double("unrealizedPnl") ?: return null,
-                pnlPercent = data.double("pnlPercent") ?: return null
+                pnlPercent = data.double("pnlPercent") ?: return null,
+                positionId = data.string("positionId"),
             )
             "PORTFOLIO_CHANGED" -> TradingStateUpdate.Portfolio(
                 totalValue = data.double("totalValue"),

@@ -6,6 +6,7 @@ import ru.bolotov.tradebot.di.dependencies.feature.DashboardDependenciesModule
 import ru.bolotov.tradebot.di.dependencies.feature.InstrumentsDependenciesModule
 import ru.bolotov.tradebot.di.dependencies.feature.MainDependenciesModule
 import ru.bolotov.tradebot.di.dependencies.feature.MoreDependenciesModule
+import ru.bolotov.tradebot.di.dependencies.feature.PositionDetailsDependenciesModule
 import ru.bolotov.tradebot.di.dependencies.feature.PositionsDependenciesModule
 import ru.bolotov.tradebot.di.dependencies.feature.RiskDependenciesModule
 import ru.bolotov.tradebot.di.dependencies.feature.SplashDependenciesModule
@@ -15,6 +16,7 @@ import ru.bolotov.tradebot.di.dependencies.feature.StrategyDependenciesModule
     includes =
         [
             MainDependenciesModule::class,
+        PositionDetailsDependenciesModule::class,
             AppEffectsHandlerDependenciesModule::class,
             SplashDependenciesModule::class,
             DashboardDependenciesModule::class,

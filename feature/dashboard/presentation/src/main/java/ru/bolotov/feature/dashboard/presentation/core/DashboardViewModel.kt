@@ -73,7 +73,7 @@ internal class DashboardViewModel @Inject constructor(
                     )
                 )
             }
-            TradingStateUpdate.PositionsChanged -> loadData()
+            TradingStateUpdate.PositionsChanged, TradingStateUpdate.Reconnected -> loadData()
         }
     }
 
@@ -85,6 +85,7 @@ internal class DashboardViewModel @Inject constructor(
             Action.StopBot -> stopBot()
             Action.Refresh -> refresh()
             Action.ScreenResumed -> refreshOnScreenResume()
+            is Action.OpenPositionDetails -> intent { postSideEffect(Effect.NavigateToPositionDetails(positionId = action.positionId)) }
             Action.NavigateToRisk -> navigateToRisk()
             Action.NavigateToPositions -> navigateToPositions()
             Action.NavigateToStrategy -> navigateToStrategy()

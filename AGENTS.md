@@ -173,3 +173,20 @@ reset it and failed writes must not show an unsaved selection. MainActivity
 resolves SYSTEM against system configuration, collects with lifecycle awareness
 and applies one root TradebotTheme plus matching system bar icons. Keep the splash
 until the initial preference is ready; never key navigation by the palette.
+## Position-details contract
+
+Details are keyed by positionId, never the instrument's latest trade. The executor
+owns complete historical and active state; the gateway proxies it unchanged.
+Quantity is lots with explicit lotSize. Missing evidence remains nullable.
+Closed/reconciled lifecycles must not expose active close controls or fabricated
+execution price/P&L. Preserve the distinction between broker SL, bot TP and managed
+profit protection. Notification OPEN/CLOSE targets use the same positionId.
+Android notifications rebuild Dashboard → Details after authentication; ordinary
+in-app navigation keeps its origin. Do not verify this feature by sending real orders.
+External navigation belongs to app/navigation/deeplink and AppViewModel. Normalize
+URI/FCM extras into AppLink once at the Android boundary; persist a pending request
+in the Activity-owned SavedStateHandle, not an application singleton or feature
+router flow. Integrate authorization and pending links in the same root navigation
+collector. Main accepts typed entry arguments only and owns Dashboard → Details.
+TaskStackBuilder manages Activity tasks, not Compose destinations. Keep foreground,
+background, legacy notification, repeat-tap and rotation behavior compatible.
