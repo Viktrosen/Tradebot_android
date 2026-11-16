@@ -3,10 +3,12 @@ package ru.bolotov.feature.positionDetails.presentation.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import java.time.Clock
+import java.time.DateTimeException
 import java.time.Instant
-import java.time.ZoneId
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import java.util.Locale
 import ru.bolotov.core.uikit.format.formatMoney
 import ru.bolotov.tradebot.feature.positionDetails.presentation.R
 
@@ -18,13 +20,26 @@ internal fun detailsMoney(value: Double?): String =
 internal fun detailsTime(value: String?): String {
     val locale = LocalConfiguration.current.locales[0]
     val unavailable = stringResource(R.string.details_no_data)
-    return value?.let {
-        runCatching {
-                val time = Instant.parse(it).atZone(ZoneId.systemDefault())
-                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.SHORT)
-                    .withLocale(locale)
-                    .format(time) + " " + time.offset.id
+    return formatPositionDateTime(value = value, locale = locale) ?: unavailable
+}
+
+/** Uses the same local zone for the displayed date and the current-year comparison. */
+internal fun formatPositionDateTime(
+    value: String?,
+    locale: Locale,
+    clock: Clock = Clock.systemDefaultZone(),
+): String? {
+    if (value == null) return null
+    return try {
+        val time = Instant.parse(value).atZone(clock.zone)
+        val pattern =
+            if (time.year == LocalDate.now(clock).year) {
+                "dd MMMM HH:mm"
+            } else {
+                "dd MMMM uuuu HH:mm"
             }
-            .getOrDefault(unavailable)
-    } ?: unavailable
+        DateTimeFormatter.ofPattern(pattern, locale).format(time)
+    } catch (_: DateTimeException) {
+        null
+    }
 }
