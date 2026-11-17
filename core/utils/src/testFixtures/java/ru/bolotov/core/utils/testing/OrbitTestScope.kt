@@ -9,6 +9,7 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.annotation.OrbitInternal
 import org.orbitmvi.orbit.internal.TestContainerDecorator
 
 /**
@@ -20,7 +21,7 @@ import org.orbitmvi.orbit.internal.TestContainerDecorator
  * Fixtures must clear their ViewModelStore; runTest cancels the test delegate's
  * background scope. Constructor dependencies must not block indefinitely.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, OrbitInternal::class)
 suspend fun <STATE : Any, EFFECT : Any> TestScope.controlOrbit(model: ContainerHost<STATE, EFFECT>) {
     val dispatcher = StandardTestDispatcher(testScheduler)
     val initialEffects = Collections.synchronizedList(mutableListOf<EFFECT>())

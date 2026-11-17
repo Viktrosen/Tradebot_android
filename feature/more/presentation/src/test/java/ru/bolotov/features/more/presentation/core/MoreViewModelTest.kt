@@ -1,7 +1,6 @@
 package ru.bolotov.features.more.presentation.core
 
 import androidx.lifecycle.ViewModelStore
-import ru.bolotov.core.utils.testing.controlOrbit
 import java.io.IOException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -24,8 +23,10 @@ import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.bolotov.core.utils.AnalyticManager
+import ru.bolotov.core.utils.testing.controlOrbit
 import ru.bolotov.feature.auth.domain.interactor.AuthInteractor
 import ru.bolotov.feature.auth.domain.model.AuthSession
+import ru.bolotov.feature.more.domain.interactor.AppInfoInteractor
 import ru.bolotov.feature.more.domain.interactor.EmergencyCloseInteractor
 import ru.bolotov.feature.more.domain.interactor.ThemeInteractor
 import ru.bolotov.feature.more.domain.model.AppThemeMode
@@ -182,12 +183,14 @@ class MoreViewModelTest {
         try {
             val auth = FakeAuth()
             val theme = FakeTheme()
+            val appInfo = FakeAppInfoInteractor()
             val emergency = FakeEmergency()
             val model = MoreViewModel(
                 analyticManager = mock(AnalyticManager::class.java),
                 auth = auth,
                 themeInteractor = theme,
-                emergencyCloseInteractor = emergency
+                emergencyCloseInteractor = emergency,
+                appInfoInteractor = appInfo
             )
             store.put("more", model)
             controlOrbit(model)
@@ -219,6 +222,13 @@ class MoreViewModelTest {
             writeFailure?.let { throw it }
             if (publishWrites) themeMode.value = mode
         }
+    }
+
+    private class FakeAppInfoInteractor: AppInfoInteractor {
+        override fun getAppVersion(): String = "1.0.0"
+
+        override fun getBuildNumber(): String = "1"
+
     }
 
     private class FakeEmergency : EmergencyCloseInteractor {
