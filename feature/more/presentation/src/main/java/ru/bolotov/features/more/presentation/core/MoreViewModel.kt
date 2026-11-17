@@ -13,6 +13,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.bolotov.core.utils.AnalyticManager
 import ru.bolotov.feature.auth.domain.interactor.AuthInteractor
 import ru.bolotov.feature.auth.domain.model.AuthSession
+import ru.bolotov.feature.more.domain.interactor.AppInfoInteractor
 import ru.bolotov.feature.more.domain.interactor.EmergencyCloseInteractor
 import ru.bolotov.feature.more.domain.interactor.ThemeInteractor
 import ru.bolotov.tradebot.feature.more.presentation.R
@@ -23,9 +24,15 @@ internal class MoreViewModel @Inject constructor(
     private val auth: AuthInteractor,
     private val themeInteractor: ThemeInteractor,
     private val emergencyCloseInteractor: EmergencyCloseInteractor,
+    private val appInfoInteractor: AppInfoInteractor
 ) : ViewModel(), ContainerHost<UiState, Effect> {
 
-    override val container: Container<UiState, Effect> = container(UiState())
+    override val container: Container<UiState, Effect> = container(
+        UiState(
+            appVersion = appInfoInteractor.getAppVersion(),
+            buildNumber = appInfoInteractor.getBuildNumber()
+        )
+    )
 
     init {
         observeTheme()
@@ -55,8 +62,6 @@ internal class MoreViewModel @Inject constructor(
                     isLoading = false,
                     email = (auth.session.value as? AuthSession.SignedIn)?.email.orEmpty(),
                     notificationsEnabled = true,
-                    appVersion = getAppVersion(),
-                    buildNumber = getBuildNumber(),
                     errorMessage = null,
                 )
             }
@@ -164,15 +169,5 @@ internal class MoreViewModel @Inject constructor(
         } catch (_: Exception) {
             postSideEffect(Effect.ShowError("Не удалось завершить выход"))
         }
-    }
-
-    private fun getAppVersion(): String {
-        // TODO: Получить из BuildConfig
-        return "1.0.0"
-    }
-
-    private fun getBuildNumber(): String {
-        // TODO: Получить из BuildConfig
-        return "1"
     }
 }

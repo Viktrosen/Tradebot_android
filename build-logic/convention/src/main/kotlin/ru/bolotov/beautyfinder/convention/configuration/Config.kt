@@ -21,9 +21,9 @@ object Config {
 
     val versionName: String
         get() {
-            val major = VERSION_CODE / 10_000_000
-            val minor = (VERSION_CODE / 10_000) % 1_000
-            val patch = VERSION_CODE % 10_000
+            val major = "1"
+            val minor = "0"
+            val patch = "0"
 
             return "$major.$minor.$patch"
         }
