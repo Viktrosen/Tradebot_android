@@ -6,8 +6,13 @@ plugins {
 }
 
 android.namespace = moduleNamespace.versions.feature.more.presentation.get()
+android.testOptions.unitTests.isIncludeAndroidResources = true
 
 dependencies {
+    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(libs.jetbrains.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.robolectric)
     implementation(projects.feature.auth.domain)
     // Module
     implementation(projects.feature.more.domain)

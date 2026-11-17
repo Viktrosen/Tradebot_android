@@ -63,9 +63,9 @@ a data repository directly.
   Compose state for business state that must survive recomposition.
 - Reuse the existing design system and feature conventions before adding another
   screen-specific abstraction.
-- Strategy cards display backend-provided catalog data. The app may configure only
-  settings exposed by the gateway; it does not select the live strategy per
-  instrument when adaptive mode is active.
+- Strategy selection is automatic-only. Catalog cards may edit gateway-exposed
+  parameters, never select an active algorithm. Simple/unknown types are read-only;
+  keep legacy response fields compatible without restoring a manual selection path.
 
 ## Bug investigation standard
 

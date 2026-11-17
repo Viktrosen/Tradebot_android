@@ -1,6 +1,5 @@
 package ru.bolotov.feature.strategy.presentation.ui
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
@@ -17,96 +16,63 @@ import ru.bolotov.tradebot.feature.strategy.presentation.R
 internal fun StrategyScreen(viewModel: StrategyViewModel) {
     val state by viewModel.collectAsState()
 
-    // Dialog states
-    var showSimpleDialog by remember { mutableStateOf(false) }
-    var showConfirmationDialog by remember { mutableStateOf(false) }
-    var showVotingDialog by remember { mutableStateOf(false) }
-    var showCandlestickDialog by remember { mutableStateOf(false) }
-    var selectedStrategy by remember { mutableStateOf<StrategyItem?>(null) }
     var statusDialog by remember { mutableStateOf<StrategyStatusDialogData?>(null) }
 
     viewModel.collectSideEffect { effect ->
         when (effect) {
-            is Effect.ShowToast -> {
+            Effect.SettingsSaved -> {
                 statusDialog = StrategyStatusDialogData.Success
             }
             is Effect.ShowError -> {
                 statusDialog = StrategyStatusDialogData.Error(effect.error)
             }
-            is Effect.StrategyChanged -> {
-                // Стратегия изменена, можно закрыть диалоги
-                showSimpleDialog = false
-                showConfirmationDialog = false
-                showVotingDialog = false
-                showCandlestickDialog = false
-                selectedStrategy = null
-            }
-            is Effect.ShowSimpleStrategyDialog -> {
-                selectedStrategy = state.availableStrategies.find { it.name == effect.name }
-                showSimpleDialog = true
-            }
-            is Effect.ShowConfirmationDialog -> {
-                showConfirmationDialog = true
-            }
-            is Effect.ShowVotingDialog -> {
-                showVotingDialog = true
-            }
-            is Effect.ShowCandlestickDialog -> {
-                showCandlestickDialog = true
-            }
         }
     }
 
-    StrategyContent(state, onAction = viewModel::handleAction)
+    StrategyContent(state = state, onAction = viewModel::handleAction)
 
     // Strategy config dialogs
-    if (showSimpleDialog && selectedStrategy != null) {
-        SimpleConfigDialog(
-            strategyType = selectedStrategy!!.name,
-            onConfirm = { strategyName ->
-                viewModel.handleAction(Action.SwitchToSimple(strategyName))
-            },
-            onDismiss = {
-                showSimpleDialog = false
-                selectedStrategy = null
-                viewModel.handleAction(Action.DismissDialog)
-            },
-        )
-    }
-
-    if (showConfirmationDialog) {
+    if (state.dialog == StrategyDialog.Confirmation) {
         ConfirmationConfigDialog(
             initialIndicators = state.confirmationIndicators,
             onConfirm = { indicators ->
-                viewModel.handleAction(Action.SwitchToConfirmation(indicators))
+                if (!state.isSaving) viewModel.handleAction(Action.SaveConfirmation(indicators = indicators))
             },
             onDismiss = {
-                showConfirmationDialog = false
                 viewModel.handleAction(Action.DismissDialog)
             },
         )
     }
 
-    if (showVotingDialog) {
+    if (state.dialog == StrategyDialog.Voting) {
         VotingConfigDialog(
-            initialWeights = state.votingWeights,
-            onConfirm = { weights -> viewModel.handleAction(Action.SwitchToVoting(weights)) },
+            draft = state.votingDraft,
+            isSaving = state.isSaving,
+            onParticipantChange = { participant, enabled ->
+                viewModel.handleAction(Action.SetVotingParticipant(participant = participant, enabled = enabled))
+            },
+            onWeightChange = { participant, weight ->
+                viewModel.handleAction(Action.SetVotingWeight(participant = participant, weight = weight))
+            },
+            onConfirm = { weights ->
+                if (!state.isSaving) viewModel.handleAction(Action.SaveVoting(weights = weights))
+            },
             onDismiss = {
-                showVotingDialog = false
                 viewModel.handleAction(Action.DismissDialog)
             },
         )
     }
 
-    if (showCandlestickDialog) {
+    if (state.dialog == StrategyDialog.Candlestick) {
         CandlestickConfigDialog(
             initialTimeframe = state.candlestickTimeframe,
             initialMinConfidence = state.candlestickMinConfidence,
             onConfirm = { timeframe, minConfidence ->
-                viewModel.handleAction(Action.SwitchToCandlestick(timeframe, minConfidence))
+                if (!state.isSaving) viewModel.handleAction(
+                    Action.SaveCandlestick(timeframe = timeframe, minConfidence = minConfidence)
+                )
             },
             onDismiss = {
-                showCandlestickDialog = false
                 viewModel.handleAction(Action.DismissDialog)
             },
         )
@@ -128,7 +94,9 @@ private fun StrategyStatusDialog(status: StrategyStatusDialogData, onDismiss: ()
         when (status) {
             StrategyStatusDialogData.Success ->
                 stringResource(R.string.strategy_save_success_message)
-            is StrategyStatusDialogData.Error -> status.message
+            is StrategyStatusDialogData.Error -> status.message.ifBlank {
+                stringResource(R.string.strategy_save_error_title)
+            }
         }
 
     TradebotDialog(

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="strategy_settings_not_required">Дополнительные параметры не требуются</string>
+    <string name="strategies_voting_participants_hint">Включите минимум два индикатора. Вес каждого — от 1 до 10.</string>
+    <string name="strategies_voting_minimum_participants">Выберите минимум два индикатора.</string>
+    <string name="strategies_voting_invalid_weight">Вес включённых индикаторов должен быть от 1 до 10.</string>
+    <string name="strategies_voting_unsupported_participants">Клиент не поддерживает индикаторы: %1$s. Сохранение отключено, чтобы не потерять их настройки. Обновите приложение.</string>
+    <string name="strategy_automatic_selection_title">Автоматический выбор стратегии</string>
     <string name="strategy_auto_selection_description">Бот подбирает стратегию для каждого инструмента. Здесь — параметры алгоритмов.</string>
-    <string name="strategy_candlestick_settings">Таймфрейм: %1$s · Минимальная уверенность: %2$d%%</string>
-    <string name="strategy_confirmation_settings">Индикаторы: %1$s</string>
-    <string name="strategy_voting_settings">Веса: %1$s</string>
-    <string name="strategy_save_success_title">Стратегия обновлена</string>
+    <string name="strategy_load_error">Не удалось загрузить стратегии</string>
+    <string name="strategy_save_success_title">Настройки обновлены</string>
     <string name="strategy_save_success_message">Настройки стратегии успешно сохранены.</string>
     <string name="strategy_save_error_title">Не удалось обновить стратегию</string>
     <string name="strategy_dialog_confirm">Понятно</string>

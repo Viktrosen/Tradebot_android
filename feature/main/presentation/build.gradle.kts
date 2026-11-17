@@ -8,6 +8,8 @@ plugins {
 android.namespace = moduleNamespace.versions.feature.main.presentation.get()
 
 dependencies {
+    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(libs.jetbrains.coroutines.test)
     implementation(projects.feature.positionDetails.router)
     // Module
     //implementation(projects.feature.feed.router)

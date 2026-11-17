@@ -8,6 +8,8 @@ android.namespace = moduleNamespace.versions.feature.splashScreen.presentation.g
 
 
 dependencies {
+    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(libs.jetbrains.coroutines.test)
     // Module
     implementation(projects.core.dependency)
 

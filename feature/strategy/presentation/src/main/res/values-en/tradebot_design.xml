@@ -4,11 +4,7 @@
     <string name="strategies_parameters">Strategy parameters</string>
     <string name="strategies_auto">AUTO</string>
     <string name="strategies_new">NEW</string>
-    <string name="strategies_current">Current</string>
     <string name="strategies_configure">Configure %1$s</string>
-    <string name="strategies_simple_title">Simple strategy settings</string>
-    <string name="strategies_simple_message">Switch to %1$s?</string>
-    <string name="strategies_yes">Yes</string>
     <string name="strategies_cancel">Cancel</string>
     <string name="strategies_confirmation_title">Confirmation strategy settings</string>
     <string name="strategies_select_indicators">Select indicators to vote:</string>

@@ -1,107 +1,76 @@
 package ru.bolotov.feature.dashboard.domain.core
 
-import org.junit.Assert.*
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Assert.assertThrows
 import org.junit.Test
+import ru.bolotov.feature.dashboard.domain.model.BotStatus
+import ru.bolotov.feature.dashboard.domain.model.Dashboard
 import ru.bolotov.feature.dashboard.domain.model.Position
+import ru.bolotov.feature.dashboard.domain.repository.BotRepository
 
-/**
- * Unit-тесты для сортировки позиций в DashboardInteractorImpl.
- *
- * Проверяют:
- * - корректность сортировки по entryTime (сначала новые)
- * - обработку пустого списка
- * - обработку null entryTime
- */
+/** Tests production interactor sorting, not a copy of Kotlin's sorting expression. */
 class DashboardInteractorSortingTest {
+    @Test
+    fun `newest known timestamps come first and unknown timestamps come last`() = runTest {
+        val repository = RecordingRepository(listOf(
+            position(name = "Unknown", entryTime = null),
+            position(name = "Old", entryTime = "2026-09-01T08:00:00Z"),
+            position(name = "New", entryTime = "2026-09-01T14:00:00Z")
+        ))
+        val sorted = DashboardInteractorImpl(repository).getPositions()
+        assertEquals(listOf("New", "Old", "Unknown"), sorted.map(Position::instrumentName))
+        assertEquals(1, repository.calls)
+        assertEquals("Unknown", repository.positions.first().instrumentName)
+    }
 
-    private fun makePosition(name: String, entryTime: String?): Position = Position(
-        positionId = "pos-$name",
-        instrumentId = "id-$name",
-        instrumentName = name,
-        direction = "BUY",
-        entryPrice = 100.0,
-        quantity = 10,
-        entryTime = entryTime,
-        stopLossPrice = 95.0,
-        atr = 2.0,
-        pnl = 10.0,
-        currentPrice = 101.0,
-        entryStrategyName = "Test"
+    @Test
+    fun `empty and singleton results preserve their content`() = runTest {
+        assertTrue(DashboardInteractorImpl(RecordingRepository(emptyList())).getPositions().isEmpty())
+        val only = position(name = "Only", entryTime = null)
+        assertEquals(listOf(only), DashboardInteractorImpl(RecordingRepository(listOf(only))).getPositions())
+    }
+
+    @Test
+    fun `equal timestamps and unknown timestamps preserve relative order`() = runTest {
+        val repository = RecordingRepository(listOf(
+            position(name = "Unknown1", entryTime = null),
+            position(name = "First", entryTime = "2026-09-01T10:00:00Z"),
+            position(name = "Second", entryTime = "2026-09-01T10:00:00Z"),
+            position(name = "Unknown2", entryTime = null)
+        ))
+        assertEquals(
+            listOf("First", "Second", "Unknown1", "Unknown2"),
+            DashboardInteractorImpl(repository).getPositions().map(Position::instrumentName)
+        )
+    }
+
+    @Test
+    fun `repository failure is not disguised as an empty portfolio`() = runTest {
+        val repository = RecordingRepository(emptyList())
+        repository.failure = IllegalStateException("Unavailable")
+        val failure = runCatching { DashboardInteractorImpl(repository).getPositions() }.exceptionOrNull()
+        assertEquals(repository.failure, failure)
+    }
+
+    private fun position(name: String, entryTime: String?) = Position(
+        positionId = "position-$name", instrumentId = "instrument-$name",
+        instrumentName = name, direction = "BUY", entryPrice = 100.0,
+        quantity = 1, entryTime = entryTime
     )
 
-    @Test
-    fun `Positions must be sorted by entryTime descending`() {
-        val positions = listOf(
-            makePosition("Old", "2026-09-01T08:00:00Z"),
-            makePosition("New", "2026-09-01T14:00:00Z"),
-            makePosition("Middle", "2026-09-01T11:00:00Z")
-        )
-
-        val sorted = positions.sortedByDescending { it.entryTime }
-
-        assertEquals("New", sorted[0].instrumentName)
-        assertEquals("Middle", sorted[1].instrumentName)
-        assertEquals("Old", sorted[2].instrumentName)
-    }
-
-    @Test
-    fun `Empty positions list must remain empty after sorting`() {
-        val positions = emptyList<Position>()
-
-        val sorted = positions.sortedByDescending { it.entryTime }
-
-        assertTrue(sorted.isEmpty())
-    }
-
-    @Test
-    fun `Single position must remain unchanged after sorting`() {
-        val position = makePosition("Single", "2026-09-01T10:00:00Z")
-
-        val sorted = listOf(position).sortedByDescending { it.entryTime }
-
-        assertEquals(1, sorted.size)
-        assertEquals("Single", sorted[0].instrumentName)
-    }
-
-    @Test
-    fun `Positions with null entryTime must be sorted to beginning`() {
-        val positions = listOf(
-            makePosition("NoTime", null),
-            makePosition("WithTime", "2026-09-01T10:00:00Z")
-        )
-
-        val sorted = positions.sortedByDescending { it.entryTime }
-
-        // null sorts first in descending order
-        assertEquals("NoTime", sorted[0].instrumentName)
-        assertEquals("WithTime", sorted[1].instrumentName)
-    }
-
-    @Test
-    fun `Positions with same entryTime must preserve order`() {
-        val positions = listOf(
-            makePosition("First", "2026-09-01T10:00:00Z"),
-            makePosition("Second", "2026-09-01T10:00:00Z")
-        )
-
-        val sorted = positions.sortedByDescending { it.entryTime }
-
-        assertEquals(2, sorted.size)
-        // Both have same time, order may vary but size must be correct
-    }
-
-    @Test
-    fun `Multiple null entryTimes must be grouped together`() {
-        val positions = listOf(
-            makePosition("NoTime1", null),
-            makePosition("WithTime", "2026-09-01T10:00:00Z"),
-            makePosition("NoTime2", null)
-        )
-
-        val sorted = positions.sortedByDescending { it.entryTime }
-
-        // Nulls should be first
-        assertEquals(2, sorted.count { it.entryTime == null })
-        assertEquals(1, sorted.count { it.entryTime != null })
+    private class RecordingRepository(val positions: List<Position>) : BotRepository {
+        var calls = 0
+        var failure: Exception? = null
+        override suspend fun getPositions(): List<Position> {
+            calls++
+            failure?.let { throw it }
+            return positions
+        }
+        override suspend fun getBotStatus(): BotStatus = error("Not requested")
+        override suspend fun getDashboard(): Dashboard = error("Not requested")
+        override suspend fun startBot() = error("Not requested")
+        override suspend fun stopBot() = error("Not requested")
     }
 }

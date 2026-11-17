@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import ru.bolotov.core.uikit.TradebotTheme
 import ru.bolotov.core.uikit.components.*
 import ru.bolotov.core.uikit.dimensions.TradebotDimens
@@ -24,7 +23,8 @@ private val NEW_STRATEGY_IDS = setOf("supertrend", "vwap")
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun StrategyCard(strategy: StrategyItem, onSelect: () -> Unit, modifier: Modifier = Modifier) {
+fun StrategyCard(strategy: StrategyItem, onConfigure: () -> Unit, modifier: Modifier = Modifier) {
+    val isConfigurable = strategy.type.configurationDialog != null
     val icon =
         when (strategy.name.trim().lowercase()) {
             "voting" -> UiR.drawable.ic_dashboard_outline
@@ -33,51 +33,50 @@ fun StrategyCard(strategy: StrategyItem, onSelect: () -> Unit, modifier: Modifie
             "vwap" -> UiR.drawable.ic_positions_outline
             else -> UiR.drawable.ic_strategy_outline
         }
-    TradebotCard(modifier.fillMaxWidth().clickable(onClick = onSelect)) {
+    TradebotCard(
+        modifier = modifier.fillMaxWidth().then(
+            if (isConfigurable) Modifier.clickable(onClick = onConfigure) else Modifier
+        ),
+    ) {
         Row(
-            Modifier.padding(TradebotDimens.cardPadding),
+            modifier = Modifier.padding(TradebotDimens.cardPadding),
             horizontalArrangement = Arrangement.spacedBy(TradebotDimens.itemGap),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             TradebotIcon(icon)
             Column(
-                Modifier.weight(1f),
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
             ) {
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
                     verticalArrangement = Arrangement.spacedBy(TradebotDimens.smallGap),
                 ) {
-                    Text(strategy.name.uppercase(), style = MaterialTheme.typography.titleMedium)
-                    if (isNewStrategy(strategy.name) && !strategy.isCurrent) {
+                    Text(
+                        text = strategy.name.uppercase(),
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                    if (isNewStrategy(strategy.name)) {
                         TradebotBadge(
-                            stringResource(R.string.strategies_new),
+                            text = stringResource(R.string.strategies_new),
                             color = TradebotTheme.colors.brand,
                         )
                     }
-                    if (strategy.isCurrent)
-                        TradebotBadge(stringResource(R.string.strategies_current))
                 }
 
                 Text(
-                    strategy.description,
+                    text = strategy.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = TradebotTheme.colors.textSecondary,
                 )
-                if (strategy.name.equals("voting", ignoreCase = true)) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf("EMA", "RSI", "MACD", "BB").forEach {
-                            TradebotBadge(it, color = TradebotTheme.colors.textSecondary)
-                        }
-                    }
-                }
             }
-            IconButton(onClick = onSelect) {
-                TradebotIcon(
-                    UiR.drawable.ic_settings_outline,
-                    contentDescription =
-                        stringResource(R.string.strategies_configure, strategy.name),
-                )
+            if (isConfigurable) {
+                IconButton(onClick = onConfigure) {
+                    TradebotIcon(
+                        resource = UiR.drawable.ic_settings_outline,
+                        contentDescription = stringResource(R.string.strategies_configure, strategy.name),
+                    )
+                }
             }
         }
     }

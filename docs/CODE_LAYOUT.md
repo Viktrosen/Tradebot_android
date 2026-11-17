@@ -103,3 +103,18 @@ UI-строки лежат в ресурсах владельца компоне
 `feature/positionDetails` keeps api/data/domain/presentation/router boundaries. MVI UiState, Action and Effect share presentation/core/UiState.kt; components are in presentation/di, DTOs in api/data/response, mappers in their owning layer. App owns AppLinkParser/Encoder and NotificationPendingIntentFactory. AppViewModel stores a PendingAppLink in SavedStateHandle. Main's router exposes entry arguments, never a notification coordinator or shared launch flow.
 - `app/navigation/deeplink` — AppLinkContract, AppLinkParser, AppLinkEncoder; `app/navigation/data` — AppLink and PendingAppLink. `app/notifications/NotificationPendingIntentFactory` creates Activity PendingIntents. AppViewModelFactory supplies the restored SavedStateHandle to Dagger.
 - `app/navigation/AppNavigationHost` — корневой NavController, lifecycle-aware сбор navigation StateFlow, переключение Auth/Main и подтверждение внешнего перехода. `AppViewModel` производит eager StateFlow, но не выполняет UI-навигацию. MainActivity размещает host под общей темой.
+
+## Автоматический выбор стратегий
+
+`feature:strategy` редактирует параметры, но не выбирает активный алгоритм.
+`presentation/core/UiState.kt` хранит состояние, Action и Effect;
+`StrategyDialog`, `StrategyItem` и `StrategyType` находятся в отдельных файлах
+того же пакета. `StrategyType` разрешает диалоги только поддерживаемых конфигураций.
+Простые и неизвестные типы каталога остаются информационными карточками.
+Legacy `current` десериализуется в data/domain, но не задаёт глобальный выбор в UI.
+
+`domain/model/VotingWeights` и `VotingWeightsError` задают проверку параметров
+голосования (участники, веса 1–10, минимум два). `UiState.votingDraft` хранит
+редактируемый снимок; `SetVotingParticipant`/`SetVotingWeight` изменяют его во
+ViewModel. UI не собирает отдельный четырёхиндикаторный payload. Неизвестные
+участники не удаляются при чтении, а блокируют сохранение с явным сообщением.

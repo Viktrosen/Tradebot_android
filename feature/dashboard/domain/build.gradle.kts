@@ -4,6 +4,7 @@ plugins {
 
 android.namespace = moduleNamespace.versions.feature.dashboard.domain.get()
 dependencies {
+    testImplementation(libs.jetbrains.coroutines.test)
     // Modules
     implementation(projects.core.utils)
 

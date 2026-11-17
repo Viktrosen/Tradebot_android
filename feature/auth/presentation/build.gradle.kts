@@ -6,6 +6,8 @@ plugins {
 }
 android.namespace = "ru.bolotov.feature.auth.presentation"
 dependencies {
+    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(libs.jetbrains.coroutines.test)
     implementation(projects.feature.auth.domain)
     implementation(projects.feature.auth.router)
     implementation(libs.bundles.orbit.mvi)

@@ -24,3 +24,22 @@ plugins {
 tasks.register("clean").configure {
     delete(rootProject.layout.buildDirectory)
 }
+
+// Robolectric needs access to JDK internals on Java 17+. This affects unit-test
+// JVMs only, never application processes or production code.
+subprojects {
+    tasks.withType<Test>().configureEach {
+        jvmArgs(
+            "--add-opens=java.base/java.lang=ALL-UNNAMED",
+            "--add-opens=java.base/java.util=ALL-UNNAMED",
+            "--add-opens=java.base/java.io=ALL-UNNAMED",
+            "--add-opens=java.base/java.net=ALL-UNNAMED",
+            "--add-opens=java.base/java.security=ALL-UNNAMED",
+            "--add-opens=java.base/java.text=ALL-UNNAMED",
+            "--add-opens=java.base/jdk.internal.access=ALL-UNNAMED",
+            "--add-opens=java.desktop/java.awt.font=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+        )
+        systemProperty("robolectric.dependency.repo.url", "https://repo.maven.apache.org/maven2")
+    }
+}

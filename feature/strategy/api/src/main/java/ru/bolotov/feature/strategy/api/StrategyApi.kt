@@ -11,14 +11,11 @@ import ru.bolotov.core.network.NetworkApiProvider
 interface StrategyApi {
     @GET("command/strategy/available") suspend fun getStrategies(): StrategiesResponse
     @GET("command/strategy/configurations") suspend fun getConfigurations(): StrategyConfigurationsResponse
-    @GET("command/status") suspend fun getBotStatus(): StrategyStatusResponse
-    @POST("command/strategy/simple") suspend fun switchSimple(@Body request: SimpleRequest): SwitchResponse
     @POST("command/strategy/confirmation") suspend fun switchConfirmation(@Body request: ConfirmationRequest): SwitchResponse
     @POST("command/strategy/voting") suspend fun switchVoting(@Body weights: Map<String, Int>): SwitchResponse
     @POST("command/strategy/candlestick") suspend fun switchCandlestick(@Body request: CandlestickRequest): SwitchResponse
 }
 @Serializable data class StrategiesResponse(val strategies: List<StrategyResponse>, val current: CurrentStrategyResponse)
-@Serializable data class StrategyStatusResponse(val currentStrategy: CurrentStrategyResponse)
 @Serializable data class StrategyResponse(val name: String, val type: String, val description: String)
 @Serializable data class CurrentStrategyResponse(
     val id: String = "",
@@ -40,7 +37,6 @@ interface StrategyApi {
     val voting: StrategySettingsResponse = StrategySettingsResponse(),
     val confirmation: StrategySettingsResponse = StrategySettingsResponse()
 )
-@Serializable data class SimpleRequest(val strategyName: String)
 @Serializable data class ConfirmationRequest(val indicators: List<String>)
 @Serializable data class CandlestickRequest(val timeframe: String, val minConfidence: Double)
 @Serializable data class SwitchResponse(

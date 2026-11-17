@@ -2,20 +2,21 @@ package ru.bolotov.feature.strategy.presentation.core
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CancellationException
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import ru.bolotov.core.utils.AnalyticManager
 import ru.bolotov.feature.strategy.domain.interactor.StrategyInteractor
 import ru.bolotov.feature.strategy.domain.model.Strategies
-import ru.bolotov.feature.strategy.domain.model.StrategySettings
+import ru.bolotov.feature.strategy.domain.model.VotingWeights
 import javax.inject.Inject
 
-@Stable
 /**
  * MVI-координатор конфигураций стратегий. Перед открытием диалога переносит
  * сохранённые значения в state, а после сохранения перечитывает их с backend.
  */
+@Stable
 internal class StrategyViewModel @Inject constructor(
     private val analyticManager: AnalyticManager,
     private val strategyInteractor: StrategyInteractor
@@ -32,14 +33,14 @@ internal class StrategyViewModel @Inject constructor(
         Action.LoadData,
         Action.Refresh -> loadData()
 
-        is Action.SelectStrategy -> openDialog(action.strategyName, action.type)
-        is Action.SwitchToSimple -> switchStrategy { simple(action.name) }
-        is Action.SwitchToConfirmation -> switchStrategy { confirmation(action.indicators) }
-        is Action.SwitchToVoting -> switchStrategy { voting(action.weights) }
-        is Action.SwitchToCandlestick -> switchStrategy {
-            candlestick(action.timeframe, action.minConfidence)
+        is Action.SaveConfirmation -> saveSettings { confirmation(indicators = action.indicators) }
+        is Action.SaveVoting -> saveVotingSettings(weights = action.weights)
+        is Action.SetVotingParticipant -> editVotingDraft { withParticipant(participant = action.participant, enabled = action.enabled) }
+        is Action.SetVotingWeight -> editVotingDraft { withWeight(participant = action.participant, weight = action.weight) }
+        is Action.SaveCandlestick -> saveSettings {
+            candlestick(timeframe = action.timeframe, minConfidence = action.minConfidence)
         }
-        is Action.OpenConfigDialog -> openDialog(action.strategyName, action.type)
+        is Action.OpenConfigDialog -> openDialog(strategyType = action.type)
         Action.DismissDialog -> dismissDialog()
     }
 
@@ -49,54 +50,43 @@ internal class StrategyViewModel @Inject constructor(
         try {
             val strategies = strategyInteractor.getStrategies()
             reduce { state.withStrategies(strategies).copy(isLoading = false) }
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: Exception) {
-            val message = error.message ?: "Не удалось загрузить стратегии"
+            val message = error.message.orEmpty()
             reduce { state.copy(isLoading = false, errorMessage = message) }
             postSideEffect(Effect.ShowError(message))
         }
     }
 
-    private fun openDialog(strategyName: String, strategyType: StrategyType) = intent {
-        val dialog = when (strategyType) {
-            StrategyType.SIMPLE -> StrategyDialog.Simple(strategyName)
-            StrategyType.CONFIRMATION -> StrategyDialog.Confirmation
-            StrategyType.VOTING -> StrategyDialog.Voting
-            StrategyType.CANDLESTICK -> StrategyDialog.Candlestick
+    private fun openDialog(strategyType: StrategyType) = intent {
+        val dialog = strategyType.configurationDialog ?: return@intent
+        reduce {
+            state.copy(
+                dialog = dialog,
+                votingDraft = if (dialog == StrategyDialog.Voting) VotingWeights.from(state.votingWeights) else state.votingDraft
+            )
         }
-
-        reduce { state.copy(dialog = dialog) }
-
-        when (dialog) {
-            is StrategyDialog.Simple -> {
-                postSideEffect(Effect.ShowSimpleStrategyDialog(dialog.strategyName))
-            }
-
-            StrategyDialog.Confirmation -> {
-                postSideEffect(Effect.ShowConfirmationDialog(state.confirmationIndicators.toList()))
-            }
-
-            StrategyDialog.Voting -> {
-                postSideEffect(Effect.ShowVotingDialog(state.votingWeights))
-            }
-
-            StrategyDialog.Candlestick -> {
-                postSideEffect(
-                    Effect.ShowCandlestickDialog(
-                        state.candlestickTimeframe,
-                        state.candlestickMinConfidence
-                    )
-                )
-            }
-        }
-
-        analyticManager.logEvent("strategy_selected")
+        analyticManager.logEvent("strategy_configuration_opened")
     }
 
     private fun dismissDialog() = intent {
         reduce { state.copy(dialog = null) }
     }
 
-    private fun switchStrategy(operation: suspend StrategyInteractor.() -> Unit) = intent {
+    private fun editVotingDraft(change: VotingWeights.() -> VotingWeights) = intent {
+        if (state.isSaving || state.dialog != StrategyDialog.Voting) return@intent
+        reduce { state.copy(votingDraft = state.votingDraft.change()) }
+    }
+
+    private fun saveVotingSettings(weights: Map<String, Int>) {
+        val configuration = VotingWeights.from(weights)
+        if (!configuration.isValid) return
+        saveSettings { voting(weights = configuration.toPayload()) }
+    }
+
+    private fun saveSettings(operation: suspend StrategyInteractor.() -> Unit) = intent {
+        if (state.isSaving) return@intent
         reduce { state.copy(isSaving = true, errorMessage = null) }
 
         try {
@@ -109,53 +99,24 @@ internal class StrategyViewModel @Inject constructor(
                     dialog = null
                 )
             }
-            postSideEffect(Effect.StrategyChanged)
-            postSideEffect(Effect.ShowToast("Стратегия переключена"))
+            postSideEffect(Effect.SettingsSaved)
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: Exception) {
-            val message = error.message ?: "Не удалось переключить стратегию"
+            val message = error.message.orEmpty()
             reduce { state.copy(isSaving = false, errorMessage = message) }
             postSideEffect(Effect.ShowError(message))
         }
-    }
-
-    private fun String.toStrategyType() = when (lowercase()) {
-        "simple" -> StrategyType.SIMPLE
-        "confirmation" -> StrategyType.CONFIRMATION
-        "voting" -> StrategyType.VOTING
-        else -> StrategyType.CANDLESTICK
-    }
-
-    private fun StrategySettings.confirmationIndicatorsOr(default: Set<String>): Set<String> = when (this) {
-        is StrategySettings.Confirmation -> indicators.toSet()
-        else -> default
-    }
-
-    private fun StrategySettings.votingWeightsOr(default: Map<String, Int>): Map<String, Int> = when (this) {
-        is StrategySettings.Voting -> weights
-        else -> default
-    }
-
-    private fun StrategySettings.candlestickTimeframeOr(default: String): String = when (this) {
-        is StrategySettings.Candlestick -> timeframe
-        else -> default
-    }
-
-    private fun StrategySettings.candlestickMinConfidenceOr(default: Double): Double = when (this) {
-        is StrategySettings.Candlestick -> minConfidence
-        else -> default
     }
 
     private fun UiState.withStrategies(strategies: Strategies): UiState = copy(
         availableStrategies = strategies.items.map { item ->
             StrategyItem(
                 name = item.name,
-                type = item.type.toStrategyType(),
-                description = item.description,
-                isCurrent = item.name.equals(strategies.current.id, ignoreCase = true)
+                type = StrategyType.fromCatalog(item.type),
+                description = item.description
             )
         },
-        currentStrategy = strategies.current.name,
-        currentStrategySettings = strategies.current.settings,
         confirmationIndicators = strategies.configurations.confirmation.indicators.toSet(),
         votingWeights = strategies.configurations.voting.weights,
         candlestickTimeframe = strategies.configurations.candlestick.timeframe,

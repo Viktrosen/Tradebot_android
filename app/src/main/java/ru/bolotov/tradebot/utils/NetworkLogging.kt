@@ -7,7 +7,7 @@ internal fun createHttpLoggingInterceptor(
     isDebug: Boolean,
     logger: HttpLoggingInterceptor.Logger
 ): HttpLoggingInterceptor = HttpLoggingInterceptor(logger).apply {
-    level = if (isDebug) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+    level = if (isDebug) HttpLoggingInterceptor.Level.BASIC else HttpLoggingInterceptor.Level.NONE
     // Defense in depth if the metadata level is changed later.
     listOf("Authorization", "Proxy-Authorization", "Cookie", "Set-Cookie", "X-API-Key")
         .forEach(::redactHeader)

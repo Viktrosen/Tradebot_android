@@ -8,6 +8,10 @@ plugins {
 android.namespace = moduleNamespace.versions.feature.risk.presentation.get()
 
 dependencies {
+    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(libs.jetbrains.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.robolectric)
     // Module
     //implementation(projects.feature.feed.router)
     //implementation(projects.feature.notifications.router)
@@ -25,3 +29,5 @@ dependencies {
     implementation(libs.bundles.orbit.mvi)
     implementation(libs.coil.compose)
 }
+
+android.testOptions.unitTests.isIncludeAndroidResources = true

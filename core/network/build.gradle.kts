@@ -5,11 +5,8 @@ plugins {
 android {
     namespace = moduleNamespace.versions.core.network.get()
 
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-        }
-    }
+    // Shrink only the final application: library shrinking removes public realtime
+    // contracts before consuming modules (and their release tests) can reference them.
 }
 
 dependencies {

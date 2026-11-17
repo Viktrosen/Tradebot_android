@@ -18,6 +18,7 @@ fun TradebotDialogButton(
     onClick: () -> Unit,
     outlined: Boolean = false,
     destructive: Boolean = false,
+    enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit,
 ) {
     val colors = TradebotTheme.colors
@@ -26,6 +27,7 @@ fun TradebotDialogButton(
     if (outlined) {
         OutlinedButton(
             onClick = onClick,
+            enabled = enabled,
             modifier = modifier,
             shape = TradebotTheme.shapes.material.small,
             border = BorderStroke(TradebotDimens.border, colors.border),
@@ -35,6 +37,7 @@ fun TradebotDialogButton(
     } else {
         Button(
             onClick = onClick,
+            enabled = enabled,
             modifier = modifier,
             shape = TradebotTheme.shapes.material.small,
             colors =
