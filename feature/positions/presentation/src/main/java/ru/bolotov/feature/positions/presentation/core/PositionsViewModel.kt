@@ -159,8 +159,8 @@ internal class PositionsViewModel @Inject constructor(
         val filteredPositions = when (filterType) {
             PositionFilter.ALL -> allPositions
             PositionFilter.OPEN -> allPositions.filterNot { it.isClosed }
-            PositionFilter.PROFIT -> allPositions.filter { it.isProfit }
-            PositionFilter.LOSS -> allPositions.filter { it.isLoss }
+            PositionFilter.PROFIT -> allPositions.filter { it.isProfit && it.isClosed }
+            PositionFilter.LOSS -> allPositions.filter { it.isLoss && it.isClosed }
         }
         reduce {
             state.copy(
