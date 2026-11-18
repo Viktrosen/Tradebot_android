@@ -1,9 +1,11 @@
 package ru.bolotov.feature.positions.presentation.core
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+
 data class UiState(
     val isLoading: Boolean = false,
-    val positions: List<UiPosition> = emptyList(),
-    val filteredPositions: List<UiPosition> = emptyList(),
+    val filteredPositions: ImmutableList<UiPosition> = persistentListOf(),
     val filterType: PositionFilter = PositionFilter.ALL,
     val isClosingPosition: Boolean = false,
     val closingPosition: UiPosition? = null,
@@ -17,8 +19,8 @@ data class UiState(
 enum class PositionFilter {
     ALL,        // Все позиции (открытые + закрытые)
     OPEN,       // Только открытые
-    PROFIT,     // Только прибыльные
-    LOSS        // Только убыточные
+    PROFIT,     // Только закрытые прибыльные
+    LOSS        // Только закрытые убыточные
 }
 
 // Presentation model для позиции

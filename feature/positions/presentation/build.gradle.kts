@@ -8,6 +8,7 @@ plugins {
 android.namespace = moduleNamespace.versions.feature.positions.presentation.get()
 
 dependencies {
+    implementation(libs.jetbrains.collections.immutable)
     testImplementation(project(path = ":core:testing", configuration = "testSupportClasses"))
     testImplementation(libs.jetbrains.coroutines.test)
     testImplementation(libs.mockito.core)

@@ -52,6 +52,7 @@ orbit = "10.0.0"
 
 # Jetbrains
 coroutines = "1.10.2"
+collectionsImmutable = "0.4.0"
 
 # Test
 chucker = "4.2.0"
@@ -126,6 +127,7 @@ javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInjec
 # Jetbrains
 jetbrains-serializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "ktxSerialization" }
 jetbrains-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+jetbrains-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "collectionsImmutable" }
 jetbrains-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 #MVI

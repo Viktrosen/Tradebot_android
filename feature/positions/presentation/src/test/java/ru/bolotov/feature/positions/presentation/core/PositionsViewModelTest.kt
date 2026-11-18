@@ -49,20 +49,85 @@ class PositionsViewModelTest {
 
     @Test
     fun `load calculates closed pnl and filters actual positions`() = runTest(dispatcher) {
+        val open = interactor.positions.first()
+        val closed = interactor.positions.last()
+        interactor.positions = listOf(
+            open,
+            open.copy(id = "open-loss", pnl = -10.0),
+            closed.copy(id = "closed-profit", pnl = 5.0),
+            closed,
+            closed.copy(id = "closed-zero", pnl = 0.0),
+            closed.copy(id = "closed-unknown", pnl = null)
+        )
         val model = loadedModel()
         val loaded = model.container.stateFlow.value
         assertFalse(loaded.isLoading)
-        assertEquals(1, loaded.openPositionsCount)
-        assertEquals(1, loaded.closedPositionsCount)
-        assertEquals(-3.0, loaded.totalPnl, 0.0)
+        assertEquals(2, loaded.openPositionsCount)
+        assertEquals(4, loaded.closedPositionsCount)
+        assertEquals(2.0, loaded.totalPnl, 0.0)
 
         for ((filter, expected) in listOf(
-            PositionFilter.OPEN to listOf("open"), PositionFilter.PROFIT to listOf("open"),
-            PositionFilter.LOSS to listOf("closed"), PositionFilter.ALL to listOf("open", "closed")
+            PositionFilter.OPEN to listOf("open", "open-loss"),
+            PositionFilter.PROFIT to listOf("closed-profit"),
+            PositionFilter.LOSS to listOf("closed"),
+            PositionFilter.ALL to interactor.positions.map { it.id }
         )) {
             model.handleAction(Action.Filter(filterType = filter))
             assertEquals(expected, model.container.stateFlow.first { it.filterType == filter }.filteredPositions.map { it.id })
+            val state = model.container.stateFlow.value
+            assertEquals(2, state.openPositionsCount)
+            assertEquals(4, state.closedPositionsCount)
+            assertEquals(2.0, state.totalPnl, 0.0)
         }
+    }
+
+    @Test
+    fun `quotes update hidden open positions without changing closed filters or earlier snapshots`() = runTest(dispatcher) {
+        val model = loadedModel()
+        val originalPositions = model.container.stateFlow.value.filteredPositions
+        model.handleAction(Action.Filter(filterType = PositionFilter.PROFIT))
+        val filtered = model.container.stateFlow.first { it.filterType == PositionFilter.PROFIT }
+        assertTrue(filtered.filteredPositions.isEmpty())
+
+        events.emit(
+            TradingStateUpdate.PositionPrice(
+                instrumentId = "instrument",
+                currentPrice = 110.0,
+                unrealizedPnl = 10.0,
+                pnlPercent = 10.0
+            )
+        )
+        runCurrent()
+
+        assertTrue(model.container.stateFlow.value.filteredPositions.isEmpty())
+        assertEquals(PositionFilter.PROFIT, model.container.stateFlow.value.filterType)
+        model.handleAction(Action.Filter(filterType = PositionFilter.ALL))
+        val all = model.container.stateFlow.first { it.filterType == PositionFilter.ALL }
+        assertEquals(110.0, all.filteredPositions.first().currentPrice!!, 0.0)
+        assertEquals(10.0, all.filteredPositions.first().pnl!!, 0.0)
+        assertEquals(-3.0, all.filteredPositions.last().pnl!!, 0.0)
+        assertEquals(102.0, originalPositions.first().currentPrice!!, 0.0)
+        assertEquals(2.0, originalPositions.first().pnl!!, 0.0)
+    }
+
+    @Test
+    fun `refresh preserves closed profit filter and recomputes the visible immutable list`() = runTest(dispatcher) {
+        val model = loadedModel()
+        model.handleAction(Action.Filter(filterType = PositionFilter.PROFIT))
+        model.container.stateFlow.first { it.filterType == PositionFilter.PROFIT }
+        interactor.positions = interactor.positions.map { position ->
+            if (position.id == "open") position.copy(isClosed = true) else position
+        }
+
+        model.handleAction(Action.Refresh)
+        assertEquals(Effect.Refresh, model.container.sideEffectFlow.first())
+        val state = model.container.stateFlow.first { it.closedPositionsCount == 2 }
+
+        assertEquals(PositionFilter.PROFIT, state.filterType)
+        assertEquals(listOf("open"), state.filteredPositions.map { it.id })
+        assertTrue(state.filteredPositions.all { it.isClosed && it.isProfit })
+        assertEquals(0, state.openPositionsCount)
+        assertEquals(-1.0, state.totalPnl, 0.0)
     }
 
     @Test
@@ -74,7 +139,7 @@ class PositionsViewModelTest {
         interactor.loadFailure = null
         model.handleAction(Action.Refresh)
         assertTrue(model.container.sideEffectFlow.first() is Effect.Refresh)
-        val state = model.container.stateFlow.first { it.positions.isNotEmpty() }
+        val state = model.container.stateFlow.first { it.filteredPositions.isNotEmpty() }
         assertNull(state.errorMessage)
     }
 
@@ -169,12 +234,17 @@ class PositionsViewModelTest {
     @Test
     fun `realtime quote ignores closed lifecycle and reconnect reloads HTTP snapshot`() = runTest(dispatcher) {
         val model = loadedModel()
-        events.emit(TradingStateUpdate.PositionPrice(
-            instrumentId = "instrument", currentPrice = 95.0, unrealizedPnl = -5.0, pnlPercent = -5.0
-        ))
-        val state = model.container.stateFlow.first { it.positions.first().currentPrice == 95.0 }
-        assertEquals(-5.0, state.positions.first().pnl!!, 0.0)
-        assertEquals(-3.0, state.positions.last().pnl!!, 0.0)
+        events.emit(
+            TradingStateUpdate.PositionPrice(
+                instrumentId = "instrument",
+                currentPrice = 95.0,
+                unrealizedPnl = -5.0,
+                pnlPercent = -5.0
+            )
+        )
+        val state = model.container.stateFlow.first { it.filteredPositions.first().currentPrice == 95.0 }
+        assertEquals(-5.0, state.filteredPositions.first().pnl!!, 0.0)
+        assertEquals(-3.0, state.filteredPositions.last().pnl!!, 0.0)
         assertEquals(-3.0, state.totalPnl, 0.0)
         events.emit(TradingStateUpdate.Reconnected)
         runCurrent()
@@ -184,7 +254,8 @@ class PositionsViewModelTest {
     }
 
     private suspend fun TestScope.model() = PositionsViewModel(
-        analyticManager = mock(AnalyticManager::class.java), positionsInteractor = interactor,
+        analyticManager = mock(AnalyticManager::class.java),
+        positionsInteractor = interactor,
         tradingStateInteractor = object : TradingStateInteractor { override fun updates() = events }
     ).also {
         store.put(key = "positions", viewModel = it)
@@ -192,7 +263,7 @@ class PositionsViewModelTest {
     }
 
     private suspend fun TestScope.loadedModel(): PositionsViewModel = model().also {
-        it.container.stateFlow.first { state -> state.positions.isNotEmpty() }
+        it.container.stateFlow.first { state -> state.filteredPositions.isNotEmpty() }
         events.subscriptionCount.first { count -> count > 0 }
     }
 
@@ -213,11 +284,22 @@ class PositionsViewModelTest {
 
         companion object {
             private fun position(id: String, closed: Boolean) = Position(
-                id = id, instrumentId = "instrument", instrumentName = "TEST", direction = "BUY",
-                quantity = 1, lotSize = 10, entryPrice = 100.0, currentPrice = 102.0,
-                pnl = if (closed) -3.0 else 2.0, pnlPercent = if (closed) -3.0 else 2.0,
-                isClosed = closed, entryTime = null, closeTime = null, entryStrategyName = "EMA",
-                aiExplanation = "Entry reasoning", closeExplanation = if (closed) "Stop loss" else null
+                id = id,
+                instrumentId = "instrument",
+                instrumentName = "TEST",
+                direction = "BUY",
+                quantity = 1,
+                lotSize = 10,
+                entryPrice = 100.0,
+                currentPrice = 102.0,
+                pnl = if (closed) -3.0 else 2.0,
+                pnlPercent = if (closed) -3.0 else 2.0,
+                isClosed = closed,
+                entryTime = null,
+                closeTime = null,
+                entryStrategyName = "EMA",
+                aiExplanation = "Entry reasoning",
+                closeExplanation = if (closed) "Stop loss" else null
             )
         }
     }

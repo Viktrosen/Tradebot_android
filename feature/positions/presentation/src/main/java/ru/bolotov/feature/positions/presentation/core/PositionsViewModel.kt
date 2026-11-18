@@ -3,6 +3,7 @@ package ru.bolotov.feature.positions.presentation.core
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -165,8 +166,7 @@ internal class PositionsViewModel @Inject constructor(
         reduce {
             state.copy(
                 isLoading = false,
-                positions = allPositions,
-                filteredPositions = filteredPositions,
+                filteredPositions = filteredPositions.toImmutableList(),
                 filterType = filterType,
                 totalPnl = allPositions.filter { it.isClosed }.sumOf { it.pnl ?: 0.0 },
                 openPositionsCount = allPositions.count { !it.isClosed },
