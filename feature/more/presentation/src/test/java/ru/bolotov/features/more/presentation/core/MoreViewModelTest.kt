@@ -23,7 +23,7 @@ import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.bolotov.core.utils.AnalyticManager
-import ru.bolotov.core.utils.testing.controlOrbit
+import ru.bolotov.core.testing.controlOrbit
 import ru.bolotov.feature.auth.domain.interactor.AuthInteractor
 import ru.bolotov.feature.auth.domain.model.AuthSession
 import ru.bolotov.feature.more.domain.interactor.AppInfoInteractor

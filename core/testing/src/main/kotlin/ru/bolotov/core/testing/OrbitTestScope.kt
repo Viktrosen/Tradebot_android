@@ -1,4 +1,4 @@
-package ru.bolotov.core.utils.testing
+package ru.bolotov.core.testing
 
 import java.util.Collections
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,7 +37,10 @@ suspend fun <STATE : Any, EFFECT : Any> TestScope.controlOrbit(model: ContainerH
     check(container is TestContainerDecorator<STATE, EFFECT>) { "Expected Orbit's testable container" }
     container.test(
         initialState = initialState,
-        settings = container.settings.copy(eventLoopDispatcher = dispatcher, intentLaunchingDispatcher = dispatcher),
+        settings = container.settings.copy(
+            eventLoopDispatcher = dispatcher,
+            intentLaunchingDispatcher = dispatcher
+        ),
         testScope = backgroundScope
     )
     container.inlineOrbit { initialEffects.forEach { postSideEffect(it) } }

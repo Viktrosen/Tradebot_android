@@ -104,6 +104,7 @@ internal class RiskViewModel @Inject constructor(
     }
 
     private fun save() = intent {
+        if (state.isSaving || state.isResetting) return@intent
         val config = state.riskConfig ?: return@intent
         reduce { state.copy(isSaving = true, errorMessage = null) }
         try {
@@ -125,6 +126,7 @@ internal class RiskViewModel @Inject constructor(
     }
 
     private fun reset() = intent {
+        if (state.isSaving || state.isResetting) return@intent
         reduce { state.copy(isResetting = true, errorMessage = null) }
         try {
             val resetConfig = riskInteractor.resetRiskConfig().config.toUi()

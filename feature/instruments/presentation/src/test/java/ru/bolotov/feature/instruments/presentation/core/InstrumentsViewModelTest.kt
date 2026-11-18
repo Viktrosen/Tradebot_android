@@ -1,7 +1,7 @@
 package ru.bolotov.feature.instruments.presentation.core
 
 import androidx.lifecycle.ViewModelStore
-import ru.bolotov.core.utils.testing.controlOrbit
+import ru.bolotov.core.testing.controlOrbit
 import java.io.IOException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers

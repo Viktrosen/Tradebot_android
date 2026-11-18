@@ -104,6 +104,17 @@ UI-строки лежат в ресурсах владельца компоне
 - `app/navigation/deeplink` — AppLinkContract, AppLinkParser, AppLinkEncoder; `app/navigation/data` — AppLink and PendingAppLink. `app/notifications/NotificationPendingIntentFactory` creates Activity PendingIntents. AppViewModelFactory supplies the restored SavedStateHandle to Dagger.
 - `app/navigation/AppNavigationHost` — корневой NavController, lifecycle-aware сбор navigation StateFlow, переключение Auth/Main и подтверждение внешнего перехода. `AppViewModel` производит eager StateFlow, но не выполняет UI-навигацию. MainActivity размещает host под общей темой.
 
+## Общие unit-test helpers
+
+`core:testing` — отдельный JVM-модуль с общими тестовыми расширениями
+(`ru.bolotov.core.testing.controlOrbit`). Подключается только через
+`testImplementation`, не входит в runtime приложения. Код — в
+`core/testing/src/main/kotlin`, инструкции — в `core/testing/README.md`.
+Feature-фикстуры и сценарии остаются в `src/test` своих модулей.
+Зависимость выбирает `configuration = "testSupportClasses"`, а не default JAR.
+`build-logic/convention/.../testing/TestSupportClassesToJarTransform` создаёт
+совместимый с AGP артефакт в кэше Gradle; тесты упаковки — в `convention/src/test`.
+
 ## Автоматический выбор стратегий
 
 `feature:strategy` редактирует параметры, но не выбирает активный алгоритм.

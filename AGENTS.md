@@ -127,6 +127,16 @@ commits unless the user explicitly asks for one.
 
 ## Kotlin source layout
 
+### Parameter and argument formatting
+
+For constructors and functions with more than two parameters/arguments, put each
+parameter/argument on its own line, indented one level; place the closing
+parenthesis on a separate line. Use named arguments in Kotlin calls where supported.
+Apply this to production and test code, including nested constructor calls.
+Calls with one or two arguments may stay on one line when readable. When an argument
+is a multiline expression, give that expression its own indented block inside the
+outer call.
+
 Follow [docs/CODE_LAYOUT.md](docs/CODE_LAYOUT.md) for exact package placement.
 Keep independent DTOs, entities, events, exceptions and interfaces in separate named files
 at their owning layer. Do not mix unrelated types into service/controller/ViewModel files.

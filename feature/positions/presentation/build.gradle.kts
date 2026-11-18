@@ -8,7 +8,7 @@ plugins {
 android.namespace = moduleNamespace.versions.feature.positions.presentation.get()
 
 dependencies {
-    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(project(path = ":core:testing", configuration = "testSupportClasses"))
     testImplementation(libs.jetbrains.coroutines.test)
     testImplementation(libs.mockito.core)
     testImplementation(libs.robolectric)

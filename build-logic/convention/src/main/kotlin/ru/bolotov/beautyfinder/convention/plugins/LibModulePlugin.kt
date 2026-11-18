@@ -3,14 +3,20 @@ package ru.bolotov.beautyfinder.convention.plugins
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import ru.bolotov.beautyfinder.convention.configuration.configureCommon
 import ru.bolotov.beautyfinder.convention.utils.PluginAlias
+import ru.bolotov.beautyfinder.convention.testing.TestSupportClassesToJarTransform
 
 class LibModulePlugin: Plugin<Project> {
     override fun apply(target: Project) {
         with(target){
+            dependencies.registerTransform(TestSupportClassesToJarTransform::class.java) {
+                from.attribute(ArtifactTypeDefinition.ARTIFACT_TYPE_ATTRIBUTE, TestSupportClassesToJarTransform.ARTIFACT_TYPE)
+                to.attribute(ArtifactTypeDefinition.ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.JAR_TYPE)
+            }
             pluginManager.apply{
                 apply(PluginAlias.ANDROID_LIBRARY)
                 apply(PluginAlias.KOTLIN_ANDROID)

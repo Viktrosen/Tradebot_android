@@ -13,7 +13,7 @@ import org.junit.Test
 import ru.bolotov.feature.positionDetails.domain.interactor.PositionDetailsInteractor
 import ru.bolotov.feature.positionDetails.domain.model.PositionDetails
 import ru.bolotov.feature.positionDetails.domain.model.PositionDetailsUpdate
-import ru.bolotov.core.utils.testing.controlOrbit
+import ru.bolotov.core.testing.controlOrbit
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PositionDetailsViewModelTest {
@@ -140,6 +140,7 @@ class PositionDetailsViewModelTest {
             model.handleAction(Action.Refresh)
             runCurrent()
             assertTrue(model.container.stateFlow.value.details!!.isClosed)
+            assertFalse(model.container.stateFlow.value.isRefreshing)
         }
     }
 

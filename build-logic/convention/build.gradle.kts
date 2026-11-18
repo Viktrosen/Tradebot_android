@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    testImplementation("junit:junit:4.13.2")
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.android.tools.common)
     compileOnly(libs.jetbrains.kotlinGradle)

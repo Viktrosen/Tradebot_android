@@ -9,7 +9,7 @@ android.namespace = moduleNamespace.versions.feature.strategy.presentation.get()
 android.testOptions.unitTests.isIncludeAndroidResources = true
 
 dependencies {
-    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(project(path = ":core:testing", configuration = "testSupportClasses"))
     testImplementation(libs.jetbrains.coroutines.test)
     testImplementation(libs.mockito.core)
     testImplementation(libs.robolectric)

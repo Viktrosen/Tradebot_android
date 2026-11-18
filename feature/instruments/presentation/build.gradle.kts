@@ -8,7 +8,7 @@ plugins {
 android.namespace = moduleNamespace.versions.feature.instruments.presentation.get()
 
 dependencies {
-    testImplementation(testFixtures(project(":core:utils")))
+    testImplementation(project(path = ":core:testing", configuration = "testSupportClasses"))
     testImplementation(libs.jetbrains.coroutines.test)
     implementation(projects.feature.instruments.router)
     implementation(projects.feature.instruments.domain)

@@ -122,6 +122,7 @@ internal class PositionsViewModel @Inject constructor(
     }
 
     private fun confirmClose() = intent {
+        if (state.isClosingPosition) return@intent
         val positionId = state.closingPosition?.id ?: return@intent
         reduce { state.copy(isClosingPosition = true) }
         try {

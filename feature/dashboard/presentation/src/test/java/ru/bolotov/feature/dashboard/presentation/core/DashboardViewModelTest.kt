@@ -24,7 +24,7 @@ import org.robolectric.annotation.Config
 import ru.bolotov.core.network.TradingStateInteractor
 import ru.bolotov.core.network.TradingStateUpdate
 import ru.bolotov.core.utils.AnalyticManager
-import ru.bolotov.core.utils.testing.controlOrbit
+import ru.bolotov.core.testing.controlOrbit
 import ru.bolotov.feature.dashboard.domain.interactor.DashboardInteractor
 import ru.bolotov.feature.dashboard.domain.model.BotStatus
 import ru.bolotov.feature.dashboard.domain.model.CurrentStrategy

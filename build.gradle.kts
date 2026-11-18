@@ -21,7 +21,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlinSerialization) apply false
 }
 
-tasks.register("clean").configure {
+tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
 

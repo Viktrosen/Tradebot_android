@@ -1,7 +1,7 @@
 package ru.bolotov.feature.main.presentation.core
 
 import androidx.lifecycle.ViewModelStore
-import ru.bolotov.core.utils.testing.controlOrbit
+import ru.bolotov.core.testing.controlOrbit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

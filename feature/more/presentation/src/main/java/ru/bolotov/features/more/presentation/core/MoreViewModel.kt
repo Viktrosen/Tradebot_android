@@ -120,6 +120,7 @@ internal class MoreViewModel @Inject constructor(
     }
 
     private fun confirmEmergencyClose() = intent {
+        if (!state.isEmergencyCloseDialogVisible || state.isEmergencyCloseInProgress) return@intent
         reduce {
             state.copy(isEmergencyCloseDialogVisible = false, isEmergencyCloseInProgress = true)
         }

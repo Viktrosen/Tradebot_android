@@ -57,7 +57,8 @@ class DashboardInteractorSortingTest {
     private fun position(name: String, entryTime: String?) = Position(
         positionId = "position-$name", instrumentId = "instrument-$name",
         instrumentName = name, direction = "BUY", entryPrice = 100.0,
-        quantity = 1, entryTime = entryTime
+        quantity = 1, entryTime = entryTime,
+        stopLossPrice = null, atr = null, pnl = null, currentPrice = null
     )
 
     private class RecordingRepository(val positions: List<Position>) : BotRepository {

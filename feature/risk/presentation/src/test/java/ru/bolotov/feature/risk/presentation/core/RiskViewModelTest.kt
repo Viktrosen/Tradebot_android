@@ -21,7 +21,7 @@ import org.mockito.Mockito.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import ru.bolotov.core.utils.AnalyticManager
-import ru.bolotov.core.utils.testing.controlOrbit
+import ru.bolotov.core.testing.controlOrbit
 import ru.bolotov.feature.risk.domain.interactor.RiskInteractor
 import ru.bolotov.feature.risk.domain.model.RiskConfig
 import ru.bolotov.feature.risk.domain.model.RiskConfigData

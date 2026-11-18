@@ -83,7 +83,12 @@ constructor(
                     intent {
                             // Once confirmed closed, an older HTTP response cannot reopen this
                             // lifecycle.
-                            if (state.details?.isClosed == true && !snapshot.isClosed) return@intent
+                            if (state.details?.isClosed == true && !snapshot.isClosed) {
+                                reduce {
+                                    state.copy(isLoading = false, isRefreshing = false, error = false)
+                                }
+                                return@intent
+                            }
                             val details =
                                 if (snapshot.isClosed) snapshot else snapshot.withQuote(newerQuote)
                             if (details.isClosed) savedStateHandle[PENDING_CLOSE] = false
