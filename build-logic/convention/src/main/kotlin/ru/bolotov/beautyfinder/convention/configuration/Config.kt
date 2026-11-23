@@ -22,7 +22,7 @@ object Config {
     val versionName: String
         get() {
             val major = "1"
-            val minor = "0"
+            val minor = "1"
             val patch = "0"
 
             return "$major.$minor.$patch"

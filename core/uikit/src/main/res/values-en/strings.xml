@@ -1,4 +1,5 @@
 <resources>
+    <string name="tb_unknown_value">—</string>
     <string name="common_press_again_message">Press again to exit</string>
     <string name="dashboard">Dashboard</string>
     <string name="positions">Positions</string>

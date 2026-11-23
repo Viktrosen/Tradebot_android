@@ -49,6 +49,9 @@ a data repository directly.
   versioned gateway contract is explicitly introduced.
 - HTTP remains the authoritative complete snapshot. STOMP is incremental UI
   enrichment; a lost WebSocket update must be recoverable through refresh.
+- Trade notifications can replay. Keep stable eventId/tag identity across foreground
+  and FCM background display; OPEN and CLOSE are distinct. Preserve existing deep links;
+  notification identity is not an exactly-once inbox or trading authority.
 - FCM token registration uses the authenticated gateway session and must never expose tokens
   or Firebase configuration in source control.
 
@@ -184,6 +187,10 @@ resolves SYSTEM against system configuration, collects with lifecycle awareness
 and applies one root TradebotTheme plus matching system bar icons. Keep the splash
 until the initial preference is ready; never key navigation by the palette.
 ## Position-details contract
+
+Preserve nullable financial values through every feature layer; UI-kit renders
+unknown as «—». Closed-position totals must not count unknown P&L as zero.
+Consume executor win-rate coverage without recalculating its denominator; see README.
 
 Details are keyed by positionId, never the instrument's latest trade. The executor
 owns complete historical and active state; the gateway proxies it unchanged.

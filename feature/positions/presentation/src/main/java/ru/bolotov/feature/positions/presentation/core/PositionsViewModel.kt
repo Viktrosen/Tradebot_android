@@ -168,7 +168,9 @@ internal class PositionsViewModel @Inject constructor(
                 isLoading = false,
                 filteredPositions = filteredPositions.toImmutableList(),
                 filterType = filterType,
-                totalPnl = allPositions.filter { it.isClosed }.sumOf { it.pnl ?: 0.0 },
+                totalPnl = allPositions.filter { it.isClosed }.let { closed ->
+                    if (closed.any { it.pnl == null }) null else closed.sumOf { requireNotNull(it.pnl) }
+                },
                 openPositionsCount = allPositions.count { !it.isClosed },
                 closedPositionsCount = allPositions.count { it.isClosed },
                 errorMessage = null

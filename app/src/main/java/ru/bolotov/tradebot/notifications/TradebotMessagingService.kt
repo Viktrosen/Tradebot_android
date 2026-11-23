@@ -22,26 +22,33 @@ class TradebotMessagingService : FirebaseMessagingService() {
         val channelId = "tradebot_updates"
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(
-            NotificationChannel(channelId, "TradeBot", NotificationManager.IMPORTANCE_HIGH)
+            NotificationChannel(
+                channelId,
+                "TradeBot",
+                NotificationManager.IMPORTANCE_HIGH
+            )
         )
         val notification = message.notification ?: return
-        val notificationId = System.currentTimeMillis().toInt()
+        val tag = tradeNotificationTag(data = message.data)
+        val notificationId = tag?.hashCode() ?: System.currentTimeMillis().toInt()
         val pendingIntent =
             NotificationPendingIntentFactory(encoder = AppLinkEncoder())
                 .create(
                     context = this,
                     destination = AppLinkParser().parseNotificationData(data = message.data),
-                    notificationId = notificationId,
+                    notificationId = notificationId
                 )
         manager.notify(
-            notificationId,
+            tag,
+            if (tag == null) notificationId else 0,
             NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(notification.title)
                 .setContentText(notification.body)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
-                .build(),
+                .setOnlyAlertOnce(tag != null)
+                .build()
         )
     }
 }

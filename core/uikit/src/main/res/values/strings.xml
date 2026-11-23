@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="tb_unknown_value">—</string>
     <string name="common_press_again_message">Нажмите ещё раз, чтобы выйти</string>
     <string name="dashboard">Дашборд</string>
     <string name="positions">Позиции</string>

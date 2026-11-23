@@ -6,6 +6,30 @@ import ru.bolotov.feature.positions.api.OpenPositionResponse
 import ru.bolotov.feature.positions.api.PositionsResponse
 
 class PositionsMapperTest {
+    @Test
+    fun `unknown historical prices and result stay null without a fabricated percentage`() {
+        val response = PositionsResponse(
+            openPositions = emptyList(),
+            closedTrades = listOf(ru.bolotov.feature.positions.api.ClosedPositionResponse(
+                positionId = "old",
+                instrumentId = "instrument",
+                instrumentName = "TEST",
+                direction = "SELL",
+                entryPrice = null,
+                entryTime = null,
+                closePrice = null,
+                quantity = 1,
+                lotSize = 10,
+                realizedPnl = null,
+                closedAt = "2026-11-23T00:00:00Z"
+            ))
+        )
+        val position = response.toDomain().single()
+        org.junit.Assert.assertNull(position.entryPrice)
+        org.junit.Assert.assertNull(position.currentPrice)
+        org.junit.Assert.assertNull(position.pnl)
+        org.junit.Assert.assertNull(position.pnlPercent)
+    }
 
     @Test
     fun `maps optional profit protection fields for an open position`() {

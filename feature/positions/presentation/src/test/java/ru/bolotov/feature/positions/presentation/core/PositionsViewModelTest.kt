@@ -64,7 +64,7 @@ class PositionsViewModelTest {
         assertFalse(loaded.isLoading)
         assertEquals(2, loaded.openPositionsCount)
         assertEquals(4, loaded.closedPositionsCount)
-        assertEquals(2.0, loaded.totalPnl, 0.0)
+        assertNull(loaded.totalPnl)
 
         for ((filter, expected) in listOf(
             PositionFilter.OPEN to listOf("open", "open-loss"),
@@ -77,7 +77,7 @@ class PositionsViewModelTest {
             val state = model.container.stateFlow.value
             assertEquals(2, state.openPositionsCount)
             assertEquals(4, state.closedPositionsCount)
-            assertEquals(2.0, state.totalPnl, 0.0)
+            assertNull(state.totalPnl)
         }
     }
 
@@ -103,11 +103,31 @@ class PositionsViewModelTest {
         assertEquals(PositionFilter.PROFIT, model.container.stateFlow.value.filterType)
         model.handleAction(Action.Filter(filterType = PositionFilter.ALL))
         val all = model.container.stateFlow.first { it.filterType == PositionFilter.ALL }
-        assertEquals(110.0, all.filteredPositions.first().currentPrice!!, 0.0)
-        assertEquals(10.0, all.filteredPositions.first().pnl!!, 0.0)
-        assertEquals(-3.0, all.filteredPositions.last().pnl!!, 0.0)
-        assertEquals(102.0, originalPositions.first().currentPrice!!, 0.0)
-        assertEquals(2.0, originalPositions.first().pnl!!, 0.0)
+        assertEquals(
+            110.0,
+            all.filteredPositions.first().currentPrice!!,
+            0.0
+        )
+        assertEquals(
+            10.0,
+            all.filteredPositions.first().pnl!!,
+            0.0
+        )
+        assertEquals(
+            -3.0,
+            all.filteredPositions.last().pnl!!,
+            0.0
+        )
+        assertEquals(
+            102.0,
+            originalPositions.first().currentPrice!!,
+            0.0
+        )
+        assertEquals(
+            2.0,
+            originalPositions.first().pnl!!,
+            0.0
+        )
     }
 
     @Test
@@ -127,7 +147,11 @@ class PositionsViewModelTest {
         assertEquals(listOf("open"), state.filteredPositions.map { it.id })
         assertTrue(state.filteredPositions.all { it.isClosed && it.isProfit })
         assertEquals(0, state.openPositionsCount)
-        assertEquals(-1.0, state.totalPnl, 0.0)
+        assertEquals(
+            -1.0,
+            requireNotNull(state.totalPnl),
+            0.0
+        )
     }
 
     @Test
@@ -243,9 +267,21 @@ class PositionsViewModelTest {
             )
         )
         val state = model.container.stateFlow.first { it.filteredPositions.first().currentPrice == 95.0 }
-        assertEquals(-5.0, state.filteredPositions.first().pnl!!, 0.0)
-        assertEquals(-3.0, state.filteredPositions.last().pnl!!, 0.0)
-        assertEquals(-3.0, state.totalPnl, 0.0)
+        assertEquals(
+            -5.0,
+            state.filteredPositions.first().pnl!!,
+            0.0
+        )
+        assertEquals(
+            -3.0,
+            state.filteredPositions.last().pnl!!,
+            0.0
+        )
+        assertEquals(
+            -3.0,
+            requireNotNull(state.totalPnl),
+            0.0
+        )
         events.emit(TradingStateUpdate.Reconnected)
         runCurrent()
         assertEquals(2, interactor.loads)

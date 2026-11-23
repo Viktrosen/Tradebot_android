@@ -34,7 +34,7 @@ fun PositionsResponse.toDomain(): List<Position> =
             profitProtectionStage = position.profitProtectionStage
         )
     } + closedTrades.map { trade ->
-        val entryValue = trade.entryPrice * trade.quantity * trade.lotSize
+        val entryValue = trade.entryPrice?.let { it * trade.quantity * trade.lotSize }
         Position(
             id = trade.positionId,
             instrumentId = trade.instrumentId,
@@ -46,7 +46,7 @@ fun PositionsResponse.toDomain(): List<Position> =
             entryPrice = trade.entryPrice,
             currentPrice = trade.closePrice,
             pnl = trade.realizedPnl,
-            pnlPercent = if (entryValue == 0.0) null else trade.realizedPnl / entryValue * 100,
+            pnlPercent = trade.realizedPnl?.let { pnl -> entryValue?.takeIf { it > 0.0 }?.let { pnl / it * 100 } },
             isClosed = true,
             entryTime = trade.entryTime,
             closeTime = trade.closedAt,

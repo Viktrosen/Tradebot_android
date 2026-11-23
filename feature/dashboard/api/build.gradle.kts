@@ -11,4 +11,5 @@ dependencies {
 
     // Libs
     implementation(libs.retrofit.converter.serialization)
+    testImplementation(libs.jetbrains.serializationJson)
 }

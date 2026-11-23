@@ -41,6 +41,18 @@ import ru.bolotov.feature.risk.domain.model.RiskConfigData
 @Config(manifest = Config.NONE, sdk = [28])
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
+    @Test
+    fun `unknown executor metrics are not replaced with zeros by the view model`() = runTest(dispatcher) {
+        dashboard.snapshot = dashboard.snapshot.copy(metrics = dashboard.snapshot.metrics.copy(
+            realizedPnl = null,
+            dailyPnl = null,
+            winRate = null
+        ))
+        val state = loadedModel().container.stateFlow.value
+        assertNull(state.totalPnl)
+        assertNull(state.dailyPnl)
+        assertNull(state.winRate)
+    }
     private val dispatcher = StandardTestDispatcher()
     private val store = ViewModelStore()
     private val dashboard = FakeDashboard()
@@ -63,11 +75,31 @@ class DashboardViewModelTest {
 
         assertFalse(state.isLoading)
         assertEquals(listOf("position"), state.positions.map { it.positionId })
-        assertEquals(15.0, state.totalPnl, 0.0)
-        assertEquals(-2.0, state.dailyPnl, 0.0)
-        assertEquals(700.0, state.availableCash, 0.0)
-        assertEquals(65.0, state.winRate, 0.0)
-        assertEquals(0.02, state.riskConfig!!.config.stopLossPercent, 0.0)
+        assertEquals(
+            15.0,
+            requireNotNull(state.totalPnl),
+            0.0
+        )
+        assertEquals(
+            -2.0,
+            requireNotNull(state.dailyPnl),
+            0.0
+        )
+        assertEquals(
+            700.0,
+            state.availableCash,
+            0.0
+        )
+        assertEquals(
+            65.0,
+            requireNotNull(state.winRate),
+            0.0
+        )
+        assertEquals(
+            0.02,
+            state.riskConfig!!.config.stopLossPercent,
+            0.0
+        )
         assertNull(state.errorMessage)
     }
 
@@ -92,7 +124,11 @@ class DashboardViewModelTest {
         dashboard.snapshot = dashboard.snapshot.copy(metrics = dashboard.snapshot.metrics.copy(availableCash = 42.0))
         model.handleAction(Action.Refresh)
 
-        assertEquals(42.0, model.container.stateFlow.first { it.availableCash == 42.0 }.availableCash, 0.0)
+        assertEquals(
+            42.0,
+            model.container.stateFlow.first { it.availableCash == 42.0 }.availableCash,
+            0.0
+        )
         assertEquals(2, dashboard.loads)
     }
 
@@ -130,12 +166,27 @@ class DashboardViewModelTest {
     fun `realtime quote portfolio status and availability enrich current state`() = runTest(dispatcher) {
         val model = loadedModel()
         events.emit(TradingStateUpdate.PositionPrice(
-            instrumentId = "instrument", currentPrice = 103.0, unrealizedPnl = 3.0, pnlPercent = 3.0
+            instrumentId = "instrument",
+            currentPrice = 103.0,
+            unrealizedPnl = 3.0,
+            pnlPercent = 3.0
         ))
         val quoted = model.container.stateFlow.first { it.positions.single().currentPrice == 103.0 }
-        assertEquals(3.0, quoted.positions.single().pnl!!, 0.0)
-        events.emit(TradingStateUpdate.Portfolio(totalValue = null, availableCash = 99.0, blockedCash = null))
-        assertEquals(99.0, model.container.stateFlow.first { it.availableCash == 99.0 }.availableCash, 0.0)
+        assertEquals(
+            3.0,
+            quoted.positions.single().pnl!!,
+            0.0
+        )
+        events.emit(TradingStateUpdate.Portfolio(
+            totalValue = null,
+            availableCash = 99.0,
+            blockedCash = null
+        ))
+        assertEquals(
+            99.0,
+            model.container.stateFlow.first { it.availableCash == 99.0 }.availableCash,
+            0.0
+        )
         events.emit(TradingStateUpdate.BotStatus(running = true))
         model.container.stateFlow.first { it.botStatus?.running == true }
         events.emit(TradingStateUpdate.TradingAvailability(instruments = emptyMap(), allTradingUnavailable = true))
@@ -177,8 +228,10 @@ class DashboardViewModelTest {
     }
 
     private suspend fun TestScope.model() = DashboardViewModel(
-        analyticManager = mock(AnalyticManager::class.java), dashboardInteractor = dashboard,
-        riskInteractor = risk, tradingStateInteractor = object : TradingStateInteractor {
+        analyticManager = mock(AnalyticManager::class.java),
+        dashboardInteractor = dashboard,
+        riskInteractor = risk,
+        tradingStateInteractor = object : TradingStateInteractor {
             override fun updates() = events
         }
     ).also {
@@ -200,18 +253,39 @@ class DashboardViewModelTest {
         var running = false
         var snapshot = Dashboard(
             openPositions = listOf(Position(
-                positionId = "position", instrumentId = "instrument", instrumentName = "TEST",
-                direction = "BUY", entryPrice = 100.0, quantity = 1, entryTime = null,
-                stopLossPrice = null, atr = null, pnl = 1.0, currentPrice = 101.0
+                positionId = "position",
+                instrumentId = "instrument",
+                instrumentName = "TEST",
+                direction = "BUY",
+                entryPrice = 100.0,
+                quantity = 1,
+                entryTime = null,
+                stopLossPrice = null,
+                atr = null,
+                pnl = 1.0,
+                currentPrice = 101.0
             )),
-            metrics = DashboardMetrics(realizedPnl = 15.0, dailyPnl = -2.0, winRate = 65.0,
-                closedTradesCount = 10, availableCash = 700.0)
+            metrics = DashboardMetrics(
+                realizedPnl = 15.0,
+                dailyPnl = -2.0,
+                winRate = 65.0,
+                closedTradesCount = 10,
+                availableCash = 700.0
+            )
         )
         override suspend fun getBotStatus(): BotStatus {
             failure?.let { throw it }
-            return BotStatus(running = running,
-                currentStrategy = CurrentStrategy(id = "market_regime", name = "Automatic", description = "",
-                    type = "adaptive", settings = StrategySettings()), activeInstruments = listOf("instrument"))
+            return BotStatus(
+                running = running,
+                currentStrategy = CurrentStrategy(
+                    id = "market_regime",
+                    name = "Automatic",
+                    description = "",
+                    type = "adaptive",
+                    settings = StrategySettings()
+                ),
+                activeInstruments = listOf("instrument")
+            )
         }
         override suspend fun getPositions() = snapshot.openPositions
         override suspend fun getDashboard(): Dashboard { loads++; return snapshot }
@@ -221,8 +295,11 @@ class DashboardViewModelTest {
 
     private class FakeRisk : RiskInteractor {
         private val profile = RiskConfig(success = true, config = RiskConfigData(
-            positionSizePercent = 0.05, stopLossPercent = 0.02, takeProfitPercent = 0.03,
-            maxCapitalUsage = 0.8, maxPositions = 5
+            positionSizePercent = 0.05,
+            stopLossPercent = 0.02,
+            takeProfitPercent = 0.03,
+            maxCapitalUsage = 0.8,
+            maxPositions = 5
         ))
         override suspend fun getRiskConfig() = profile
         override suspend fun updateRiskConfig(config: RiskConfig) = config

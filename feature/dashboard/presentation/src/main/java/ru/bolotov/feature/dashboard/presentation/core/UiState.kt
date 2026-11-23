@@ -10,12 +10,12 @@ import ru.bolotov.feature.dashboard.domain.model.RiskConfig
 data class UiState(
     val isLoading: Boolean = false,
     val botStatus: BotStatus? = null,
-    val marketRegime: MarketRegime? = null,  // НОВОЕ: текущий режим рынка
+    val marketRegime: MarketRegime? = null,
     val positions: List<Position> = emptyList(),
-    val totalPnl: Double = 0.0,
-    val dailyPnl: Double = 0.0,
+    val totalPnl: Double? = null,
+    val dailyPnl: Double? = null,
     val availableCash: Double = 0.0,
-    val winRate: Double = 0.0,
+    val winRate: Double? = null,
     val riskConfig: RiskConfig? = null,
     val errorMessage: String? = null
 )

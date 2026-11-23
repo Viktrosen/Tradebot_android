@@ -49,12 +49,12 @@ data class ClosedPositionResponse(
     val instrumentName: String,
     val direction: String,
     val positionSide: String = "LONG",
-    val entryPrice: Double,
+    val entryPrice: Double? = null,
     val entryTime: String?,
-    val closePrice: Double,
+    val closePrice: Double? = null,
     val quantity: Long,
     val lotSize: Int,
-    val realizedPnl: Double,
+    val realizedPnl: Double? = null,
     val closedAt: String,
     val closeExplanation: String? = null
 )

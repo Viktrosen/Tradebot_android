@@ -44,7 +44,7 @@ import ru.bolotov.tradebot.feature.positions.presentation.R
 internal fun PositionsContent(
     state: UiState,
     onAction: (Action) -> Unit,
-    onNavigateToInstrument: (String) -> Unit,
+    onNavigateToInstrument: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -57,7 +57,7 @@ internal fun PositionsContent(
         TradebotPullToRefreshBox(
             isRefreshing = state.isLoading,
             onRefresh = { onAction(Action.Refresh) },
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier.fillMaxSize().padding(paddingValues)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 // Stats row
@@ -65,14 +65,14 @@ internal fun PositionsContent(
                     totalPnl = state.totalPnl,
                     openCount = state.openPositionsCount,
                     closedCount = state.closedPositionsCount,
-                    modifier = Modifier.padding(TradebotDimens.cardPadding),
+                    modifier = Modifier.padding(TradebotDimens.cardPadding)
                 )
 
                 // Filter bar
                 PositionsFilterBar(
                     currentFilter = state.filterType,
                     onFilterSelected = { onAction(Action.Filter(it)) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 // Positions list
@@ -116,7 +116,7 @@ internal fun PositionsContent(
                                                     stringResource(R.string.positions_empty_loss)
                                             },
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -141,7 +141,7 @@ internal fun PositionsContent(
                                         },
                                         onInfoClick = {
                                             onAction(Action.ShowPositionInfo(position.id))
-                                        },
+                                        }
                                     )
                                 }
                             }
@@ -155,12 +155,11 @@ internal fun PositionsContent(
 
 @Composable
 private fun StatsRow(
-    totalPnl: Double,
+    totalPnl: Double?,
     openCount: Int,
     closedCount: Int,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-    val isPositive = totalPnl >= 0
 
     TradebotCard(modifier = modifier.fillMaxWidth()) {
         Row(
@@ -172,40 +171,44 @@ private fun StatsRow(
                 value = formatMoney(totalPnl, signed = true),
                 valueColor =
                     when {
-                        totalPnl > 0 -> TradebotTheme.colors.profit
-                        totalPnl < 0 -> TradebotTheme.colors.loss
+                        totalPnl != null && totalPnl > 0 -> TradebotTheme.colors.profit
+                        totalPnl != null && totalPnl < 0 -> TradebotTheme.colors.loss
                         else -> TradebotTheme.colors.text
-                    },
+                    }
             )
 
             StatItem(
                 title = stringResource(R.string.positions_open_count),
                 value = "$openCount",
-                valueColor = MaterialTheme.colorScheme.primary,
+                valueColor = MaterialTheme.colorScheme.primary
             )
 
             StatItem(
                 title = stringResource(R.string.positions_closed_count),
                 value = "$closedCount",
-                valueColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                valueColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
 }
 
 @Composable
-private fun StatItem(title: String, value: String, valueColor: androidx.compose.ui.graphics.Color) {
+private fun StatItem(
+    title: String,
+    value: String,
+    valueColor: androidx.compose.ui.graphics.Color
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = title,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
             text = value,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-            color = valueColor,
+            color = valueColor
         )
     }
 }
@@ -214,7 +217,7 @@ private fun StatItem(title: String, value: String, valueColor: androidx.compose.
     name = "Positions · long, short, closed",
     showBackground = true,
     widthDp = 412,
-    heightDp = 915,
+    heightDp = 915
 )
 @Composable
 private fun PositionsContentPreview() {
@@ -238,7 +241,7 @@ private fun PositionsContentPreview() {
             closeExplanation = null,
             brokerStopLossPrice = 261.66,
             managedExitPrice = 267.10,
-            profitProtectionStage = "BREAKEVEN",
+            profitProtectionStage = "BREAKEVEN"
         )
     val short =
         long.copy(
@@ -253,7 +256,7 @@ private fun PositionsContentPreview() {
             brokerStopLossPrice = 42.74,
             managedExitPrice = null,
             profitProtectionStage = null,
-            entryStrategyName = "SuperTrend",
+            entryStrategyName = "SuperTrend"
         )
     val closed =
         short.copy(
@@ -264,7 +267,7 @@ private fun PositionsContentPreview() {
             pnlPercent = 0.5,
             closeTime = "2026-11-12T09:00:00Z",
             aiExplanation = null,
-            closeExplanation = "Защита прибыли",
+            closeExplanation = "Защита прибыли"
         )
     TradebotTheme {
         PositionsContent(
@@ -276,10 +279,10 @@ private fun PositionsContentPreview() {
                 ),
                 totalPnl = 14.0,
                 openPositionsCount = 2,
-                closedPositionsCount = 1,
+                closedPositionsCount = 1
             ),
             onAction = {},
-            onNavigateToInstrument = {},
+            onNavigateToInstrument = {}
         )
     }
 }

@@ -8,7 +8,8 @@ import ru.bolotov.tradebot.core.uikit.R
 
 /** Display formatting only; never used in sizing or trading calculations. */
 @Composable
-fun formatMoney(value: Double, signed: Boolean = false): String {
+fun formatMoney(value: Double?, signed: Boolean = false): String {
+    if (value == null) return stringResource(R.string.tb_unknown_value)
     val locale = LocalConfiguration.current.locales[0]
     val number =
         NumberFormat.getNumberInstance(locale)
@@ -21,7 +22,12 @@ fun formatMoney(value: Double, signed: Boolean = false): String {
 }
 
 @Composable
-fun formatPercent(value: Double, digits: Int = 2, signed: Boolean = false): String {
+fun formatPercent(
+    value: Double?,
+    digits: Int = 2,
+    signed: Boolean = false
+): String {
+    if (value == null) return stringResource(R.string.tb_unknown_value)
     val locale = LocalConfiguration.current.locales[0]
     val number =
         NumberFormat.getNumberInstance(locale)

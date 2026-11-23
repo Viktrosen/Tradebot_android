@@ -42,14 +42,14 @@ internal fun DashboardContent(
     onNavigateToPositions: () -> Unit,
     onNavigateToInstruments: () -> Unit,
     onShowAllPositions: () -> Unit,
-    onOpenPositionDetails: (String) -> Unit = {},
+    onOpenPositionDetails: (String) -> Unit = {}
 ) {
     val colors = TradebotTheme.colors
     val running = state.botStatus?.running == true
     LazyColumn(
         Modifier.fillMaxSize(),
         contentPadding = PaddingValues(TradebotDimens.screenPadding),
-        verticalArrangement = Arrangement.spacedBy(TradebotDimens.itemGap),
+        verticalArrangement = Arrangement.spacedBy(TradebotDimens.itemGap)
     ) {
         item {
             Row(
@@ -70,7 +70,7 @@ internal fun DashboardContent(
                         stringResource(R.string.dashboard_unavailable)
                     else stringResource(R.string.dashboard_available),
                     style = MaterialTheme.typography.bodySmall,
-                    color = colors.textSecondary,
+                    color = colors.textSecondary
                 )
             }
         }
@@ -80,21 +80,21 @@ internal fun DashboardContent(
                 horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
             ) {
                 TradebotMetric(
-                    stringResource(R.string.dashboard_total_pnl),
-                    state.totalPnl.money(),
-                    Modifier.weight(1f),
-                    pnlColor(state.totalPnl),
+                    label = stringResource(R.string.dashboard_total_pnl),
+                    value = state.totalPnl.money(),
+                    modifier = Modifier.weight(1f),
+                    color = pnlColor(state.totalPnl)
                 )
                 TradebotMetric(
-                    stringResource(R.string.dashboard_today),
-                    state.dailyPnl.money(),
-                    Modifier.weight(1f),
-                    pnlColor(state.dailyPnl),
+                    label = stringResource(R.string.dashboard_today),
+                    value = state.dailyPnl.money(),
+                    modifier = Modifier.weight(1f),
+                    color = pnlColor(state.dailyPnl)
                 )
                 TradebotMetric(
-                    stringResource(R.string.dashboard_win_rate),
-                    formatPercent(state.winRate, digits = 1),
-                    Modifier.weight(1f),
+                    label = stringResource(R.string.dashboard_win_rate),
+                    value = formatPercent(state.winRate, digits = 1),
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -103,14 +103,14 @@ internal fun DashboardContent(
                 Row(
                     Modifier.padding(TradebotDimens.cardPadding),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(TradebotDimens.largeGap),
+                    horizontalArrangement = Arrangement.spacedBy(TradebotDimens.largeGap)
                 ) {
                     TradebotIcon(UiR.drawable.ic_wallet_outline)
                     Column {
                         Text(
                             stringResource(R.string.dashboard_free_cash),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = colors.textSecondary,
+                            color = colors.textSecondary
                         )
                         Text(state.availableCash.money(), style = TradebotTheme.typography.amount)
                     }
@@ -122,12 +122,12 @@ internal fun DashboardContent(
                 TradebotCard(
                     Modifier.fillMaxWidth(),
                     containerColor = colors.dangerSurface,
-                    borderColor = colors.loss,
+                    borderColor = colors.loss
                 ) {
                     Text(
                         stringResource(R.string.dashboard_warning),
                         Modifier.padding(TradebotDimens.cardPadding),
-                        color = colors.loss,
+                        color = colors.loss
                     )
                 }
             }
@@ -149,7 +149,7 @@ internal fun DashboardContent(
                         Text(
                             stringResource(R.string.dashboard_control_title),
                             Modifier.weight(1f).padding(start = 10.dp),
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.titleSmall
                         )
                         TextButton(onClick = onNavigateToStrategy) {
                             Text(
@@ -164,7 +164,7 @@ internal fun DashboardContent(
                             onStartBot,
                             Modifier.weight(1f),
                             enabled = !running,
-                            iconRes = UiR.drawable.ic_play_outline,
+                            iconRes = UiR.drawable.ic_play_outline
                         )
                         TradebotButton(
                             stringResource(R.string.dashboard_stop),
@@ -173,7 +173,7 @@ internal fun DashboardContent(
                             enabled = running,
                             outlined = true,
                             destructive = true,
-                            iconRes = UiR.drawable.ic_close_24,
+                            iconRes = UiR.drawable.ic_close_24
                         )
                     }
                 }
@@ -189,7 +189,7 @@ internal fun DashboardContent(
                     stringResource(
                         R.string.dashboard_selected_count,
                         state.botStatus?.activeInstruments?.size ?: 0,
-                    ),
+                    )
             )
         }
         if (state.positions.isNotEmpty()) {
@@ -226,7 +226,7 @@ private fun DashboardRiskCard(riskConfig: RiskConfig?, onClick: () -> Unit) {
                 Text(
                     stringResource(R.string.dashboard_risk_title),
                     Modifier.weight(1f).padding(start = 12.dp),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 TradebotIcon(UiR.drawable.ic_chevron_right)
             }
@@ -281,9 +281,13 @@ private fun DashboardRiskCard(riskConfig: RiskConfig?, onClick: () -> Unit) {
 @Composable
 private fun RiskSummary(label: String, value: String) {
     Text(
-        stringResource(UiR.string.tb_summary, label, value),
+        stringResource(
+            UiR.string.tb_summary,
+            label,
+            value
+        ),
         style = MaterialTheme.typography.bodySmall,
-        color = TradebotTheme.colors.textSecondary,
+        color = TradebotTheme.colors.textSecondary
     )
 }
 
@@ -301,7 +305,7 @@ private fun DashboardPositionCard(position: Position, onClick: () -> Unit) {
                 Text(
                     position.instrumentName,
                     Modifier.weight(1f),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 TradebotBadge(
                     stringResource(
@@ -317,7 +321,7 @@ private fun DashboardPositionCard(position: Position, onClick: () -> Unit) {
                 Text(
                     it,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TradebotTheme.colors.textSecondary,
+                    color = TradebotTheme.colors.textSecondary
                 )
             }
             Text(
@@ -326,9 +330,9 @@ private fun DashboardPositionCard(position: Position, onClick: () -> Unit) {
                     pluralStringResource(
                         UiR.plurals.tb_lot_quantity,
                         position.quantity.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
-                        position.quantity,
+                        position.quantity
                     ),
-                    position.entryPrice.money(),
+                    position.entryPrice.money()
                 ),
                 style = MaterialTheme.typography.bodySmall,
             )
@@ -339,7 +343,11 @@ private fun DashboardPositionCard(position: Position, onClick: () -> Unit) {
                 )
             }
             position.pnl?.let {
-                Text(it.money(), color = pnlColor(it), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    it.money(),
+                    color = pnlColor(it),
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
             position.brokerStopLossPrice?.let {
                 Text(
@@ -351,7 +359,7 @@ private fun DashboardPositionCard(position: Position, onClick: () -> Unit) {
                 Text(
                     stringResource(R.string.dashboard_profit_protection, it.money()),
                     style = MaterialTheme.typography.bodySmall,
-                    color = TradebotTheme.colors.accent,
+                    color = TradebotTheme.colors.accent
                 )
             }
         }
@@ -359,16 +367,21 @@ private fun DashboardPositionCard(position: Position, onClick: () -> Unit) {
 }
 
 @Composable
-private fun pnlColor(value: Double) =
+private fun pnlColor(value: Double?) =
     when {
-        value > 0 -> TradebotTheme.colors.profit
-        value < 0 -> TradebotTheme.colors.loss
+        value != null && value > 0 -> TradebotTheme.colors.profit
+        value != null && value < 0 -> TradebotTheme.colors.loss
         else -> TradebotTheme.colors.text
     }
 
-@Composable private fun Double.money() = formatMoney(this)
+@Composable private fun Double?.money() = formatMoney(this)
 
-@Preview(name = "Dashboard · running", showBackground = true, widthDp = 412, heightDp = 915)
+@Preview(
+    name = "Dashboard · running",
+    showBackground = true,
+    widthDp = 412,
+    heightDp = 915
+)
 @Composable
 private fun DashboardContentPreview() {
     TradebotTheme {
@@ -386,32 +399,32 @@ private fun DashboardContentPreview() {
                         UiState(
                             botStatus =
                                 BotStatus(
-                                    true,
-                                    CurrentStrategy(
+                                    running = true,
+                                    currentStrategy = CurrentStrategy(
                                         "auto",
                                         "Автоматически",
                                         "",
                                         "auto",
-                                        StrategySettings(),
+                                        StrategySettings()
                                     ),
-                                    List(6) { "preview-$it" },
+                                    activeInstruments = List(6) { "preview-$it" }
                                 ),
                             availableCash = 1790.76,
                             riskConfig =
                                 RiskConfig(
                                     true,
                                     RiskConfigData(
-                                        0.02,
-                                        "2%",
-                                        0.02,
-                                        "2%",
-                                        0.03,
-                                        "3%",
-                                        0.8,
-                                        "80%",
-                                        10,
+                                        positionSizePercent = 0.02,
+                                        positionSizePercentDisplay = "2%",
+                                        stopLossPercent = 0.02,
+                                        stopLossPercentDisplay = "2%",
+                                        takeProfitPercent = 0.03,
+                                        takeProfitPercentDisplay = "3%",
+                                        maxCapitalUsage = 0.8,
+                                        maxCapitalUsagePercent = "80%",
+                                        maxPositions = 10
                                     ),
-                                ),
+                                )
                         ),
                     onStartBot = {},
                     onStopBot = {},
@@ -419,7 +432,7 @@ private fun DashboardContentPreview() {
                     onNavigateToRisk = {},
                     onNavigateToPositions = {},
                     onNavigateToInstruments = {},
-                    onShowAllPositions = {},
+                    onShowAllPositions = {}
                 )
             }
         }

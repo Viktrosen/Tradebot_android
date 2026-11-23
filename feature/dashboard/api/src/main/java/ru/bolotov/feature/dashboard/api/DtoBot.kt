@@ -6,7 +6,7 @@ interface DtoBot {
     @Serializable
     data class BotStatusResponse(
         val running: Boolean,
-        val currentStrategy: CurrentStrategy,  // ← теперь объект
+        val currentStrategy: CurrentStrategy,
         val activeInstruments: List<String>,
         val allTradingUnavailable: Boolean = false,
         val marketRegime: String? = null  // НОВОЕ: текущий режим рынка
@@ -71,20 +71,22 @@ interface DtoBot {
         val instrumentName: String,
         val direction: String,
         val positionSide: String = "LONG",
-        val closePrice: Double,
+        val closePrice: Double? = null,
         val quantity: Long,
         val lotSize: Int,
-        val realizedPnl: Double,
+        val realizedPnl: Double? = null,
         val closedAt: String
     )
 
     @Serializable
     data class DashboardMetrics(
-        val realizedPnl: Double,
-        val dailyPnl: Double,
-        val winRate: Double,
+        val realizedPnl: Double? = null,
+        val dailyPnl: Double? = null,
+        val winRate: Double? = null,
         val closedTradesCount: Int,
-        val availableCash: Double = 0.0
+        val availableCash: Double = 0.0,
+        val knownPnlTradesCount: Int? = null,
+        val unknownPnlTradesCount: Int? = null
     )
 
     @Serializable

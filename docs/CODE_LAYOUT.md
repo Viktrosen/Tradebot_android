@@ -2,6 +2,10 @@
 
 ## Обязательные правила
 
+`app/notifications/TradeNotificationIdentity.kt` нормализует eventId/legacy identity
+в стабильный notification tag. MessagingService применяет его к NotificationManager;
+сборка PendingIntent и AppLink-навигация остаются у прежних владельцев.
+
 1. Самостоятельный тип хранится в одноимённом файле своего слоя. Не складывать все типы проекта в общий data-пакет.
 2. Сервисы, контроллеры и ViewModel не содержат самостоятельные DTO рядом с реализацией.
 3. Варианты sealed-иерархий остаются вложенными в неё; extensions модели могут находиться в её файле.

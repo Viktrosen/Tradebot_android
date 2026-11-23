@@ -8,7 +8,7 @@ data class Position(
     val positionSide: String = "LONG",
     val quantity: Long,
     val lotSize: Int,
-    val entryPrice: Double,
+    val entryPrice: Double?,
     val currentPrice: Double?,
     val pnl: Double?,
     val pnlPercent: Double?,

@@ -32,7 +32,7 @@ fun PositionCard(
     onCloseClick: () -> Unit,
     onInstrumentClick: () -> Unit,
     onInfoClick: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val colors = TradebotTheme.colors
     val pnlColor =
@@ -79,14 +79,14 @@ fun PositionCard(
                                 pluralStringResource(
                                     UiR.plurals.tb_lot_quantity,
                                     position.quantity.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
-                                    position.quantity,
+                                    position.quantity
                                 ),
                             )
                             .joinToString(" · ")
                     Text(
                         details,
                         style = MaterialTheme.typography.bodySmall,
-                        color = colors.textSecondary,
+                        color = colors.textSecondary
                     )
                 }
                 if (!position.infoExplanation.isNullOrBlank()) {
@@ -105,34 +105,32 @@ fun PositionCard(
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap),
+                horizontalArrangement = Arrangement.spacedBy(TradebotDimens.compactGap)
             ) {
                 PositionPrice(
                     stringResource(R.string.positions_entry),
                     position.entryPrice,
-                    Modifier.weight(1f),
+                    Modifier.weight(1f)
                 )
                 if (!position.isClosed)
                     position.currentPrice?.let {
                         PositionPrice(
                             stringResource(R.string.positions_current),
                             it,
-                            Modifier.weight(1f),
+                            Modifier.weight(1f)
                         )
                     }
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.End) {
-                    position.pnl?.let {
-                        Text(
-                            formatMoney(it, signed = true),
-                            color = pnlColor,
-                            style = MaterialTheme.typography.titleMedium,
-                        )
-                    }
+                    Text(
+                        formatMoney(position.pnl, signed = true),
+                        color = pnlColor,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     position.pnlPercent?.let {
                         Text(
                             formatPercent(it, signed = true),
                             color = pnlColor,
-                            style = MaterialTheme.typography.bodySmall,
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }
@@ -145,7 +143,7 @@ fun PositionCard(
                     Row(
                         Modifier.padding(10.dp),
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         TradebotIcon(UiR.drawable.ic_risk_outline)
                         Column(
@@ -162,10 +160,10 @@ fun PositionCard(
                                     stringResource(
                                         R.string.positions_protection,
                                         position.profitProtectionStage.toProfitProtectionLabel(),
-                                        it.money(),
+                                        it.money()
                                     ),
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = colors.accent,
+                                    color = colors.accent
                                 )
                             }
                         }
@@ -184,7 +182,7 @@ fun PositionCard(
                         Text(
                             stringResource(R.string.positions_opened, it.toPositionDateTime()),
                             style = TradebotTheme.typography.label,
-                            color = colors.textSecondary,
+                            color = colors.textSecondary
                         )
                     }
                     if (position.isClosed)
@@ -195,7 +193,7 @@ fun PositionCard(
                                     it.toPositionDateTime(),
                                 ),
                                 style = TradebotTheme.typography.label,
-                                color = colors.textSecondary,
+                                color = colors.textSecondary
                             )
                         }
                 }
@@ -204,7 +202,7 @@ fun PositionCard(
                         stringResource(R.string.position_close),
                         onCloseClick,
                         outlined = true,
-                        destructive = true,
+                        destructive = true
                     )
             }
         }
@@ -212,18 +210,22 @@ fun PositionCard(
 }
 
 @Composable
-private fun PositionPrice(label: String, value: Double, modifier: Modifier) {
+private fun PositionPrice(
+    label: String,
+    value: Double?,
+    modifier: Modifier
+) {
     Column(modifier) {
         Text(
             label,
             style = MaterialTheme.typography.bodySmall,
-            color = TradebotTheme.colors.textSecondary,
+            color = TradebotTheme.colors.textSecondary
         )
         Text(value.money(), style = MaterialTheme.typography.titleSmall)
     }
 }
 
-@Composable private fun Double.money() = formatMoney(this)
+@Composable private fun Double?.money() = formatMoney(this)
 
 @Composable
 private fun String.toPositionDateTime(): String {

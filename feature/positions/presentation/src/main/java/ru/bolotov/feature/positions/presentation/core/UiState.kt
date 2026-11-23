@@ -10,7 +10,7 @@ data class UiState(
     val isClosingPosition: Boolean = false,
     val closingPosition: UiPosition? = null,
     val infoPosition: UiPosition? = null,
-    val totalPnl: Double = 0.0,
+    val totalPnl: Double? = null,
     val openPositionsCount: Int = 0,
     val closedPositionsCount: Int = 0,
     val errorMessage: String? = null
@@ -31,7 +31,7 @@ data class UiPosition(
     val direction: String,
     val positionSide: String,
     val quantity: Long,
-    val entryPrice: Double,
+    val entryPrice: Double?,
     val currentPrice: Double?,
     val pnl: Double?,
     val pnlPercent: Double?,

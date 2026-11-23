@@ -29,9 +29,11 @@ data class Dashboard(
 )
 
 data class DashboardMetrics(
-    val realizedPnl: Double,
-    val dailyPnl: Double,
-    val winRate: Double,
+    val realizedPnl: Double?,
+    val dailyPnl: Double?,
+    val winRate: Double?,
     val closedTradesCount: Int,
-    val availableCash: Double
+    val availableCash: Double,
+    val knownPnlTradesCount: Int? = null,
+    val unknownPnlTradesCount: Int? = null
 )

@@ -68,7 +68,9 @@ fun DtoBot.DashboardResponse.toDomain(): Dashboard = Dashboard(
         dailyPnl = metrics.dailyPnl,
         winRate = metrics.winRate,
         closedTradesCount = metrics.closedTradesCount,
-        availableCash = metrics.availableCash
+        availableCash = metrics.availableCash,
+        knownPnlTradesCount = metrics.knownPnlTradesCount,
+        unknownPnlTradesCount = metrics.unknownPnlTradesCount
     )
 )
 

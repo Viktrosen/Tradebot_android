@@ -40,10 +40,26 @@ class PositionTest {
         assertEquals("SBER", position.instrumentName)
         assertEquals(100, position.quantity)
         assertEquals(10, position.lotSize)
-        assertEquals(150.0, position.entryPrice, 0.001)
-        assertEquals(155.0, position.currentPrice!!, 0.001)
-        assertEquals(500.0, position.pnl!!, 0.001)
-        assertEquals(3.33, position.pnlPercent!!, 0.001)
+        assertEquals(
+            150.0,
+            requireNotNull(position.entryPrice),
+            0.001
+        )
+        assertEquals(
+            155.0,
+            position.currentPrice!!,
+            0.001
+        )
+        assertEquals(
+            500.0,
+            position.pnl!!,
+            0.001
+        )
+        assertEquals(
+            3.33,
+            position.pnlPercent!!,
+            0.001
+        )
         assertFalse(position.isClosed)
         assertEquals("CrossEma", position.entryStrategyName)
     }
