@@ -11,7 +11,7 @@ object Config {
     const val COMPILE_SDK = 36
     const val TARGET_SDK = 36
 
-    const val VERSION_CODE = 1
+    const val VERSION_CODE = 2
 
     const val JVM_TOOL_CHAIN = 11
 
